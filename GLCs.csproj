@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>GLCs</AssemblyName>
+    <RootNamespace>GLCs</RootNamespace>
+    <OutputType>Library</OutputType>
+    <!-- NuGet -->
+    <PackageId>GLCs</PackageId>
+    <Authors>squid233</Authors>
+    <Company>OverRun Organization</Company>
+    <Copyright>MIT</Copyright>
+    <Product>GLCs</Product>
+    <Version>0.1.0</Version>
+    <Description>OpenGL bindings for C#.</Description>
+    <RepositoryType>git</RepositoryType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+</Project>
