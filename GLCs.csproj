@@ -4,16 +4,16 @@
     <AssemblyName>GLCs</AssemblyName>
     <RootNamespace>GLCs</RootNamespace>
     <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- NuGet -->
     <PackageId>GLCs</PackageId>
     <Authors>squid233</Authors>
     <Company>OverRun Organization</Company>
-    <Copyright>MIT</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Product>GLCs</Product>
     <Version>0.1.0</Version>
     <Description>OpenGL bindings for C#.</Description>
-    <RepositoryType>git</RepositoryType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
   </PropertyGroup>
 </Project>
