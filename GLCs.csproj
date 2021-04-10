@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>GLCs</AssemblyName>
@@ -12,7 +12,7 @@
     <Company>OverRun Organization</Company>
     <PackageLicenseExpression></PackageLicenseExpression>
     <Product>GLCs</Product>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Description>OpenGL bindings for C#.</Description>
     <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
     <Nullable>disable</Nullable>

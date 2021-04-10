@@ -5,7 +5,7 @@ namespace GLCs
 {
     public static class GL
     {
-        public const int VERSION_MAJOR = 1, VERSION_MINOR = 5;
+        public const int VERSION_MAJOR = 2, VERSION_MINOR = 1;
         [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
         private static extern IntPtr wglGetProcAddress(string lpszProc);
         private static T getDelegate<T>(string lpszProc)
@@ -6220,6 +6220,12 @@ namespace GLCs
         public static extern void GetFloatv(uint pname, float[] @params);
         [DllImport("opengl32.dll", EntryPoint = "glGetIntegerv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetIntegerv(uint pname, int[] @params);
+        public static int GetInteger(uint pname)
+        {
+            int[] p = { 0 };
+            GetIntegerv(pname, p);
+            return p[0];
+        }
         [DllImport("opengl32.dll", EntryPoint = "glGetLightfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetLightfv(uint light, uint pname, float[] @params);
         [DllImport("opengl32.dll", EntryPoint = "glGetLightiv", CallingConvention = CallingConvention.StdCall)]
@@ -6750,7 +6756,7 @@ namespace GLCs
         private delegate void multiTexCoord4d(uint target, double s, double t, double r, double q);
         private delegate void multiTexCoord4dv(uint target, double[] v);
         private delegate void multiTexCoord4f(uint target, float s, float t, float r, float q);
-        private delegate void multiTexCoord4fv(uint target, float[]v);
+        private delegate void multiTexCoord4fv(uint target, float[] v);
         private delegate void multiTexCoord4i(uint target, int s, int t, int r, int q);
         private delegate void multiTexCoord4iv(uint target, int[] v);
         private delegate void multiTexCoord4s(uint target, short s, short t, short r, short q);
@@ -6786,7 +6792,7 @@ namespace GLCs
         }
         public static void CompressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data)
         {
-            getDelegate<compressedTexSubImage3D>("glCompressedTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth,  format, imageSize, data);
+            getDelegate<compressedTexSubImage3D>("glCompressedTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
         }
         public static void GetCompressedTexImage(uint target, int lod, IntPtr img)
         {
@@ -7191,7 +7197,7 @@ namespace GLCs
         private delegate void bindBuffer(uint target, uint buffer);
         private delegate void bufferData(uint target, long size, IntPtr data, uint usage);
         private delegate void bufferSubData(uint target, long offset, long size, IntPtr data);
-        private delegate void deleteBuffers(int n, uint[] buffers);
+        private delegate void deleteBuffers(int n, IntPtr buffers);
         private delegate void deleteQueries(int n, uint[] ids);
         private delegate void endQuery(uint target);
         private delegate void genBuffers(int n, uint[] buffers);
@@ -7218,13 +7224,44 @@ namespace GLCs
         {
             getDelegate<bufferData>("glBufferData")(target, size, data, usage);
         }
+        public static void BufferData(uint target, long size, uint usage)
+        {
+            BufferData(target, size, IntPtr.Zero, usage);
+        }
+        public static void BufferData(uint target, float[] data, uint usage)
+        {
+            unsafe
+            {
+                fixed (float* ptr = data)
+                {
+                    BufferData(target, data.Length, new IntPtr(ptr), usage);
+                }
+            }
+        }
+        public static void BufferData(uint target, int[] data, uint usage)
+        {
+            unsafe
+            {
+                fixed (int* ptr = data)
+                {
+                    BufferData(target, data.Length, new IntPtr(ptr), usage);
+                }
+            }
+        }
         public static void BufferSubData(uint target, long offset, long size, IntPtr data)
         {
             getDelegate<bufferSubData>("glBufferSubData")(target, offset, size, data);
         }
-        public static void DeleteBuffers(int n, uint[] buffers)
+        public static void DeleteBuffers(int n, IntPtr buffers)
         {
             getDelegate<deleteBuffers>("glDeleteBuffers")(n, buffers);
+        }
+        public static void DeleteBuffer(uint buffer)
+        {
+            unsafe
+            {
+                DeleteBuffers(1, new IntPtr(&buffer));
+            }
         }
         public static void DeleteQueries(int n, uint[] ids)
         {
@@ -7234,9 +7271,15 @@ namespace GLCs
         {
             getDelegate<endQuery>("glEndQuery")(target);
         }
-        public static void GenBuffers(int n, uint[] buffers)
+        public static void GenBuffers(uint[] buffers)
         {
-            getDelegate<genBuffers>("glGenBuffers")(n, buffers);
+            getDelegate<genBuffers>("glGenBuffers")(buffers.Length, buffers);
+        }
+        public static uint GenBuffer()
+        {
+            uint[] buf = { 0 };
+            GenBuffers(buf);
+            return buf[0];
         }
         public static void GenQueries(int n, uint[] ids)
         {
@@ -7284,5 +7327,548 @@ namespace GLCs
         }
 
         #endregion // GL15
+        #region GL20
+
+        private delegate void attachShader(uint program, uint shader);
+        private delegate void bindAttribLocation(uint program, uint index, string name);
+        private delegate void blendEquationSeparate(uint modeRGB, uint modeAlpha);
+        private delegate void compileShader(uint shader);
+        private delegate uint createProgram();
+        private delegate uint createShader(uint type);
+        private delegate void deleteProgram(uint program);
+        private delegate void deleteShader(uint shader);
+        private delegate void detachShader(uint program, uint shader);
+        private delegate void disableVertexAttribArray(uint index);
+        private delegate void drawBuffers(int n, uint[] bufs);
+        private delegate void enableVertexAttribArray(uint index);
+        private delegate void getActiveAttrib(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, char[] name);
+        private delegate void getActiveUniform(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, char[] name);
+        private delegate void getAttachedShaders(uint program, int maxCount, ref int count, uint[] shaders);
+        private delegate int getAttribLocation(uint program, char[] name);
+        private delegate void getProgramInfoLog(uint program, int bufSize, ref int length, ref string infoLog);
+        private delegate void getProgramiv(uint program, uint pname, int[] param);
+        private delegate void getShaderInfoLog(uint shader, int bufSize, ref int length, ref string infoLog);
+        private delegate void getShaderSource(uint obj, int maxLength, ref int length, ref string source);
+        private delegate void getShaderiv(uint shader, uint pname, int[] param);
+        private delegate int getUniformLocation(uint program, string name);
+        private delegate void getUniformfv(uint program, int location, float[] @params);
+        private delegate void getUniformiv(uint program, int location, int[] @params);
+        private delegate void getVertexAttribPointerv(uint index, uint pname, IntPtr[] pointer);
+        private delegate void getVertexAttribdv(uint index, uint pname, double[] @params);
+        private delegate void getVertexAttribfv(uint index, uint pname, float[] @params);
+        private delegate void getVertexAttribiv(uint index, uint pname, int[] @params);
+        private delegate byte isProgram(uint program);
+        private delegate byte isShader(uint shader);
+        private delegate void linkProgram(uint program);
+        private delegate void shaderSource(uint shader, int count, string[] @string, int[] length);
+        private delegate void stencilFuncSeparate(uint face, uint func, int @ref, uint mask);
+        private delegate void stencilMaskSeparate(uint face, uint mask);
+        private delegate void stencilOpSeparate(uint face, uint sfail, uint dpfail, uint dppass);
+        private delegate void uniform1f(int location, float v0);
+        private delegate void uniform1fv(int location, int count, float[] value);
+        private delegate void uniform1i(int location, int v0);
+        private delegate void uniform1iv(int location, int count, int[] value);
+        private delegate void uniform2f(int location, float v0, float v1);
+        private delegate void uniform2fv(int location, int count, float[] value);
+        private delegate void uniform2i(int location, int v0, int v1);
+        private delegate void uniform2iv(int location, int count, int[] value);
+        private delegate void uniform3f(int location, float v0, float v1, float v2);
+        private delegate void uniform3fv(int location, int count, float[] value);
+        private delegate void uniform3i(int location, int v0, int v1, int v2);
+        private delegate void uniform3iv(int location, int count, int[] value);
+        private delegate void uniform4f(int location, float v0, float v1, float v2, float v3);
+        private delegate void uniform4fv(int location, int count, float[] value);
+        private delegate void uniform4i(int location, int v0, int v1, int v2, int v3);
+        private delegate void uniform4iv(int location, int count, int[] value);
+        private delegate void uniformMatrix2fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix3fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix4fv(int location, int count, byte transpose, float[] value);
+        private delegate void useProgram(uint program);
+        private delegate void validateProgram(uint program);
+        private delegate void vertexAttrib1d(uint index, double x);
+        private delegate void vertexAttrib1dv(uint index, double[] v);
+        private delegate void vertexAttrib1f(uint index, float x);
+        private delegate void vertexAttrib1fv(uint index, float[] v);
+        private delegate void vertexAttrib1s(uint index, short x);
+        private delegate void vertexAttrib1sv(uint index, short[] v);
+        private delegate void vertexAttrib2d(uint index, double x, double y);
+        private delegate void vertexAttrib2dv(uint index, double[] v);
+        private delegate void vertexAttrib2f(uint index, float x, float y);
+        private delegate void vertexAttrib2fv(uint index, float[] v);
+        private delegate void vertexAttrib2s(uint index, short x, short y);
+        private delegate void vertexAttrib2sv(uint index, short[] v);
+        private delegate void vertexAttrib3d(uint index, double x, double y, double z);
+        private delegate void vertexAttrib3dv(uint index, double[] v);
+        private delegate void vertexAttrib3f(uint index, float x, float y, float z);
+        private delegate void vertexAttrib3fv(uint index, float[] v);
+        private delegate void vertexAttrib3S(uint index, short x, short y, short z);
+        private delegate void vertexAttrib3SV(uint index, short[] v);
+        private delegate void vertexAttrib4Nbv(uint index, sbyte[] v);
+        private delegate void vertexAttrib4Niv(uint index, int[] v);
+        private delegate void vertexAttrib4Nsv(uint index, short[] v);
+        private delegate void vertexAttrib4Nub(uint index, byte x, byte y, byte z, byte w);
+        private delegate void vertexAttrib4Nubv(uint index, byte[] v);
+        private delegate void vertexAttrib4Nuiv(uint index, uint[] v);
+        private delegate void vertexAttrib4Nusv(uint index, ushort[] v);
+        private delegate void vertexAttrib4bv(uint index, sbyte[] v);
+        private delegate void vertexAttrib4d(uint index, double x, double y, double z, double w);
+        private delegate void vertexAttrib4dv(uint index, double[] v);
+        private delegate void vertexAttrib4f(uint index, float x, float y, float z, float w);
+        private delegate void vertexAttrib4fv(uint index, float[] v);
+        private delegate void vertexAttrib4iv(uint index, int[] v);
+        private delegate void vertexAttrib4s(uint index, short x, short y, short z, short w);
+        private delegate void vertexAttrib4sv(uint index, short[] v);
+        private delegate void vertexAttrib4ubv(uint index, byte[] v);
+        private delegate void vertexAttrib4uiv(uint index, uint[] v);
+        private delegate void vertexAttrib4usv(uint index, ushort[] v);
+        private delegate void vertexAttribPointer(uint index, int size, uint type, byte normalized, int stride, IntPtr pointer);
+        public static void AttachShader(uint program, uint shader)
+        {
+            getDelegate<attachShader>("glAttachShader")(program, shader);
+        }
+        public static void BindAttribLocation(uint program, uint index, string name)
+        {
+            getDelegate<bindAttribLocation>("glBindAttribLocation")(program, index, name);
+        }
+        public static void BlendEquationSeparate(uint modeRGB, uint modeAlpha)
+        {
+            getDelegate<blendEquationSeparate>("glBlendEquationSeparate")(modeRGB, modeAlpha);
+        }
+        public static void CompileShader(uint shader)
+        {
+            getDelegate<compileShader>("glCompileShader")(shader);
+        }
+        public static uint CreateProgram()
+        {
+            return getDelegate<createProgram>("glCreateProgram")();
+        }
+        public static uint CreateShader(uint type)
+        {
+            return getDelegate<createShader>("glCreateShader")(type);
+        }
+        public static void DeleteProgram(uint program)
+        {
+            getDelegate<deleteProgram>("glDeleteProgram")(program);
+        }
+        public static void DeleteShader(uint shader)
+        {
+            getDelegate<deleteShader>("glDeleteShader")(shader);
+        }
+        public static void DetachShader(uint program, uint shader)
+        {
+            getDelegate<detachShader>("glDetachShader")(program, shader);
+        }
+        public static void DisableVertexAttribArray(uint index)
+        {
+            getDelegate<disableVertexAttribArray>("glDisableVertexAttribArray")(index);
+        }
+        public static void DrawBuffers(int n, uint[] bufs)
+        {
+            getDelegate<drawBuffers>("glDrawBuffers")(n, bufs);
+        }
+        public static void DrawBuffers(uint[] bufs)
+        {
+            DrawBuffers(bufs.Length, bufs);
+        }
+        public static void EnableVertexAttribArray(uint index)
+        {
+            getDelegate<enableVertexAttribArray>("glEnableVertexAttribArray")(index);
+        }
+        public static void GetActiveAttrib(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name)
+        {
+            getDelegate<getActiveAttrib>("glGetActiveAttrib")(program, index, maxLength, ref length, ref size, ref type, name.ToCharArray());
+        }
+        public static void GetActiveUniform(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name)
+        {
+            getDelegate<getActiveUniform>("glGetActiveUniform")(program, index, maxLength, ref length, ref size, ref type, name.ToCharArray());
+        }
+        public static void GetAttachedShaders(uint program, int maxCount, ref int count, uint[] shaders)
+        {
+            getDelegate<getAttachedShaders>("glGetAttachedShaders")(program, maxCount, ref count, shaders);
+        }
+        public static int GetAttribLocation(uint program, string name)
+        {
+            return getDelegate<getAttribLocation>("glGetAttribLocation")(program, name.ToCharArray());
+        }
+        public static void GetProgramInfoLog(uint program, int bufSize, ref int length, ref string infoLog)
+        {
+            getDelegate<getProgramInfoLog>("glGetProgramInfoLog")(program, bufSize, ref length, ref infoLog);
+        }
+        public static string GetProgramInfoLog(uint program)
+        {
+            int maxLen = GetProgrami(program, INFO_LOG_LENGTH);
+            string infoLog = new(new char[maxLen]);
+            int l = 0;
+            GetProgramInfoLog(program, maxLen, ref l, ref infoLog);
+            return infoLog;
+        }
+        public static void GetProgramiv(uint program, uint pname, int[] param)
+        {
+            getDelegate<getProgramiv>("glGetProgramiv")(program, pname, param);
+        }
+        public static int GetProgrami(uint program, uint pname)
+        {
+            int[] p = { 0 };
+            GetProgramiv(program, pname, p);
+            return p[0];
+        }
+        public static void GetShaderInfoLog(uint shader, int bufSize, ref int length, ref string infoLog)
+        {
+            getDelegate<getShaderInfoLog>("glGetShaderInfoLog")(shader, bufSize, ref length, ref infoLog);
+        }
+        public static string GetShaderInfoLog(uint shader)
+        {
+            int maxLen = GetShaderi(shader, INFO_LOG_LENGTH);
+            string infoLog = new(new char[maxLen]);
+            int l = 0;
+            GetShaderInfoLog(shader, maxLen, ref l, ref infoLog);
+            return infoLog;
+        }
+        public static void GetShaderSource(uint obj, int maxLength, ref int length, ref string source)
+        {
+            getDelegate<getShaderSource>("glGetShaderSource")(obj, maxLength, ref length, ref source);
+        }
+        public static void GetShaderiv(uint shader, uint pname, int[] param)
+        {
+            getDelegate<getShaderiv>("glGetShaderiv")(shader, pname, param);
+        }
+        public static int GetShaderi(uint shader, uint pname)
+        {
+            int[] p = { 0 };
+            GetShaderiv(shader, pname, p);
+            return p[0];
+        }
+        public static int GetUniformLocation(uint program, string name)
+        {
+            return getDelegate<getUniformLocation>("glGetUniformLocation")(program, name);
+        }
+        public static void GetUniformfv(uint program, int location, float[] @params)
+        {
+            getDelegate<getUniformfv>("glGetUniformfv")(program, location, @params);
+        }
+        public static void GetUniformiv(uint program, int location, int[] @params)
+        {
+            getDelegate<getUniformiv>("glGetUniformiv")(program, location, @params);
+        }
+        public static void GetVertexAttribPointerv(uint index, uint pname, IntPtr[] pointer)
+        {
+            getDelegate<getVertexAttribPointerv>("glGetVertexAttribPointerv")(index, pname, pointer);
+        }
+        public static void GetVertexAttribdv(uint index, uint pname, double[] @params)
+        {
+            getDelegate<getVertexAttribdv>("glGetVertexAttribdv")(index, pname, @params);
+        }
+        public static void GetVertexAttribfv(uint index, uint pname, float[] @params)
+        {
+            getDelegate<getVertexAttribfv>("glGetVertexAttribfv")(index, pname, @params);
+        }
+        public static void GetVertexAttribiv(uint index, uint pname, int[] @params)
+        {
+            getDelegate<getVertexAttribiv>("glGetVertexAttribiv")(index, pname, @params);
+        }
+        public static bool IsProgram(uint program)
+        {
+            return getDelegate<isProgram>("glIsProgram")(program) == TRUE;
+        }
+        public static bool IsShader(uint shader)
+        {
+            return getDelegate<isShader>("glIsShader")(shader) == TRUE;
+        }
+        public static void LinkProgram(uint program)
+        {
+            getDelegate<linkProgram>("glLinkProgram")(program);
+        }
+        public static void ShaderSource(uint shader, int count, string[] @string, int[] length)
+        {
+            getDelegate<shaderSource>("glShaderSource")(shader, count, @string, length);
+        }
+        public static void ShaderSource(uint shader, string source)
+        {
+            getDelegate<shaderSource>("glShaderSource")(
+                shader,
+                1,
+                new string[] { source },
+                new int[] { source.Length });
+        }
+        public static void StencilFuncSeparate(uint face, uint func, int @ref, uint mask)
+        {
+            getDelegate<stencilFuncSeparate>("glStencilFuncSeparate")(face, func, @ref, mask);
+        }
+        public static void StencilMaskSeparate(uint face, uint mask)
+        {
+            getDelegate<stencilMaskSeparate>("glStencilMaskSeparate")(face, mask);
+        }
+        public static void StencilOpSeparate(uint face, uint sfail, uint dpfail, uint dppass)
+        {
+            getDelegate<stencilOpSeparate>("glStencilOpSeparate")(face, sfail, dpfail, dppass);
+        }
+        public static void Uniform1f(int location, float v0)
+        {
+            getDelegate<uniform1f>("glUniform1f")(location, v0);
+        }
+        public static void Uniform1fv(int location, int count, float[] value)
+        {
+            getDelegate<uniform1fv>("glUniform1fv")(location, count, value);
+        }
+        public static void Uniform1i(int location, int v0)
+        {
+            getDelegate<uniform1i>("glUniform1i")(location, v0);
+        }
+        public static void Uniform1iv(int location, int count, int[] value)
+        {
+            getDelegate<uniform1iv>("glUniform1iv")(location, count, value);
+        }
+        public static void Uniform2f(int location, float v0, float v1)
+        {
+            getDelegate<uniform2f>("glUniform2f")(location, v0, v1);
+        }
+        public static void Uniform2fv(int location, int count, float[] value)
+        {
+            getDelegate<uniform2fv>("glUniform2fv")(location, count, value);
+        }
+        public static void Uniform2i(int location, int v0, int v1)
+        {
+            getDelegate<uniform2i>("glUniform2i")(location, v0, v1);
+        }
+        public static void Uniform2iv(int location, int count, int[] value)
+        {
+            getDelegate<uniform2iv>("glUniform2iv")(location, count, value);
+        }
+        public static void Uniform3f(int location, float v0, float v1, float v2)
+        {
+            getDelegate<uniform3f>("glUniform3f")(location, v0, v1, v2);
+        }
+        public static void Uniform3fv(int location, int count, float[] value)
+        {
+            getDelegate<uniform3fv>("glUniform3fv")(location, count, value);
+        }
+        public static void Uniform3i(int location, int v0, int v1, int v2)
+        {
+            getDelegate<uniform3i>("glUniform3i")(location, v0, v1, v2);
+        }
+        public static void Uniform3iv(int location, int count, int[] value)
+        {
+            getDelegate<uniform3iv>("glUniform3iv")(location, count, value);
+        }
+        public static void Uniform4f(int location, float v0, float v1, float v2, float v3)
+        {
+            getDelegate<uniform4f>("glUniform4f")(location, v0, v1, v2, v3);
+        }
+        public static void Uniform4fv(int location, int count, float[] value)
+        {
+            getDelegate<uniform4fv>("glUniform4fv")(location, count, value);
+        }
+        public static void Uniform4i(int location, int v0, int v1, int v2, int v3)
+        {
+            getDelegate<uniform4i>("glUniform4i")(location, v0, v1, v2, v3);
+        }
+        public static void Uniform4iv(int location, int count, int[] value)
+        {
+            getDelegate<uniform4iv>("glUniform4iv")(location, count, value);
+        }
+        public static void UniformMatrix2fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix2fv>("glUniformMatrix2fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix3fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix3fv>("glUniformMatrix3fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix4fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix4fv>("glUniformMatrix4fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UseProgram(uint program)
+        {
+            getDelegate<useProgram>("glUseProgram")(program);
+        }
+        public static void ValidateProgram(uint program)
+        {
+            getDelegate<validateProgram>("glValidateProgram")(program);
+        }
+        public static void VertexAttrib1d(uint index, double x)
+        {
+            getDelegate<vertexAttrib1d>("glVertexAttrib1d")(index, x);
+        }
+        public static void VertexAttrib1dv(uint index, double[] v)
+        {
+            getDelegate<vertexAttrib1dv>("glVertexAttrib1dv")(index, v);
+        }
+        public static void VertexAttrib1f(uint index, float x)
+        {
+            getDelegate<vertexAttrib1f>("glVertexAttrib1f")(index, x);
+        }
+        public static void VertexAttrib1fv(uint index, float[] v)
+        {
+            getDelegate<vertexAttrib1fv>("glVertexAttrib1fv")(index, v);
+        }
+        public static void VertexAttrib1s(uint index, short x)
+        {
+            getDelegate<vertexAttrib1s>("glVertexAttrib1s")(index, x);
+        }
+        public static void VertexAttrib1sv(uint index, short[] v)
+        {
+            getDelegate<vertexAttrib1sv>("glVertexAttrib1sv")(index, v);
+        }
+        public static void VertexAttrib2d(uint index, double x, double y)
+        {
+            getDelegate<vertexAttrib2d>("glVertexAttrib2d")(index, x, y);
+        }
+        public static void VertexAttrib2dv(uint index, double[] v)
+        {
+            getDelegate<vertexAttrib2dv>("glVertexAttrib2dv")(index, v);
+        }
+        public static void VertexAttrib2f(uint index, float x, float y)
+        {
+            getDelegate<vertexAttrib2f>("glVertexAttrib2f")(index, x, y);
+        }
+        public static void VertexAttrib2fv(uint index, float[] v)
+        {
+            getDelegate<vertexAttrib2fv>("glVertexAttrib2fv")(index, v);
+        }
+        public static void VertexAttrib2s(uint index, short x, short y)
+        {
+            getDelegate<vertexAttrib2s>("glVertexAttrib2s")(index, x, y);
+        }
+        public static void VertexAttrib2sv(uint index, short[] v)
+        {
+            getDelegate<vertexAttrib2sv>("glVertexAttrib2sv")(index, v);
+        }
+        public static void VertexAttrib3d(uint index, double x, double y, double z)
+        {
+            getDelegate<vertexAttrib3d>("glVertexAttrib3d")(index, x, y, z);
+        }
+        public static void VertexAttrib3dv(uint index, double[] v)
+        {
+            getDelegate<vertexAttrib3dv>("glVertexAttrib3dv")(index, v);
+        }
+        public static void VertexAttrib3f(uint index, float x, float y, float z)
+        {
+            getDelegate<vertexAttrib3f>("glVertexAttrib3f")(index, x, y, z);
+        }
+        public static void VertexAttrib3fv(uint index, float[] v)
+        {
+            getDelegate<vertexAttrib3fv>("glVertexAttrib3fv")(index, v);
+        }
+        public static void VertexAttrib3S(uint index, short x, short y, short z)
+        {
+            getDelegate<vertexAttrib3S>("glVertexAttrib3S")(index, x, y, z);
+        }
+        public static void VertexAttrib3SV(uint index, short[] v)
+        {
+            getDelegate<vertexAttrib3SV>("glVertexAttrib3SV")(index, v);
+        }
+        public static void VertexAttrib4Nbv(uint index, sbyte[] v)
+        {
+            getDelegate<vertexAttrib4Nbv>("glVertexAttrib4Nbv")(index, v);
+        }
+        public static void VertexAttrib4Niv(uint index, int[] v)
+        {
+            getDelegate<vertexAttrib4Niv>("glVertexAttrib4Niv")(index, v);
+        }
+        public static void VertexAttrib4Nsv(uint index, short[] v)
+        {
+            getDelegate<vertexAttrib4Nsv>("glVertexAttrib4Nsv")(index, v);
+        }
+        public static void VertexAttrib4Nub(uint index, byte x, byte y, byte z, byte w)
+        {
+            getDelegate<vertexAttrib4Nub>("glVertexAttrib4Nub")(index, x, y, z, w);
+        }
+        public static void VertexAttrib4Nubv(uint index, byte[] v)
+        {
+            getDelegate<vertexAttrib4Nubv>("glVertexAttrib4Nubv")(index, v);
+        }
+        public static void VertexAttrib4Nuiv(uint index, uint[] v)
+        {
+            getDelegate<vertexAttrib4Nuiv>("glVertexAttrib4Nuiv")(index, v);
+        }
+        public static void VertexAttrib4Nusv(uint index, ushort[] v)
+        {
+            getDelegate<vertexAttrib4Nusv>("glVertexAttrib4Nusv")(index, v);
+        }
+        public static void VertexAttrib4bv(uint index, sbyte[] v)
+        {
+            getDelegate<vertexAttrib4bv>("glVertexAttrib4bv")(index, v);
+        }
+        public static void VertexAttrib4d(uint index, double x, double y, double z, double w)
+        {
+            getDelegate<vertexAttrib4d>("glVertexAttrib4d")(index, x, y, z, w);
+        }
+        public static void VertexAttrib4dv(uint index, double[] v)
+        {
+            getDelegate<vertexAttrib4dv>("glVertexAttrib4dv")(index, v);
+        }
+        public static void VertexAttrib4f(uint index, float x, float y, float z, float w)
+        {
+            getDelegate<vertexAttrib4f>("glVertexAttrib4f")(index, x, y, z, w);
+        }
+        public static void VertexAttrib4fv(uint index, float[] v)
+        {
+            getDelegate<vertexAttrib4fv>("glVertexAttrib4fv")(index, v);
+        }
+        public static void VertexAttrib4iv(uint index, int[] v)
+        {
+            getDelegate<vertexAttrib4iv>("glVertexAttrib4iv")(index, v);
+        }
+        public static void VertexAttrib4s(uint index, short x, short y, short z, short w)
+        {
+            getDelegate<vertexAttrib4s>("glVertexAttrib4s")(index, x, y, z, w);
+        }
+        public static void VertexAttrib4sv(uint index, short[] v)
+        {
+            getDelegate<vertexAttrib4sv>("glVertexAttrib4sv")(index, v);
+        }
+        public static void VertexAttrib4ubv(uint index, byte[] v)
+        {
+            getDelegate<vertexAttrib4ubv>("glVertexAttrib4ubv")(index, v);
+        }
+        public static void VertexAttrib4uiv(uint index, uint[] v)
+        {
+            getDelegate<vertexAttrib4uiv>("glVertexAttrib4uiv")(index, v);
+        }
+        public static void VertexAttrib4usv(uint index, ushort[] v)
+        {
+            getDelegate<vertexAttrib4usv>("glVertexAttrib4usv")(index, v);
+        }
+        public static void VertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer)
+        {
+            getDelegate<vertexAttribPointer>("glVertexAttribPointer")(index, size, type, normalized ? TRUE : FALSE, stride, pointer);
+        }
+
+        #endregion // GL20
+        #region GL21
+
+        private delegate void uniformMatrix2x3fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix2x4fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix3x2fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix3x4fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix4x2fv(int location, int count, byte transpose, float[] value);
+        private delegate void uniformMatrix4x3fv(int location, int count, byte transpose, float[] value);
+        public static void UniformMatrix2x3fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix2x3fv>("glUniformMatrix2x3fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix2x4fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix2x4fv>("glUniformMatrix2x4fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix3x2fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix3x2fv>("glUniformMatrix3x2fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix3x4fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix3x4fv>("glUniformMatrix3x4fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix4x2fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix4x2fv>("glUniformMatrix4x2fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+        public static void UniformMatrix4x3fv(int location, int count, bool transpose, float[] value)
+        {
+            getDelegate<uniformMatrix4x3fv>("glUniformMatrix4x3fv")(location, count, transpose ? TRUE : FALSE, value);
+        }
+
+        #endregion // GL21
     }
 }

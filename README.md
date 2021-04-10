@@ -4,7 +4,7 @@ OpenGL bindings for C#. ![Nuget](https://img.shields.io/nuget/v/GLCs) ![Nuget (w
 
 Now include:
 - [GLFW](https://www.glfw.org/) 3.3.4
-- OpenGL 1.5
+- OpenGL 2.1
 
 ## How to Use
 
@@ -12,13 +12,13 @@ Now include:
    ```
    dotnet add package GLCs
    ```
-2. Use it just like `GLCs_test`.
+2. Use it just like [GLCs_test](GLCs_test).
 
 **Note**: Required `glfw3.dll` and `opengl32.dll`.
 
 The all classes are under `GLCs` namespace.
 
-The `GL` class includes all functions (1.5) in `glew.h`.
+The `GL` class includes all functions (2.1) in `glew.h`.
 
 ### The `GLFW` class
 
@@ -64,8 +64,6 @@ void othermethod()
 
 | Time       | Support to OpenGL... |
 | ---------- | -------------------- |
-| 2021-04-10 | 2.0                  |
-| 2021-05-01 | 2.1                  |
 | 2021-05-22 | 3.0 & 3.1            |
 | 2020-06-12 | 3.2                  |
 | 2020-07-03 | 3.3 & 4.0            |
