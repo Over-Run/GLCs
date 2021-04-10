@@ -10,7 +10,7 @@ namespace GLCs
 
         public const int VERSION_MAJOR        =         3,
             VERSION_MINOR                     =         3,
-            VERSION_REVISION                  =         2;
+            VERSION_REVISION                  =         4;
         public const int TRUE                 =         1,
             FALSE                             =         0;
         public const int RELEASE              =         0,

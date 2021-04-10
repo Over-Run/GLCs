@@ -5,7 +5,13 @@ namespace GLCs
 {
     public static class GL
     {
-        public const int VERSION_MAJOR = 1, VERSION_MINOR = 2;
+        public const int VERSION_MAJOR = 1, VERSION_MINOR = 5;
+        [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
+        private static extern IntPtr wglGetProcAddress(string lpszProc);
+        private static T getDelegate<T>(string lpszProc)
+        {
+            return Marshal.GetDelegateForFunctionPointer<T>(wglGetProcAddress(lpszProc));
+        }
         #region Constants
 
         public const uint VERSION_1_1 = 1;
@@ -5992,6 +5998,7 @@ namespace GLCs
         public const uint WIN_swap_hint = 1;
 
         #endregion // Constants
+        #region GL11
 
         [DllImport("opengl32.dll", EntryPoint = "glAccum", CallingConvention = CallingConvention.StdCall)]
         public static extern void Accum(uint op, float value);
@@ -6115,7 +6122,7 @@ namespace GLCs
         public static extern void DeleteTextures(int n, uint[] textures);
         public static void DeleteTexture(uint texture)
         {
-            DeleteTextures(1, new uint[]{texture});
+            DeleteTextures(1, new uint[] { texture });
         }
         [DllImport("opengl32.dll", EntryPoint = "glDepthFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthFunc(uint func);
@@ -6197,7 +6204,7 @@ namespace GLCs
         public static extern void GenTextures(int n, uint[] textures);
         public static uint GenTexture()
         {
-            uint[] tex = {0};
+            uint[] tex = { 0 };
             GenTextures(1, tex);
             return tex[0];
         }
@@ -6675,12 +6682,10 @@ namespace GLCs
         public static extern void VertexPointer(int size, uint type, int stride, IntPtr pointer);
         [DllImport("opengl32.dll", EntryPoint = "glViewport", CallingConvention = CallingConvention.StdCall)]
         public static extern void Viewport(int x, int y, int width, int height);
-        [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
-        private static extern IntPtr wglGetProcAddress(string lpszProc);
-        private static T getDelegate<T>(string lpszProc)
-        {
-            return Marshal.GetDelegateForFunctionPointer<T>(wglGetProcAddress(lpszProc));
-        }
+
+        #endregion // GL11
+        #region GL12
+
         private delegate void copyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
         private delegate void drawRangeElements(uint mode, uint start, uint end, int count, uint type, IntPtr indices);
         private delegate void texImage3D(uint target, int level, int internalFormat, int width, int height, int depth, int border, uint format, uint type, IntPtr pixels);
@@ -6701,5 +6706,583 @@ namespace GLCs
         {
             getDelegate<texSubImage3D>("glTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
         }
+
+        #endregion // GL12
+        #region GL13
+
+        private delegate void activeTexture(uint texture);
+        private delegate void clientActiveTexture(uint texture);
+        private delegate void compressedTexImage1D(uint target, int level, uint internalformat, int width, int border, int imageSize, IntPtr data);
+        private delegate void compressedTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, int imageSize, IntPtr data);
+        private delegate void compressedTexImage3D(uint target, int level, uint internalformat, int width, int height, int depth, int border, int imageSize, IntPtr data);
+        private delegate void compressedTexSubImage1D(uint target, int level, int xoffset, int width, uint format, int imageSize, IntPtr data);
+        private delegate void compressedTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data);
+        private delegate void compressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data);
+        private delegate void getCompressedTexImage(uint target, int lod, IntPtr img);
+        private delegate void loadTransposeMatrixd(double[] m);
+        private delegate void loadTransposeMatrixf(float[] m);
+        private delegate void multTransposeMatrixd(double[] m);
+        private delegate void multTransposeMatrixf(float[] m);
+        private delegate void multiTexCoord1d(uint target, double s);
+        private delegate void multiTexCoord1dv(uint target, double[] v);
+        private delegate void multiTexCoord1f(uint target, float s);
+        private delegate void multiTexCoord1fv(uint target, float[] v);
+        private delegate void multiTexCoord1i(uint target, int s);
+        private delegate void multiTexCoord1iv(uint target, int[] v);
+        private delegate void multiTexCoord1s(uint target, short s);
+        private delegate void multiTexCoord1sv(uint target, short[] v);
+        private delegate void multiTexCoord2d(uint target, double s, double t);
+        private delegate void multiTexCoord2dv(uint target, double[] v);
+        private delegate void multiTexCoord2f(uint target, float s, float t);
+        private delegate void multiTexCoord2fv(uint target, float[] v);
+        private delegate void multiTexCoord2i(uint target, int s, int t);
+        private delegate void multiTexCoord2iv(uint target, int[] v);
+        private delegate void multiTexCoord2s(uint target, short s, short t);
+        private delegate void multiTexCoord2sv(uint target, short[] v);
+        private delegate void multiTexCoord3d(uint target, double s, double t, double r);
+        private delegate void multiTexCoord3dv(uint target, double[] v);
+        private delegate void multiTexCoord3f(uint target, float s, float t, float r);
+        private delegate void multiTexCoord3fv(uint target, float[] v);
+        private delegate void multiTexCoord3i(uint target, int s, int t, int r);
+        private delegate void multiTexCoord3iv(uint target, int[] v);
+        private delegate void multiTexCoord3s(uint target, short s, short t, short r);
+        private delegate void multiTexCoord3sv(uint target, short[] v);
+        private delegate void multiTexCoord4d(uint target, double s, double t, double r, double q);
+        private delegate void multiTexCoord4dv(uint target, double[] v);
+        private delegate void multiTexCoord4f(uint target, float s, float t, float r, float q);
+        private delegate void multiTexCoord4fv(uint target, float[]v);
+        private delegate void multiTexCoord4i(uint target, int s, int t, int r, int q);
+        private delegate void multiTexCoord4iv(uint target, int[] v);
+        private delegate void multiTexCoord4s(uint target, short s, short t, short r, short q);
+        private delegate void multiTexCoord4sv(uint target, short[] v);
+        private delegate void sampleCoverage(float value, byte invert);
+        public static void ActiveTexture(uint texture)
+        {
+            getDelegate<activeTexture>("glActiveTexture")(texture);
+        }
+        public static void ClientActiveTexture(uint texture)
+        {
+            getDelegate<clientActiveTexture>("glClientActiveTexture")(texture);
+        }
+        public static void CompressedTexImage1D(uint target, int level, uint internalformat, int width, int border, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexImage1D>("glCompressedTexImage1D")(target, level, internalformat, width, border, imageSize, data);
+        }
+        public static void CompressedTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexImage2D>("glCompressedTexImage2D")(target, level, internalformat, width, height, border, imageSize, data);
+        }
+        public static void CompressedTexImage3D(uint target, int level, uint internalformat, int width, int height, int depth, int border, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexImage3D>("glCompressedTexImage3D")(target, level, internalformat, width, height, depth, border, imageSize, data);
+        }
+        public static void CompressedTexSubImage1D(uint target, int level, int xoffset, int width, uint format, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexSubImage1D>("glCompressedTexSubImage1D")(target, level, xoffset, width, format, imageSize, data);
+        }
+        public static void CompressedTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexSubImage2D>("glCompressedTexSubImage2D")(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+        }
+        public static void CompressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data)
+        {
+            getDelegate<compressedTexSubImage3D>("glCompressedTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth,  format, imageSize, data);
+        }
+        public static void GetCompressedTexImage(uint target, int lod, IntPtr img)
+        {
+            getDelegate<getCompressedTexImage>("glGetCompressedTexImage")(target, lod, img);
+        }
+        public static void LoadTransposeMatrixd(double[] m)
+        {
+            getDelegate<loadTransposeMatrixd>("glLoadTransposeMatrixd")(m);
+        }
+        public static void LoadTransposeMatrixf(float[] m)
+        {
+            getDelegate<loadTransposeMatrixf>("glLoadTransposeMatrixf")(m);
+        }
+        public static void MultTransposeMatrixd(double[] m)
+        {
+            getDelegate<multTransposeMatrixd>("glMultTransposeMatrixd")(m);
+        }
+        public static void MultTransposeMatrixf(float[] m)
+        {
+            getDelegate<multTransposeMatrixf>("glMultTransposeMatrixf")(m);
+        }
+        public static void MultiTexCoord1d(uint target, double s)
+        {
+            getDelegate<multiTexCoord1d>("glMultiTexCoord1d")(target, s);
+        }
+        public static void MultiTexCoord1dv(uint target, double[] v)
+        {
+            getDelegate<multiTexCoord1dv>("glMultiTexCoord1dv")(target, v);
+        }
+        public static void MultiTexCoord1f(uint target, float s)
+        {
+            getDelegate<multiTexCoord1f>("glMultiTexCoord1f")(target, s);
+        }
+        public static void MultiTexCoord1fv(uint target, float[] v)
+        {
+            getDelegate<multiTexCoord1fv>("glMultiTexCoord1fv")(target, v);
+        }
+        public static void MultiTexCoord1i(uint target, int s)
+        {
+            getDelegate<multiTexCoord1i>("glMultiTexCoord1i")(target, s);
+        }
+        public static void MultiTexCoord1iv(uint target, int[] v)
+        {
+            getDelegate<multiTexCoord1iv>("glMultiTexCoord1iv")(target, v);
+        }
+        public static void MultiTexCoord1s(uint target, short s)
+        {
+            getDelegate<multiTexCoord1s>("glMultiTexCoord1s")(target, s);
+        }
+        public static void MultiTexCoord1sv(uint target, short[] v)
+        {
+            getDelegate<multiTexCoord1sv>("glMultiTexCoord1sv")(target, v);
+        }
+        public static void MultiTexCoord2d(uint target, double s, double t)
+        {
+            getDelegate<multiTexCoord2d>("glMultiTexCoord2d")(target, s, t);
+        }
+        public static void MultiTexCoord2dv(uint target, double[] v)
+        {
+            getDelegate<multiTexCoord2dv>("glMultiTexCoord2dv")(target, v);
+        }
+        public static void MultiTexCoord2f(uint target, float s, float t)
+        {
+            getDelegate<multiTexCoord2f>("glMultiTexCoord2f")(target, s, t);
+        }
+        public static void MultiTexCoord2fv(uint target, float[] v)
+        {
+            getDelegate<multiTexCoord2fv>("glMultiTexCoord2fv")(target, v);
+        }
+        public static void MultiTexCoord2i(uint target, int s, int t)
+        {
+            getDelegate<multiTexCoord2i>("glMultiTexCoord2i")(target, s, t);
+        }
+        public static void MultiTexCoord2iv(uint target, int[] v)
+        {
+            getDelegate<multiTexCoord2iv>("glMultiTexCoord2iv")(target, v);
+        }
+        public static void MultiTexCoord2s(uint target, short s, short t)
+        {
+            getDelegate<multiTexCoord2s>("glMultiTexCoord2s")(target, s, t);
+        }
+        public static void MultiTexCoord2sv(uint target, short[] v)
+        {
+            getDelegate<multiTexCoord2sv>("glMultiTexCoord2sv")(target, v);
+        }
+        public static void MultiTexCoord3d(uint target, double s, double t, double r)
+        {
+            getDelegate<multiTexCoord3d>("glMultiTexCoord3d")(target, s, t, r);
+        }
+        public static void MultiTexCoord3dv(uint target, double[] v)
+        {
+            getDelegate<multiTexCoord3dv>("glMultiTexCoord3dv")(target, v);
+        }
+        public static void MultiTexCoord3f(uint target, float s, float t, float r)
+        {
+            getDelegate<multiTexCoord3f>("glMultiTexCoord3f")(target, s, t, r);
+        }
+        public static void MultiTexCoord3fv(uint target, float[] v)
+        {
+            getDelegate<multiTexCoord3fv>("glMultiTexCoord3fv")(target, v);
+        }
+        public static void MultiTexCoord3i(uint target, int s, int t, int r)
+        {
+            getDelegate<multiTexCoord3i>("glMultiTexCoord3i")(target, s, t, r);
+        }
+        public static void MultiTexCoord3iv(uint target, int[] v)
+        {
+            getDelegate<multiTexCoord3iv>("glMultiTexCoord3iv")(target, v);
+        }
+        public static void MultiTexCoord3s(uint target, short s, short t, short r)
+        {
+            getDelegate<multiTexCoord3s>("glMultiTexCoord3s")(target, s, t, r);
+        }
+        public static void MultiTexCoord3sv(uint target, short[] v)
+        {
+            getDelegate<multiTexCoord3sv>("glMultiTexCoord3sv")(target, v);
+        }
+        public static void MultiTexCoord4d(uint target, double s, double t, double r, double q)
+        {
+            getDelegate<multiTexCoord4d>("glMultiTexCoord4d")(target, s, t, r, q);
+        }
+        public static void MultiTexCoord4dv(uint target, double[] v)
+        {
+            getDelegate<multiTexCoord4dv>("glMultiTexCoord4dv")(target, v);
+        }
+        public static void MultiTexCoord4f(uint target, float s, float t, float r, float q)
+        {
+            getDelegate<multiTexCoord4f>("glMultiTexCoord4f")(target, s, t, r, q);
+        }
+        public static void MultiTexCoord4fv(uint target, float[] v)
+        {
+            getDelegate<multiTexCoord4fv>("glMultiTexCoord4fv")(target, v);
+        }
+        public static void MultiTexCoord4i(uint target, int s, int t, int r, int q)
+        {
+            getDelegate<multiTexCoord4i>("glMultiTexCoord4i")(target, s, t, r, q);
+        }
+        public static void MultiTexCoord4iv(uint target, int[] v)
+        {
+            getDelegate<multiTexCoord4iv>("glMultiTexCoord4iv")(target, v);
+        }
+        public static void MultiTexCoord4s(uint target, short s, short t, short r, short q)
+        {
+            getDelegate<multiTexCoord4s>("glMultiTexCoord4s")(target, s, t, r, q);
+        }
+        public static void MultiTexCoord4sv(uint target, short[] v)
+        {
+            getDelegate<multiTexCoord4sv>("glMultiTexCoord4sv")(target, v);
+        }
+        public static void SampleCoverage(float value, byte invert)
+        {
+            getDelegate<sampleCoverage>("glSampleCoverage")(value, invert);
+        }
+        public static void SampleCoverage(float value, bool invert)
+        {
+            SampleCoverage(value, invert ? TRUE : FALSE);
+        }
+
+        #endregion // GL13
+        #region GL14
+
+        private delegate void blendColor(float red, float green, float blue, float alpha);
+        private delegate void blendEquation(uint mode);
+        private delegate void blendFuncSeparate(uint sfactorRGB, uint dfactorRGB, uint sfactorAlpha, uint dfactorAlpha);
+        private delegate void fogCoordPointer(uint type, int stride, IntPtr pointer);
+        private delegate void fogCoordd(double coord);
+        private delegate void fogCoorddv(double[] coord);
+        private delegate void fogCoordf(float coord);
+        private delegate void fogCoordfv(float[] coord);
+        private delegate void multiDrawArrays(uint mode, int[] first, int[] count, int drawcount);
+        private delegate void multiDrawElements(uint mode, int[] count, uint type, IntPtr[] indices, int drawcount);
+        private delegate void pointParameterf(uint pname, float param);
+        private delegate void pointParameterfv(uint pname, float[] @params);
+        private delegate void pointParameteri(uint pname, int param);
+        private delegate void pointParameteriv(uint pname, int[] @params);
+        private delegate void secondaryColor3b(sbyte red, sbyte green, sbyte blue);
+        private delegate void secondaryColor3bv(sbyte[] v);
+        private delegate void secondaryColor3d(double red, double green, double blue);
+        private delegate void secondaryColor3dv(double[] v);
+        private delegate void secondaryColor3f(float red, float green, float blue);
+        private delegate void secondaryColor3fv(float[] v);
+        private delegate void secondaryColor3i(int red, int green, int blue);
+        private delegate void secondaryColor3iv(int[] v);
+        private delegate void secondaryColor3s(short red, short green, short blue);
+        private delegate void secondaryColor3sv(short[] v);
+        private delegate void secondaryColor3ub(byte red, byte green, byte blue);
+        private delegate void secondaryColor3ubv(byte[] v);
+        private delegate void secondaryColor3ui(uint red, uint green, uint blue);
+        private delegate void secondaryColor3uiv(uint[] v);
+        private delegate void secondaryColor3us(ushort red, ushort green, ushort blue);
+        private delegate void secondaryColor3usv(ushort[] v);
+        private delegate void secondaryColorPointer(int size, uint type, int stride, IntPtr pointer);
+        private delegate void windowPos2d(double x, double y);
+        private delegate void windowPos2dv(double[] p);
+        private delegate void windowPos2f(float x, float y);
+        private delegate void windowPos2fv(float[] p);
+        private delegate void windowPos2i(int x, int y);
+        private delegate void windowPos2iv(int[] p);
+        private delegate void windowPos2s(short x, short y);
+        private delegate void windowPos2sv(short[] p);
+        private delegate void windowPos3d(double x, double y, double z);
+        private delegate void windowPos3dv(double[] p);
+        private delegate void windowPos3f(float x, float y, float z);
+        private delegate void windowPos3fv(float[] p);
+        private delegate void windowPos3i(int x, int y, int z);
+        private delegate void windowPos3iv(int[] p);
+        private delegate void windowPos3s(short x, short y, short z);
+        private delegate void windowPos3sv(short[] p);
+        public static void BlendColor(float red, float green, float blue, float alpha)
+        {
+            getDelegate<blendColor>("glBlendColor")(red, green, blue, alpha);
+        }
+        public static void BlendEquation(uint mode)
+        {
+            getDelegate<blendEquation>("glBlendEquation")(mode);
+        }
+        public static void BlendFuncSeparate(uint sfactorRGB, uint dfactorRGB, uint sfactorAlpha, uint dfactorAlpha)
+        {
+            getDelegate<blendFuncSeparate>("glBlendFuncSeparate")(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+        }
+        public static void FogCoordPointer(uint type, int stride, IntPtr pointer)
+        {
+            getDelegate<fogCoordPointer>("glFogCoordPointer")(type, stride, pointer);
+        }
+        public static void FogCoordd(double coord)
+        {
+            getDelegate<fogCoordd>("glFogCoordd")(coord);
+        }
+        public static void FogCoorddv(double[] coord)
+        {
+            getDelegate<fogCoorddv>("glFogCoorddv")(coord);
+        }
+        public static void FogCoordf(float coord)
+        {
+            getDelegate<fogCoordf>("glFogCoordf")(coord);
+        }
+        public static void FogCoordfv(float[] coord)
+        {
+            getDelegate<fogCoordfv>("glFogCoordfv")(coord);
+        }
+        public static void MultiDrawArrays(uint mode, int[] first, int[] count, int drawcount)
+        {
+            getDelegate<multiDrawArrays>("glMultiDrawArrays")(mode, first, count, drawcount);
+        }
+        public static void MultiDrawElements(uint mode, int[] count, uint type, IntPtr[] indices, int drawcount)
+        {
+            getDelegate<multiDrawElements>("glMultiDrawElements")(mode, count, type, indices, drawcount);
+        }
+        public static void PointParameterf(uint pname, float param)
+        {
+            getDelegate<pointParameterf>("glPointParameterf")(pname, param);
+        }
+        public static void PointParameterfv(uint pname, float[] @params)
+        {
+            getDelegate<pointParameterfv>("glPointParameterfv")(pname, @params);
+        }
+        public static void PointParameteri(uint pname, int param)
+        {
+            getDelegate<pointParameteri>("glPointParameteri")(pname, param);
+        }
+        public static void PointParameteriv(uint pname, int[] @params)
+        {
+            getDelegate<pointParameteriv>("glPointParameteriv")(pname, @params);
+        }
+        public static void SecondaryColor3b(sbyte red, sbyte green, sbyte blue)
+        {
+            getDelegate<secondaryColor3b>("glSecondaryColor3b")(red, green, blue);
+        }
+        public static void SecondaryColor3bv(sbyte[] v)
+        {
+            getDelegate<secondaryColor3bv>("glSecondaryColor3bv")(v);
+        }
+        public static void SecondaryColor3d(double red, double green, double blue)
+        {
+            getDelegate<secondaryColor3d>("glSecondaryColor3d")(red, green, blue);
+        }
+        public static void SecondaryColor3dv(double[] v)
+        {
+            getDelegate<secondaryColor3dv>("glSecondaryColor3dv")(v);
+        }
+        public static void SecondaryColor3f(float red, float green, float blue)
+        {
+            getDelegate<secondaryColor3f>("glSecondaryColor3f")(red, green, blue);
+        }
+        public static void SecondaryColor3fv(float[] v)
+        {
+            getDelegate<secondaryColor3fv>("glSecondaryColor3fv")(v);
+        }
+        public static void SecondaryColor3i(int red, int green, int blue)
+        {
+            getDelegate<secondaryColor3i>("glSecondaryColor3i")(red, green, blue);
+        }
+        public static void SecondaryColor3iv(int[] v)
+        {
+            getDelegate<secondaryColor3iv>("glSecondaryColor3iv")(v);
+        }
+        public static void SecondaryColor3s(short red, short green, short blue)
+        {
+            getDelegate<secondaryColor3s>("glSecondaryColor3s")(red, green, blue);
+        }
+        public static void SecondaryColor3sv(short[] v)
+        {
+            getDelegate<secondaryColor3sv>("glSecondaryColor3sv")(v);
+        }
+        public static void SecondaryColor3ub(byte red, byte green, byte blue)
+        {
+            getDelegate<secondaryColor3ub>("glSecondaryColor3ub")(red, green, blue);
+        }
+        public static void SecondaryColor3ubv(byte[] v)
+        {
+            getDelegate<secondaryColor3ubv>("glSecondaryColor3ubv")(v);
+        }
+        public static void SecondaryColor3ui(uint red, uint green, uint blue)
+        {
+            getDelegate<secondaryColor3ui>("glSecondaryColor3ui")(red, green, blue);
+        }
+        public static void SecondaryColor3uiv(uint[] v)
+        {
+            getDelegate<secondaryColor3uiv>("glSecondaryColor3uiv")(v);
+        }
+        public static void SecondaryColor3us(ushort red, ushort green, ushort blue)
+        {
+            getDelegate<secondaryColor3us>("glSecondaryColor3us")(red, green, blue);
+        }
+        public static void SecondaryColor3usv(ushort[] v)
+        {
+            getDelegate<secondaryColor3usv>("glSecondaryColor3usv")(v);
+        }
+        public static void SecondaryColorPointer(int size, uint type, int stride, IntPtr pointer)
+        {
+            getDelegate<secondaryColorPointer>("glSecondaryColorPointer")(size, type, stride, pointer);
+        }
+        public static void WindowPos2d(double x, double y)
+        {
+            getDelegate<windowPos2d>("glWindowPos2d")(x, y);
+        }
+        public static void WindowPos2dv(double[] p)
+        {
+            getDelegate<windowPos2dv>("glWindowPos2dv")(p);
+        }
+        public static void WindowPos2f(float x, float y)
+        {
+            getDelegate<windowPos2f>("glWindowPos2f")(x, y);
+        }
+        public static void WindowPos2fv(float[] p)
+        {
+            getDelegate<windowPos2fv>("glWindowPos2fv")(p);
+        }
+        public static void WindowPos2i(int x, int y)
+        {
+            getDelegate<windowPos2i>("glWindowPos2i")(x, y);
+        }
+        public static void WindowPos2iv(int[] p)
+        {
+            getDelegate<windowPos2iv>("glWindowPos2iv")(p);
+        }
+        public static void WindowPos2s(short x, short y)
+        {
+            getDelegate<windowPos2s>("glWindowPos2s")(x, y);
+        }
+        public static void WindowPos2sv(short[] p)
+        {
+            getDelegate<windowPos2sv>("glWindowPos2sv")(p);
+        }
+        public static void WindowPos3d(double x, double y, double z)
+        {
+            getDelegate<windowPos3d>("glWindowPos3d")(x, y, z);
+        }
+        public static void WindowPos3dv(double[] p)
+        {
+            getDelegate<windowPos3dv>("glWindowPos3dv")(p);
+        }
+        public static void WindowPos3f(float x, float y, float z)
+        {
+            getDelegate<windowPos3f>("glWindowPos3f")(x, y, z);
+        }
+        public static void WindowPos3fv(float[] p)
+        {
+            getDelegate<windowPos3fv>("glWindowPos3fv")(p);
+        }
+        public static void WindowPos3i(int x, int y, int z)
+        {
+            getDelegate<windowPos3i>("glWindowPos3i")(x, y, z);
+        }
+        public static void WindowPos3iv(int[] p)
+        {
+            getDelegate<windowPos3iv>("glWindowPos3iv")(p);
+        }
+        public static void WindowPos3s(short x, short y, short z)
+        {
+            getDelegate<windowPos3s>("glWindowPos3s")(x, y, z);
+        }
+        public static void WindowPos3sv(short[] p)
+        {
+            getDelegate<windowPos3sv>("glWindowPos3sv")(p);
+        }
+
+        #endregion // GL14
+        #region GL15
+
+        private delegate void beginQuery(uint target, uint id);
+        private delegate void bindBuffer(uint target, uint buffer);
+        private delegate void bufferData(uint target, long size, IntPtr data, uint usage);
+        private delegate void bufferSubData(uint target, long offset, long size, IntPtr data);
+        private delegate void deleteBuffers(int n, uint[] buffers);
+        private delegate void deleteQueries(int n, uint[] ids);
+        private delegate void endQuery(uint target);
+        private delegate void genBuffers(int n, uint[] buffers);
+        private delegate void genQueries(int n, uint[] ids);
+        private delegate void getBufferParameteriv(uint target, uint pname, int[] @params);
+        private delegate void getBufferPointerv(uint target, uint pname, IntPtr[] @params);
+        private delegate void getBufferSubData(uint target, long offset, long size, IntPtr data);
+        private delegate void getQueryObjectiv(uint id, uint pname, int[] @params);
+        private delegate void getQueryObjectuiv(uint id, uint pname, uint[] @params);
+        private delegate void getQueryiv(uint target, uint pname, int[] @params);
+        private delegate byte isBuffer(uint buffer);
+        private delegate byte isQuery(uint id);
+        private delegate IntPtr mapBuffer(uint target, uint access);
+        private delegate byte unmapBuffer(uint target);
+        public static void BeginQuery(uint target, uint id)
+        {
+            getDelegate<beginQuery>("glBeginQuery")(target, id);
+        }
+        public static void BindBuffer(uint target, uint buffer)
+        {
+            getDelegate<bindBuffer>("glBindBuffer")(target, buffer);
+        }
+        public static void BufferData(uint target, long size, IntPtr data, uint usage)
+        {
+            getDelegate<bufferData>("glBufferData")(target, size, data, usage);
+        }
+        public static void BufferSubData(uint target, long offset, long size, IntPtr data)
+        {
+            getDelegate<bufferSubData>("glBufferSubData")(target, offset, size, data);
+        }
+        public static void DeleteBuffers(int n, uint[] buffers)
+        {
+            getDelegate<deleteBuffers>("glDeleteBuffers")(n, buffers);
+        }
+        public static void DeleteQueries(int n, uint[] ids)
+        {
+            getDelegate<deleteQueries>("glDeleteQueries")(n, ids);
+        }
+        public static void EndQuery(uint target)
+        {
+            getDelegate<endQuery>("glEndQuery")(target);
+        }
+        public static void GenBuffers(int n, uint[] buffers)
+        {
+            getDelegate<genBuffers>("glGenBuffers")(n, buffers);
+        }
+        public static void GenQueries(int n, uint[] ids)
+        {
+            getDelegate<genQueries>("glGenQueries")(n, ids);
+        }
+        public static void GetBufferParameteriv(uint target, uint pname, int[] @params)
+        {
+            getDelegate<getBufferParameteriv>("glGetBufferParameteriv")(target, pname, @params);
+        }
+        public static void GetBufferPointerv(uint target, uint pname, IntPtr[] @params)
+        {
+            getDelegate<getBufferPointerv>("glGetBufferPointerv")(target, pname, @params);
+        }
+        public static void GetBufferSubData(uint target, long offset, long size, IntPtr data)
+        {
+            getDelegate<getBufferSubData>("glGetBufferSubData")(target, offset, size, data);
+        }
+        public static void GetQueryObjectiv(uint id, uint pname, int[] @params)
+        {
+            getDelegate<getQueryObjectiv>("glGetQueryObjectiv")(id, pname, @params);
+        }
+        public static void GetQueryObjectuiv(uint id, uint pname, uint[] @params)
+        {
+            getDelegate<getQueryObjectuiv>("glGetQueryObjectuiv")(id, pname, @params);
+        }
+        public static void GetQueryiv(uint target, uint pname, int[] @params)
+        {
+            getDelegate<getQueryiv>("glGetQueryiv")(target, pname, @params);
+        }
+        public static bool IsBuffer(uint buffer)
+        {
+            return getDelegate<isBuffer>("glIsBuffer")(buffer) == TRUE;
+        }
+        public static bool IsQuery(uint id)
+        {
+            return getDelegate<isQuery>("glIsQuery")(id) == TRUE;
+        }
+        public static IntPtr MapBuffer(uint target, uint access)
+        {
+            return getDelegate<mapBuffer>("glMapBuffer")(target, access);
+        }
+        public static bool UnmapBuffer(uint target)
+        {
+            return getDelegate<unmapBuffer>("glUnmapBuffer")(target) == TRUE;
+        }
+
+        #endregion // GL15
     }
 }

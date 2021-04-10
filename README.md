@@ -4,7 +4,7 @@ OpenGL bindings for C#.
 
 Now include:
 - [GLFW](https://www.glfw.org/) 3.3.4
-- OpenGL 1.2
+- OpenGL 1.5
 
 ## How to Use
 
@@ -18,7 +18,7 @@ Now include:
 
 The all classes are under `GLCs` namespace.
 
-The `GL` class includes all functions (1.2) in `glew.h`.
+The `GL` class includes all functions (1.5) in `glew.h`.
 
 ### The `GLFW` class
 
@@ -64,10 +64,9 @@ void othermethod()
 
 | Time       | Support to OpenGL... |
 | ---------- | -------------------- |
-| 2021-02-15 | 1.2 ~ 1.5            |
-| 2021-03-20 | 2.0                  |
-| 2021-03-27 | 2.1                  |
-| 2021-04-17 | 3.0 & 3.1            |
-| 2020-04-24 | 3.2                  |
-| 2020-05-01 | 3.3 & 4.0            |
-| 2020-05-10 | 4.5 & 4.6            |
+| 2021-04-10 | 2.0                  |
+| 2021-05-01 | 2.1                  |
+| 2021-05-22 | 3.0 & 3.1            |
+| 2020-06-12 | 3.2                  |
+| 2020-07-03 | 3.3 & 4.0            |
+| 2020-07-24 | 4.5 & 4.6            |
