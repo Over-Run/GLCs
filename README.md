@@ -3,8 +3,8 @@
 OpenGL bindings for C#.
 
 Now include:
-- [GLFW](https://www.glfw.org/) 3.3.2
-- OpenGL 1.1
+- [GLFW](https://www.glfw.org/) 3.3.4
+- OpenGL 1.2
 
 ## How to Use
 
@@ -12,14 +12,13 @@ Now include:
    ```
    dotnet add package GLCs
    ```
-   
 2. Use it just like `GLCs_test`.
 
 **Note**: Required `glfw3.dll` and `opengl32.dll`.
 
 The all classes are under `GLCs` namespace.
 
-The `GL` class includes all functions (1.1) in `glew.h`.
+The `GL` class includes all functions (1.2) in `glew.h`.
 
 ### The `GLFW` class
 

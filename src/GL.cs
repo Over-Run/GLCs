@@ -5,9 +5,9 @@ namespace GLCs
 {
     public static class GL
     {
+        public const int VERSION_MAJOR = 1, VERSION_MINOR = 2;
         #region Constants
 
-        public const int VERSION_MAJOR = 1, VERSION_MINOR = 1;
         public const uint VERSION_1_1 = 1;
         public const uint ZERO = 0;
         public const byte FALSE = 0;
@@ -5993,207 +5993,207 @@ namespace GLCs
 
         #endregion // Constants
 
-        [DllImport("opengl32.dll", EntryPoint="glAccum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glAccum", CallingConvention = CallingConvention.StdCall)]
         public static extern void Accum(uint op, float value);
-        [DllImport("opengl32.dll", EntryPoint="glAlphaFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glAlphaFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void AlphaFunc(uint func, float @ref);
-        [DllImport("opengl32.dll", EntryPoint="glAreTexturesResident", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glAreTexturesResident", CallingConvention = CallingConvention.StdCall)]
         public static extern byte AreTexturesResident(int n, uint[] textures, byte[] residences);
-        [DllImport("opengl32.dll", EntryPoint="glArrayElement", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glArrayElement", CallingConvention = CallingConvention.StdCall)]
         public static extern void ArrayElement(int i);
-        [DllImport("opengl32.dll", EntryPoint="glBegin", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glBegin", CallingConvention = CallingConvention.StdCall)]
         public static extern void Begin(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glBindTexture", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glBindTexture", CallingConvention = CallingConvention.StdCall)]
         public static extern void BindTexture(uint target, uint texture);
-        [DllImport("opengl32.dll", EntryPoint="glBitmap", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glBitmap", CallingConvention = CallingConvention.StdCall)]
         public static extern void Bitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, byte[] bitmap);
-        [DllImport("opengl32.dll", EntryPoint="glBlendFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glBlendFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void BlendFunc(uint sfactor, uint dfactor);
-        [DllImport("opengl32.dll", EntryPoint="glCallList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCallList", CallingConvention = CallingConvention.StdCall)]
         public static extern void CallList(uint list);
-        [DllImport("opengl32.dll", EntryPoint="glCallLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCallLists", CallingConvention = CallingConvention.StdCall)]
         public static extern void CallLists(int n, uint type, IntPtr lists);
-        [DllImport("opengl32.dll", EntryPoint="glClear", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClear", CallingConvention = CallingConvention.StdCall)]
         public static extern void Clear(uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glClearAccum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClearAccum", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearAccum(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint="glClearColor", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClearColor", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearColor(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint="glClearDepth", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClearDepth", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearDepth(double depth);
-        [DllImport("opengl32.dll", EntryPoint="glClearIndex", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClearIndex", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearIndex(float c);
-        [DllImport("opengl32.dll", EntryPoint="glClearStencil", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClearStencil", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearStencil(int s);
-        [DllImport("opengl32.dll", EntryPoint="glClipPlane", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glClipPlane", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClipPlane(uint plane, double[] equation);
-        [DllImport("opengl32.dll", EntryPoint="glColor3b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3b(sbyte red, sbyte green, sbyte blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3d(double red, double green, double blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3f(float red, float green, float blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3i(int red, int green, int blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3s(short red, short green, short blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3ub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3ub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ub(byte red, byte green, byte blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3ubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3ubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ubv(byte[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3ui", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3ui", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ui(uint red, uint green, uint blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3uiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3uiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3uiv(uint[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor3us", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3us", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3us(ushort red, ushort green, ushort blue);
-        [DllImport("opengl32.dll", EntryPoint="glColor3usv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor3usv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3usv(ushort[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4b(sbyte red, sbyte green, sbyte blue, sbyte alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4d(double red, double green, double blue, double alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4f(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4i(int red, int green, int blue, int alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4s(short red, short green, short blue, short alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4ub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4ub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ub(byte red, byte green, byte blue, byte alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4ubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4ubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ubv(byte[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4ui", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4ui", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ui(uint red, uint green, uint blue, uint alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4uiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4uiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4uiv(uint[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColor4us", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4us", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4us(ushort red, ushort green, ushort blue, ushort alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColor4usv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColor4usv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4usv(ushort[] v);
-        [DllImport("opengl32.dll", EntryPoint="glColorMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColorMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorMask(byte red, byte green, byte blue, byte alpha);
-        [DllImport("opengl32.dll", EntryPoint="glColorMaterial", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColorMaterial", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorMaterial(uint face, uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glColorPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glColorPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glCopyPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCopyPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyPixels(int x, int y, int width, int height, uint type);
-        [DllImport("opengl32.dll", EntryPoint="glCopyTexImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCopyTexImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexImage1D(uint target, int level, uint internalFormat, int x, int y, int width, int border);
-        [DllImport("opengl32.dll", EntryPoint="glCopyTexImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCopyTexImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexImage2D(uint target, int level, uint internalFormat, int x, int y, int width, int height, int border);
-        [DllImport("opengl32.dll", EntryPoint="glCopyTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCopyTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexSubImage1D(uint target, int level, int xoffset, int x, int y, int width);
-        [DllImport("opengl32.dll", EntryPoint="glCopyTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCopyTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexSubImage2D(uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
-        [DllImport("opengl32.dll", EntryPoint="glCullFace", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glCullFace", CallingConvention = CallingConvention.StdCall)]
         public static extern void CullFace(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glDeleteLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDeleteLists", CallingConvention = CallingConvention.StdCall)]
         public static extern void DeleteLists(uint list, int range);
-        [DllImport("opengl32.dll", EntryPoint="glDeleteTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDeleteTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void DeleteTextures(int n, uint[] textures);
         public static void DeleteTexture(uint texture)
         {
             DeleteTextures(1, new uint[]{texture});
         }
-        [DllImport("opengl32.dll", EntryPoint="glDepthFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDepthFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthFunc(uint func);
-        [DllImport("opengl32.dll", EntryPoint="glDepthMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDepthMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthMask(byte flag);
-        [DllImport("opengl32.dll", EntryPoint="glDepthRange", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDepthRange", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthRange(double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint="glDisable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDisable", CallingConvention = CallingConvention.StdCall)]
         public static extern void Disable(uint cap);
-        [DllImport("opengl32.dll", EntryPoint="glDisableClientState", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDisableClientState", CallingConvention = CallingConvention.StdCall)]
         public static extern void DisableClientState(uint array);
-        [DllImport("opengl32.dll", EntryPoint="glDrawArrays", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDrawArrays", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawArrays(uint mode, int first, int count);
-        [DllImport("opengl32.dll", EntryPoint="glDrawBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDrawBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawBuffer(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glDrawElements", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDrawElements", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawElements(uint mode, int count, uint type, IntPtr indices);
-        [DllImport("opengl32.dll", EntryPoint="glDrawPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glDrawPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawPixels(int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glEdgeFlag", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlag", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlag(byte flag);
-        [DllImport("opengl32.dll", EntryPoint="glEdgeFlagPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlagPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlagPointer(int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glEdgeFlagv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlagv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlagv(byte[] flag);
-        [DllImport("opengl32.dll", EntryPoint="glEnable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEnable", CallingConvention = CallingConvention.StdCall)]
         public static extern void Enable(uint cap);
-        [DllImport("opengl32.dll", EntryPoint="glEnableClientState", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEnableClientState", CallingConvention = CallingConvention.StdCall)]
         public static extern void EnableClientState(uint array);
-        [DllImport("opengl32.dll", EntryPoint="glEnd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEnd", CallingConvention = CallingConvention.StdCall)]
         public static extern void End();
-        [DllImport("opengl32.dll", EntryPoint="glEndList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEndList", CallingConvention = CallingConvention.StdCall)]
         public static extern void EndList();
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1d(double u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord1dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1dv(double[] u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1f(float u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord1fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1fv(float[] u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2d(double u, double v);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2dv(double[] u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2f(float u, float v);
-        [DllImport("opengl32.dll", EntryPoint="glEvalCoord2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2fv(float[] u);
-        [DllImport("opengl32.dll", EntryPoint="glEvalMesh1", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalMesh1", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalMesh1(uint mode, int i1, int i2);
-        [DllImport("opengl32.dll", EntryPoint="glEvalMesh2", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalMesh2", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalMesh2(uint mode, int i1, int i2, int j1, int j2);
-        [DllImport("opengl32.dll", EntryPoint="glEvalPoint1", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalPoint1", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalPoint1(int i);
-        [DllImport("opengl32.dll", EntryPoint="glEvalPoint2", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glEvalPoint2", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalPoint2(int i, int j);
-        [DllImport("opengl32.dll", EntryPoint="glFeedbackBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFeedbackBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void FeedbackBuffer(int size, uint type, float[] buffer);
-        [DllImport("opengl32.dll", EntryPoint="glFinish", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFinish", CallingConvention = CallingConvention.StdCall)]
         public static extern void Finish();
-        [DllImport("opengl32.dll", EntryPoint="glFlush", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFlush", CallingConvention = CallingConvention.StdCall)]
         public static extern void Flush();
-        [DllImport("opengl32.dll", EntryPoint="glFogf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFogf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glFogfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFogfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogfv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glFogi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFogi", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogi(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glFogiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFogiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogiv(uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glFrontFace", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFrontFace", CallingConvention = CallingConvention.StdCall)]
         public static extern void FrontFace(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glFrustum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glFrustum", CallingConvention = CallingConvention.StdCall)]
         public static extern void Frustum(double left, double right, double bottom, double top, double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint="glGenLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGenLists", CallingConvention = CallingConvention.StdCall)]
         public static extern uint GenLists(int range);
-        [DllImport("opengl32.dll", EntryPoint="glGenTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGenTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void GenTextures(int n, uint[] textures);
         public static uint GenTexture()
         {
@@ -6201,479 +6201,505 @@ namespace GLCs
             GenTextures(1, tex);
             return tex[0];
         }
-        [DllImport("opengl32.dll", EntryPoint="glGetBooleanv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetBooleanv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetBooleanv(uint pname, byte[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetClipPlane", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetClipPlane", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetClipPlane(uint plane, double[] equation);
-        [DllImport("opengl32.dll", EntryPoint="glGetDoublev", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetDoublev", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetDoublev(uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetError", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetError", CallingConvention = CallingConvention.StdCall)]
         public static extern uint GetError();
-        [DllImport("opengl32.dll", EntryPoint="glGetFloatv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetFloatv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetFloatv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetIntegerv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetIntegerv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetIntegerv(uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetLightfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetLightfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetLightfv(uint light, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetLightiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetLightiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetLightiv(uint light, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetMapdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetMapdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapdv(uint target, uint query, double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glGetMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapfv(uint target, uint query, float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glGetMapiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetMapiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapiv(uint target, uint query, int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glGetMaterialfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetMaterialfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMaterialfv(uint face, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetMaterialiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetMaterialiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMaterialiv(uint face, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetPixelMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapfv(uint map, float[] values);
-        [DllImport("opengl32.dll", EntryPoint="glGetPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapuiv(uint map, uint[] values);
-        [DllImport("opengl32.dll", EntryPoint="glGetPixelMapusv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapusv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapusv(uint map, ushort[] values);
-        [DllImport("opengl32.dll", EntryPoint="glGetPointerv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetPointerv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPointerv(uint pname, IntPtr[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetPolygonStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetPolygonStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPolygonStipple(byte[] mask);
-        [DllImport("opengl32.dll", EntryPoint="glGetString", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetString", CallingConvention = CallingConvention.StdCall)]
         public static extern byte[] GetString(uint name);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexEnvfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexEnvfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexEnvfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexEnviv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexEnviv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexEnviv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexGendv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexGendv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGendv(uint coord, uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexGenfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexGenfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGenfv(uint coord, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexGeniv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexGeniv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGeniv(uint coord, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexImage", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexImage(uint target, int level, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexLevelParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexLevelParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexLevelParameterfv(uint target, int level, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexLevelParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexLevelParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexLevelParameteriv(uint target, int level, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexParameterfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glGetTexParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glGetTexParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexParameteriv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glHint", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glHint", CallingConvention = CallingConvention.StdCall)]
         public static extern void Hint(uint target, uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glIndexMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void IndexMask(uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glIndexPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void IndexPointer(uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glIndexd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexd", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexd(double c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexdv(double[] c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexf(float c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexfv(float[] c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexi", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexi(int c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexiv(int[] c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexs", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexs", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexs(short c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexsv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexsv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexsv(short[] c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexub(byte c);
-        [DllImport("opengl32.dll", EntryPoint="glIndexubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIndexubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexubv(byte[] c);
-        [DllImport("opengl32.dll", EntryPoint="glInitNames", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glInitNames", CallingConvention = CallingConvention.StdCall)]
         public static extern void InitNames();
-        [DllImport("opengl32.dll", EntryPoint="interleavedArrays", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "interleavedArrays", CallingConvention = CallingConvention.StdCall)]
         public static extern void InterleavedArrays(uint format, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glIsEnabled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIsEnabled", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsEnabled(uint cap);
-        [DllImport("opengl32.dll", EntryPoint="glIsList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIsList", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsList(uint list);
-        [DllImport("opengl32.dll", EntryPoint="glIsTexture", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glIsTexture", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsTexture(uint texture);
-        [DllImport("opengl32.dll", EntryPoint="glLightModelf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightModelf", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModelf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glLightModelfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightModelfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModelfv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glLightModeli", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightModeli", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModeli(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glLightModeliv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightModeliv", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModeliv(uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glLightf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightf(uint light, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glLightfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightfv(uint light, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glLighti", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLighti", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lighti(uint light, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glLightiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLightiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightiv(uint light, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glLineStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLineStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void LineStipple(int factor, ushort pattern);
-        [DllImport("opengl32.dll", EntryPoint="glLineWidth", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLineWidth", CallingConvention = CallingConvention.StdCall)]
         public static extern void LineWidth(float width);
-        [DllImport("opengl32.dll", EntryPoint="glListBase", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glListBase", CallingConvention = CallingConvention.StdCall)]
         public static extern void ListBase(uint @base);
-        [DllImport("opengl32.dll", EntryPoint="glLoadIdentity", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLoadIdentity", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadIdentity();
-        [DllImport("opengl32.dll", EntryPoint="glLoadMatrixd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLoadMatrixd", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadMatrixd(double[] m);
-        [DllImport("opengl32.dll", EntryPoint="glLoadMatrixf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLoadMatrixf", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadMatrixf(float[] m);
-        [DllImport("opengl32.dll", EntryPoint="glLoadName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLoadName", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadName(uint name);
-        [DllImport("opengl32.dll", EntryPoint="glLogicOp", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glLogicOp", CallingConvention = CallingConvention.StdCall)]
         public static extern void LogicOp(uint opcode);
-        [DllImport("opengl32.dll", EntryPoint="glMap1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMap1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map1d(uint target, double u1, double u2, int stride, int order, double[] points);
-        [DllImport("opengl32.dll", EntryPoint="glMap1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMap1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map1f(uint target, float u1, float u2, int stride, int order, float[] points);
-        [DllImport("opengl32.dll", EntryPoint="glMap2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMap2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map2d(uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points);
-        [DllImport("opengl32.dll", EntryPoint="glMap2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMap2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map2f(uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points);
-        [DllImport("opengl32.dll", EntryPoint="glMapGrid1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMapGrid1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid1d(int un, double u1, double u2);
-        [DllImport("opengl32.dll", EntryPoint="glMapGrid1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMapGrid1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid1f(int un, float u1, float u2);
-        [DllImport("opengl32.dll", EntryPoint="glMapGrid2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMapGrid2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
-        [DllImport("opengl32.dll", EntryPoint="glMapGrid2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMapGrid2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
-        [DllImport("opengl32.dll", EntryPoint="glMaterialf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMaterialf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialf(uint face, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glMaterialfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMaterialfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialfv(uint face, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glMateriali", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMateriali", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materiali(uint face, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glMaterialiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMaterialiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialiv(uint face, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glMatrixMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMatrixMode", CallingConvention = CallingConvention.StdCall)]
         public static extern void MatrixMode(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glMultMatrixd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMultMatrixd", CallingConvention = CallingConvention.StdCall)]
         public static extern void MultMatrixd(double[] m);
-        [DllImport("opengl32.dll", EntryPoint="glMultMatrixf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glMultMatrixf", CallingConvention = CallingConvention.StdCall)]
         public static extern void MultMatrixf(float[] m);
-        [DllImport("opengl32.dll", EntryPoint="glNewList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNewList", CallingConvention = CallingConvention.StdCall)]
         public static extern void NewList(uint list, uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3b(sbyte nx, sbyte ny, sbyte nz);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3d(double nx, double ny, double nz);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3f(float nx, float ny, float nz);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3i(int nx, int ny, int nz);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3s(short nx, short ny, short nz);
-        [DllImport("opengl32.dll", EntryPoint="glNormal3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormal3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glNormalPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glNormalPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void NormalPointer(uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glOrtho", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glOrtho", CallingConvention = CallingConvention.StdCall)]
         public static extern void Ortho(double left, double right, double bottom, double top, double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint="glPassThrough", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPassThrough", CallingConvention = CallingConvention.StdCall)]
         public static extern void PassThrough(float token);
-        [DllImport("opengl32.dll", EntryPoint="glPixelMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapfv(uint map, int mapsize, float[] values);
-        [DllImport("opengl32.dll", EntryPoint="glPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapuiv(uint map, int mapsize, uint[] values);
-        [DllImport("opengl32.dll", EntryPoint="glPixelMapusv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelMapusv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapusv(uint map, int mapsize, ushort[] values);
-        [DllImport("opengl32.dll", EntryPoint="glPixelStoref", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelStoref", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelStoref(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glPixelStorei", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelStorei", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelStorei(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glPixelTransferf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelTransferf", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelTransferf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glPixelTransferi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelTransferi", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelTransferi(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glPixelZoom", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPixelZoom", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelZoom(float xfactor, float yfactor);
-        [DllImport("opengl32.dll", EntryPoint="glPointSize", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPointSize", CallingConvention = CallingConvention.StdCall)]
         public static extern void PointSize(float size);
-        [DllImport("opengl32.dll", EntryPoint="glPolygonMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPolygonMode", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonMode(uint face, uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glPolygonOffset", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPolygonOffset", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonOffset(float factor, float units);
-        [DllImport("opengl32.dll", EntryPoint="glPolygonStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPolygonStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonStipple(byte[] mask);
-        [DllImport("opengl32.dll", EntryPoint="glPopAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPopAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopAttrib();
-        [DllImport("opengl32.dll", EntryPoint="glPopClientAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPopClientAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopClientAttrib();
-        [DllImport("opengl32.dll", EntryPoint="glPopMatrix", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPopMatrix", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopMatrix();
-        [DllImport("opengl32.dll", EntryPoint="glPopName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPopName", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopName();
-        [DllImport("opengl32.dll", EntryPoint="glPrioritizeTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPrioritizeTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void PrioritizeTextures(int n, uint[] textures, float[] priorities);
-        [DllImport("opengl32.dll", EntryPoint="glPushAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPushAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushAttrib(uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glPushClientAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPushClientAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushClientAttrib(uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glPushMatrix", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPushMatrix", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushMatrix();
-        [DllImport("opengl32.dll", EntryPoint="glPushName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glPushName", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushName(uint name);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2d(double x, double y);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2f(float x, float y);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2i(int x, int y);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2s(short x, short y);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3d(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3f(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3i(int x, int y, int z);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3s(short x, short y, short z);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4d(double x, double y, double z, double w);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4f(float x, float y, float z, float w);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4i(int x, int y, int z, int w);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4s(short x, short y, short z, short w);
-        [DllImport("opengl32.dll", EntryPoint="glRasterPos4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glReadBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glReadBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void ReadBuffer(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glReadPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glReadPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void ReadPixels(int x, int y, int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glRectd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectd", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectd(double x1, double y1, double x2, double y2);
-        [DllImport("opengl32.dll", EntryPoint="glRectdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectdv(double[] v1, double[] v2);
-        [DllImport("opengl32.dll", EntryPoint="glRectf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectf(float x1, float y1, float x2, float y2);
-        [DllImport("opengl32.dll", EntryPoint="glRectfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectfv(float[] v1, float[] v2);
-        [DllImport("opengl32.dll", EntryPoint="glRecti", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRecti", CallingConvention = CallingConvention.StdCall)]
         public static extern void Recti(int x1, int y1, int x2, int y2);
-        [DllImport("opengl32.dll", EntryPoint="glRectiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectiv(int[] v1, int[] v2);
-        [DllImport("opengl32.dll", EntryPoint="glRects", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRects", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rects(short x1, short y1, short x2, short y2);
-        [DllImport("opengl32.dll", EntryPoint="glRectsv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRectsv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectsv(short[] v1, short[] v2);
-        [DllImport("opengl32.dll", EntryPoint="glRenderMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRenderMode", CallingConvention = CallingConvention.StdCall)]
         public static extern int RenderMode(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glRotated", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRotated", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rotated(double angle, double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint="glRotatef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glRotatef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rotatef(float angle, float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint="glScaled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glScaled", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scaled(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint="glScalef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glScalef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scalef(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint="glScissor", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glScissor", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scissor(int x, int y, int width, int height);
-        [DllImport("opengl32.dll", EntryPoint="glSelectBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glSelectBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void SelectBuffer(int size, IntPtr buffer);
-        [DllImport("opengl32.dll", EntryPoint="glShadeModel", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glShadeModel", CallingConvention = CallingConvention.StdCall)]
         public static extern void ShadeModel(uint mode);
-        [DllImport("opengl32.dll", EntryPoint="glStencilFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glStencilFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilFunc(uint func, int @ref, uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glStencilMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glStencilMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilMask(uint mask);
-        [DllImport("opengl32.dll", EntryPoint="glStencilOp", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glStencilOp", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilOp(uint fail, uint zfail, uint zpass);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1d(double s);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1f(float s);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1i(int s);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1s(short s);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord1sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2d(double s, double t);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2f(float s, float t);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2i(int s, int t);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2s(short s, short t);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3d(double s, double t, double r);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3f(float s, float t, float r);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3i(int s, int t, int r);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3s(short s, short t, short r);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4d(double s, double t, double r, double q);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4f(float s, float t, float r, float q);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4i(int s, int t, int r, int q);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4s(short s, short t, short r, short q);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoord4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glTexCoordPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexCoordPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoordPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glTexEnvf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexEnvf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvf(uint target, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glTexEnvfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexEnvfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexEnvi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexEnvi", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvi(uint target, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glTexEnviv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexEnviv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnviv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexGend", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGend", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGend(uint coord, uint pname, double param);
-        [DllImport("opengl32.dll", EntryPoint="glTexGendv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGendv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGendv(uint coord, uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexGenf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGenf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGenf(uint coord, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glTexGenfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGenfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGenfv(uint coord, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexGeni", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGeni", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGeni(uint coord, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glTexGeniv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexGeniv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGeniv(uint coord, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexImage1D(uint target, int level, int internalformat, int width, int border, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glTexImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexImage2D(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glTexParameterf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexParameterf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameterf(uint target, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint="glTexParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameterfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexParameteri", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexParameteri", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameteri(uint target, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint="glTexParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameteriv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint="glTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint="glTranslated", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTranslated", CallingConvention = CallingConvention.StdCall)]
         public static extern void Translated(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint="glTranslatef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glTranslatef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Translatef(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2d(double x, double y);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2f(float x, float y);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2i(int x, int y);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2s(short x, short y);
-        [DllImport("opengl32.dll", EntryPoint="glVertex2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3d(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3f(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3i(int x, int y, int z);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3s(short x, short y, short z);
-        [DllImport("opengl32.dll", EntryPoint="glVertex3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4d(double x, double y, double z, double w);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4f(float x, float y, float z, float w);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4i(int x, int y, int z, int w);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4s(short x, short y, short z, short w);
-        [DllImport("opengl32.dll", EntryPoint="glVertex4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertex4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint="glVertexPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glVertexPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void VertexPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint="glViewport", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("opengl32.dll", EntryPoint = "glViewport", CallingConvention = CallingConvention.StdCall)]
         public static extern void Viewport(int x, int y, int width, int height);
+        [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
+        private static extern IntPtr wglGetProcAddress(string lpszProc);
+        private static T getDelegate<T>(string lpszProc)
+        {
+            return Marshal.GetDelegateForFunctionPointer<T>(wglGetProcAddress(lpszProc));
+        }
+        private delegate void copyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
+        private delegate void drawRangeElements(uint mode, uint start, uint end, int count, uint type, IntPtr indices);
+        private delegate void texImage3D(uint target, int level, int internalFormat, int width, int height, int depth, int border, uint format, uint type, IntPtr pixels);
+        private delegate void texSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels);
+        public static void CopyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height)
+        {
+            getDelegate<copyTexSubImage3D>("glCopyTexSubImage3D")(target, level, xoffset, yoffset, zoffset, x, y, width, height);
+        }
+        public static void DrawRangeElements(uint mode, uint start, uint end, int count, uint type, IntPtr indices)
+        {
+            getDelegate<drawRangeElements>("glDrawRangeElements")(mode, start, end, count, type, indices);
+        }
+        public static void TexImage3D(uint target, int level, int internalFormat, int width, int height, int depth, int border, uint format, uint type, IntPtr pixels)
+        {
+            getDelegate<texImage3D>("glTexImage3D")(target, level, internalFormat, width, height, depth, border, format, type, pixels);
+        }
+        public static void TexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels)
+        {
+            getDelegate<texSubImage3D>("glTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+        }
     }
 }
