@@ -10,10 +10,22 @@
     <PackageId>GLCs</PackageId>
     <Authors>squid233</Authors>
     <Company>OverRun Organization</Company>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <Product>GLCs</Product>
     <Version>0.1.0</Version>
     <Description>OpenGL bindings for C#.</Description>
     <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
+    <Nullable>disable</Nullable>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Over-Run/GLCs</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Over-Run/GLCs</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>

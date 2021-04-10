@@ -1,6 +1,6 @@
-# GLCs
+# GLCs ![License](https://img.shields.io/github/license/Over-Run/GLCs)
 
-OpenGL bindings for C#.
+OpenGL bindings for C#. ![Nuget](https://img.shields.io/nuget/v/GLCs) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GLCs)
 
 Now include:
 - [GLFW](https://www.glfw.org/) 3.3.4
