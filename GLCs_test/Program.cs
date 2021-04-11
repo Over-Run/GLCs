@@ -5,7 +5,6 @@ namespace GLCs_test
 {
     class Program
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060")]
         static void Main(string[] args)
         {
             Console.WriteLine("We are using GLCs {0}", GLCS.GetVersionString());
@@ -31,6 +30,17 @@ namespace GLCs_test
                 {
                     GLFW.SetWindowShouldClose(window, true);
                 }
+            });
+            GLFW.GetVideoModeLet(GLFW.GetPrimaryMonitor(), (vidMode) =>
+            {
+                int w = 0;
+                int h = 0;
+                GLFW.GetWindowSize(window, ref w, ref h);
+                GLFW.SetWindowPos(
+                    window,
+                    (vidMode.width - w) / 2,
+                    (vidMode.height - h) / 2
+                );
             });
             GLFW.MakeContextCurrent(window);
             GLFW.SwapInterval(1);

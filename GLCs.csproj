@@ -15,7 +15,7 @@
     <Version>0.3.0</Version>
     <Description>OpenGL bindings for C#.</Description>
     <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Over-Run/GLCs</PackageProjectUrl>
@@ -26,6 +26,14 @@
     <None Include="LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="dll\glfw3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="glfw3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>
