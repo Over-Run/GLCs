@@ -6,6 +6,8 @@ Now include:
 - [GLFW](https://www.glfw.org/) 3.3.6
 - OpenGL 4.6
 
+[If you are sure that any bugs come from this library, or you want any features come to this library, please report them to us!](https://github.com/Over-Run/GLCs/issues)
+
 ## How to Use
 
 1. Add package to your project:

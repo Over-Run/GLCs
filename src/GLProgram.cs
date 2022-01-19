@@ -157,9 +157,9 @@ namespace GLCs
             return id;
         }
 
-        ~GLProgram()
+        public void Free()
         {
-            if (programId != 0) GL.DeleteProgram(programId);
+            if (GL.IsProgram(programId)) GL.DeleteProgram(programId);
         }
     }
 }

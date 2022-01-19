@@ -19,6 +19,8 @@ namespace GLCs_test
             }
             GLFW.WindowHint(GLFW.VISIBLE, GLFW.FALSE);
             GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 3);
+            GLFW.WindowHint(GLFW.CONTEXT_VERSION_MINOR, 3);
+            GLFW.WindowHint(GLFW.OPENGL_PROFILE, GLFW.OPENGL_CORE_PROFILE);
             IntPtr window = GLFW.CreateWindow(854, 480, "GLC# Test", IntPtr.Zero, IntPtr.Zero);
             if (window == IntPtr.Zero)
             {
@@ -46,6 +48,7 @@ namespace GLCs_test
             GLFW.SwapInterval(1);
             GLFW.ShowWindow(window);
             GL.ClearColor(.4f, .6f, .9f, 1);
+            GL.Viewport(0, 0, 854, 480);
             GLProgram program = new GLProgram()
                 .CreateVsh(@"#version 330 core
 layout (location = 0) in vec3 vert;
@@ -62,54 +65,40 @@ void main() {
     FragColor = vec4(out_color, 1.0);
 }")
                 .Link();
-            float[] vertices =
+            float[] data =
             {
-                0.5f, 0.5f, 0f,
-                -0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f
+                0.5f, 0.5f, 0f, 1, 0, 0,
+                -0.5f, -0.5f, 0f, 0, 1, 0,
+                0.5f, -0.5f, 0f, 0, 0, 1
             };
-            float[] colors =
-            {
-                1, 0, 0,
-                0, 1, 0,
-                0, 0, 1
-            };
-            uint vao = GL.;
-            uint vbo = GL.GenBuffer();
-            
-            //fixme: there is not any triangles rendered
+            uint vao = GL.GenVertexArrays();
+            uint vbo = GL.GenBuffers();
+            GL.BindVertexArray(vao);
+            GL.BindBuffer(GL.ARRAY_BUFFER, vbo);
+            GL.BufferData(GL.ARRAY_BUFFER, data, GL.STATIC_DRAW);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, GL.FLOAT, false, 24, 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 3, GL.FLOAT, false, 24, 12);
+            GL.BindBuffer(GL.ARRAY_BUFFER, 0);
+            GL.DrawArrays(GL.TRIANGLES, 0, 3);
+            GL.BindVertexArray(0);
             while (!GLFW.WindowShouldClose(window))
             {
                 GL.Clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
                 program.Bind();
-                GL.BindBuffer(GL.ARRAY_BUFFER, vertVbo);
-                GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
-                program.EnableVertAttribArrPtr(
-                    "vert",
-                    3,
-                    GL.FLOAT,
-                    false,
-                    0
-                );
-                GL.BindBuffer(GL.ARRAY_BUFFER, colorVbo);
-                GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
-                program.EnableVertAttribArrPtr(
-                    "in_color",
-                    3,
-                    GL.FLOAT,
-                    false,
-                    0
-                );
-                GL.BindBuffer(GL.ARRAY_BUFFER, GL.NONE);
+                GL.BindVertexArray(vao);
                 GL.DrawArrays(GL.TRIANGLES, 0, 3);
+                GL.BindVertexArray(0);
                 GLProgram.Unbind();
                 GLFW.SwapBuffers(window);
                 GLFW.PollEvents();
             }
             Console.WriteLine("Bye!");
-            GL.BindBuffer(GL.ARRAY_BUFFER, GL.NONE);
-            GL.DeleteBuffer(vertVbo);
-            GL.DeleteBuffer(colorVbo);
+            GL.BindBuffer(GL.ARRAY_BUFFER, 0);
+            GL.DeleteBuffer(vbo);
+            GL.DeleteVertexArrays(vao);
+            program.Free();
             GLFW.SetKeyCallback(window, null);
             GLFW.DestroyWindow(window);
             GLFW.Terminate();

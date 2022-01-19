@@ -595,7 +595,7 @@ namespace GLCs
         public static extern void WindowHint(int hint, int value);
         [DllImport("glfw3.dll", EntryPoint = "glfwWindowHintString")]
         public static extern void WindowHintString(int hint, string value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindow", CharSet = CharSet.Unicode)]
+        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindow")]
         public static extern GLFWwindow CreateWindow(int width, int height, string title, [Nullable] GLFWmonitor monitor, [Nullable] GLFWwindow share);
         [DllImport("glfw3.dll", EntryPoint = "glfwDestroyWindow")]
         public static extern void DestroyWindow(GLFWwindow window);
