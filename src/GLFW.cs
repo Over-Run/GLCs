@@ -18,7 +18,7 @@ namespace GLCs
 
         public const int VERSION_MAJOR = 3,
             VERSION_MINOR = 3,
-            VERSION_REVISION = 4;
+            VERSION_REVISION = 6;
         public const int TRUE = 1,
             FALSE = 0;
         public const int RELEASE = 0,
@@ -595,7 +595,7 @@ namespace GLCs
         public static extern void WindowHint(int hint, int value);
         [DllImport("glfw3.dll", EntryPoint = "glfwWindowHintString")]
         public static extern void WindowHintString(int hint, string value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindow")]
+        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindow", CharSet = CharSet.Unicode)]
         public static extern GLFWwindow CreateWindow(int width, int height, string title, [Nullable] GLFWmonitor monitor, [Nullable] GLFWwindow share);
         [DllImport("glfw3.dll", EntryPoint = "glfwDestroyWindow")]
         public static extern void DestroyWindow(GLFWwindow window);
@@ -879,10 +879,8 @@ namespace GLCs
         public static extern string[] GetRequiredInstanceExtensions(ref uint count);
         [DllImport("glfw3.dll", EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
         public static extern VkProc GetInstanceProcAddress(VkInstance vkInstance, byte[] procName);
-        public static VkProc GetInstanceProcAddress(VkInstance vkInstance, string procName)
-        {
-            return GetInstanceProcAddress(vkInstance, Encoding.ASCII.GetBytes(procName));
-        }
+        [DllImport("glfw3.dll", EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
+        public static extern VkProc GetInstanceProcAddress(VkInstance vkInstance, string procName);
         [DllImport("glfw3.dll")]
         public static extern int glfwGetPhysicalDevicePresentationSupport(VkInstance vkInstance, IntPtr device, uint queueFamily);
         public static bool GetPhysicalDevicePresentationSupport(VkInstance vkInstance, VkInstance device, uint queueFamily)

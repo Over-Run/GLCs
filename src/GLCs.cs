@@ -5,7 +5,7 @@ namespace GLCs
     public static class GLCS
     {
         public const int VERSION_MAJOR = 0;
-        public const int VERSION_MINOR = 3;
+        public const int VERSION_MINOR = 4;
         public const int VERSION_REVISION = 0;
         public static string GetVersionString()
         {

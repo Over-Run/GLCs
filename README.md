@@ -3,7 +3,7 @@
 OpenGL bindings for C#. ![Nuget](https://img.shields.io/nuget/v/GLCs) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GLCs)
 
 Now include:
-- [GLFW](https://www.glfw.org/) 3.3.4
+- [GLFW](https://www.glfw.org/) 3.3.6
 - OpenGL 4.6
 
 ## How to Use

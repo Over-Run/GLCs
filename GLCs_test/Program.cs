@@ -18,7 +18,7 @@ namespace GLCs_test
                 throw new ContextException("Unable to initialize GLFW");
             }
             GLFW.WindowHint(GLFW.VISIBLE, GLFW.FALSE);
-            GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 2);
+            GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 3);
             IntPtr window = GLFW.CreateWindow(854, 480, "GLC# Test", IntPtr.Zero, IntPtr.Zero);
             if (window == IntPtr.Zero)
             {
@@ -47,18 +47,19 @@ namespace GLCs_test
             GLFW.ShowWindow(window);
             GL.ClearColor(.4f, .6f, .9f, 1);
             GLProgram program = new GLProgram()
-                .CreateVsh(@"#version 110
-attribute vec3 vert;
-attribute vec3 in_color;
-varying vec3 out_color;
+                .CreateVsh(@"#version 330 core
+layout (location = 0) in vec3 vert;
+layout (location = 1) in vec3 in_color;
+out vec3 out_color;
 void main() {
     gl_Position = vec4(vert, 1.0);
     out_color = in_color;
 }")
-                .CreateFsh(@"#version 110
-varying vec3 out_color;
+                .CreateFsh(@"#version 330 core
+in vec3 out_color;
+out vec4 FragColor;
 void main() {
-    gl_FragColor = vec4(out_color, 1.0);
+    FragColor = vec4(out_color, 1.0);
 }")
                 .Link();
             float[] vertices =
@@ -73,8 +74,9 @@ void main() {
                 0, 1, 0,
                 0, 0, 1
             };
-            uint vertVbo = GL.GenBuffer();
-            uint colorVbo = GL.GenBuffer();
+            uint vao = GL.;
+            uint vbo = GL.GenBuffer();
+            
             //fixme: there is not any triangles rendered
             while (!GLFW.WindowShouldClose(window))
             {
@@ -101,14 +103,6 @@ void main() {
                 GL.BindBuffer(GL.ARRAY_BUFFER, GL.NONE);
                 GL.DrawArrays(GL.TRIANGLES, 0, 3);
                 GLProgram.Unbind();
-                /*GL.Begin(GL.TRIANGLES);
-                GL.Color3f(1, 0, 0);
-                GL.Vertex2f(0, .5f);
-                GL.Color3f(0, 1, 0);
-                GL.Vertex2f(-.5f, -.5f);
-                GL.Color3f(0, 0, 1);
-                GL.Vertex2f(.5f, -.5f);
-                GL.End();*/
                 GLFW.SwapBuffers(window);
                 GLFW.PollEvents();
             }

@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <AssemblyName>GLCs</AssemblyName>
     <RootNamespace>GLCs</RootNamespace>
     <OutputType>Library</OutputType>
@@ -9,9 +9,9 @@
     <!-- NuGet -->
     <PackageId>GLCs</PackageId>
     <Authors>squid233</Authors>
-    <Company>OverRun Organization</Company>
+    <Company>Overrun Organization</Company>
     <Product>GLCs</Product>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Description>OpenGL bindings for C#.</Description>
     <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
     <Nullable>enable</Nullable>
@@ -20,6 +20,7 @@
     <PackageProjectUrl>https://github.com/Over-Run/GLCs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Over-Run/GLCs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <None Include="LICENSE">

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace GLCs
@@ -6,6 +6,7 @@ namespace GLCs
     public class GLProgram
     {
         private readonly Dictionary<string, int> uniforms = new();
+        private readonly Dictionary<string, int> attributes = new();
         private readonly uint programId = GL.CreateProgram();
         private uint vshId = 0;
         private uint fshId = 0;
@@ -37,8 +38,18 @@ namespace GLCs
             {
                 throw new ContextException("Error linking GL program: " + GL.GetProgramInfoLog(programId));
             }
-            if (vshId != 0) GL.DetachShader(programId, vshId);
-            if (fshId != 0) GL.DetachShader(programId, fshId);
+            if (vshId != 0)
+            {
+                GL.DetachShader(programId, vshId);
+                GL.DeleteShader(vshId);
+                vshId = 0;
+            }
+            if (fshId != 0)
+            {
+                GL.DetachShader(programId, fshId);
+                GL.DeleteShader(fshId);
+                fshId = 0;
+            }
             GL.ValidateProgram(programId);
             if (GL.GetProgrami(programId, GL.VALIDATE_STATUS) == GL.FALSE)
                 Console.Error.WriteLine(GL.GetProgramInfoLog(programId));
@@ -74,6 +85,14 @@ namespace GLCs
         public void SetUniform(string name, int value)
         {
             GL.Uniform1i(GetUniform(name), value);
+        }
+
+        public int GetAttrib(string name)
+        {
+            if (attributes.ContainsKey(name)) return attributes[name];
+            var loc = GL.GetAttribLocation(programId, name);
+            attributes[name] = loc;
+            return loc;
         }
 
         public void EnableVertexAttribArray(string name)
@@ -123,7 +142,9 @@ namespace GLCs
             if (id == 0)
             {
                 throw new NullPointerException(
-                    "Failed to create shader (Shader type: " + type + ")"
+                    "An error occurred creating the shader "
+                        + type
+                        + " object."
                 );
             }
             GL.ShaderSource(id, src);
@@ -139,8 +160,6 @@ namespace GLCs
         ~GLProgram()
         {
             if (programId != 0) GL.DeleteProgram(programId);
-            if (vshId != 0) GL.DeleteShader(vshId);
-            if (fshId != 0) GL.DeleteShader(fshId);
         }
     }
 }

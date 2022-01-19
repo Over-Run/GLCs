@@ -7,7 +7,7 @@ namespace GLCs
     {
         public const int VERSION_MAJOR = 4, VERSION_MINOR = 6;
         [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
-        private static extern IntPtr WglGetProcAddress(string lpszProc);
+        public static extern IntPtr WglGetProcAddress(string lpszProc);
         public static T GetDelegate<T>(string lpszProc) =>
             Marshal.GetDelegateForFunctionPointer<T>(WglGetProcAddress(lpszProc));
         #region Constants
@@ -6120,7 +6120,7 @@ namespace GLCs
         public static extern void DeleteTextures(int n, uint[] textures);
         public static void DeleteTexture(uint texture)
         {
-            DeleteTextures(1, new uint[] { texture });
+            DeleteTextures(1, new[] { texture });
         }
         [DllImport("opengl32.dll", EntryPoint = "glDepthFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthFunc(uint func);
@@ -7664,8 +7664,8 @@ namespace GLCs
             GetDelegate<shaderSource>("glShaderSource")(
                 shader,
                 1,
-                new string[] { source },
-                new int[] { source.Length });
+                new[] { source },
+                new[] { source.Length });
         }
         public static void StencilFuncSeparate(uint face, uint func, int @ref, uint mask)
         {
@@ -8348,5 +8348,399 @@ namespace GLCs
         }
 
         #endregion // GL46
+        #region GL_3DFX_tbuffer
+
+        private delegate void tbufferMask3DFX(uint mask);
+        public static void TbufferMask3DFX(uint mask)
+        {
+            GetDelegate<tbufferMask3DFX>("glTbufferMask3DFX")(mask);
+        }
+
+        #endregion // GL_3DFX_tbuffer
+        #region GL_AMD_debug_output
+
+        public delegate void DebugProcAMD(uint id, uint category, uint severity, int length, string message, IntPtr userParam);
+        private delegate void debugMessageCallbackAMD(DebugProcAMD callback, IntPtr userParam);
+        private delegate void debugMessageEnableAMD(uint category, uint severity, int count, uint[] ids, bool enabled);
+        private delegate void debugMessageInsertAMD(uint category, uint severity, uint id, int length, string buf);
+        private delegate uint getDebugMessageLogAMD(uint count, int bufSize, uint[] categories, uint[] severities, uint[] ids, int[] lengths, [Nullable] ref string? messageLog);
+        public static void DebugMessageCallbackAMD(DebugProcAMD callback, IntPtr userParam)
+        {
+            GetDelegate<debugMessageCallbackAMD>("glDebugMessageCallbackAMD")(callback, userParam);
+        }
+        public static void DebugMessageEnableAMD(uint category, uint severity, int count, uint[] ids, bool enabled)
+        {
+            GetDelegate<debugMessageEnableAMD>("glDebugMessageEnableAMD")(category, severity, count, ids, enabled);
+        }
+        public static void DebugMessageEnableAMD(uint category, uint severity, uint[] ids, bool enabled)
+        {
+            DebugMessageEnableAMD(category, severity, ids.Length, ids, enabled);
+        }
+        public static void DebugMessageEnableAMD(uint category, uint severity, uint id, bool enabled)
+        {
+            DebugMessageEnableAMD(category, severity, new[] { id }, enabled);
+        }
+        public static void DebugMessageInsertAMD(uint category, uint severity, uint id, int length, string buf)
+        {
+            GetDelegate<debugMessageInsertAMD>("glDebugMessageInsertAMD")(category, severity, id, length, buf);
+        }
+        public static void DebugMessageInsertAMD(uint category, uint severity, uint id, string buf)
+        {
+            DebugMessageInsertAMD(category, severity, id, buf.Length, buf);
+        }
+        public static uint GetDebugMessageLogAMD(uint count, int bufSize, uint[] categories, uint[] severities, uint[] ids, int[] lengths, [Nullable] ref string? messageLog)
+        {
+            return GetDelegate<getDebugMessageLogAMD>("glGetDebugMessageLogAMD")(count, bufSize, categories, severities, ids, lengths, ref messageLog);
+        }
+
+        #endregion // GL_AMD_debug_output
+        #region GL_AMD_draw_buffers_blend
+
+        private delegate void blendEquationIndexedAMD(uint buf, uint mode);
+        private delegate void blendEquationSeparateIndexedAMD(uint buf, uint modeRGB, uint modeAlpha);
+        private delegate void blendFuncIndexedAMD(uint buf, uint src, uint dst);
+        private delegate void blendFuncSeparateIndexedAMD(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha);
+        public static void BlendEquationIndexedAMD(uint buf, uint mode)
+        {
+            GetDelegate<blendEquationIndexedAMD>("glBlendEquationIndexedAMD")(buf, mode);
+        }
+        public static void BlendEquationSeparateIndexedAMD(uint buf, uint modeRGB, uint modeAlpha)
+        {
+            GetDelegate<blendEquationSeparateIndexedAMD>("glBlendEquationSeparateIndexedAMD")(buf, modeRGB, modeAlpha);
+        }
+        public static void BlendFuncIndexedAMD(uint buf, uint src, uint dst)
+        {
+            GetDelegate<blendFuncIndexedAMD>("glBlendFuncIndexedAMD")(buf, src, dst);
+        }
+        public static void BlendFuncSeparateIndexedAMD(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha)
+        {
+            GetDelegate<blendFuncSeparateIndexedAMD>("glBlendFuncSeparateIndexedAMD")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+        }
+
+        #endregion // GL_AMD_draw_buffers_blend
+        #region GL_AMD_framebuffer_multisample_advanced
+
+        private delegate void namedRenderbufferStorageMultisampleAdvancedAMD(uint renderbuffer, int samples, int storageSamples, uint internalformat, int width, int height);
+        private delegate void renderbufferStorageMultisampleAdvancedAMD(uint target, int samples, int storageSamples, uint internalformat, int width, int height);
+        public static void NamedRenderbufferStorageMultisampleAdvancedAMD(uint renderbuffer, int samples, int storageSamples, uint internalformat, int width, int height)
+        {
+            GetDelegate<namedRenderbufferStorageMultisampleAdvancedAMD>("glNamedRenderbufferStorageMultisampleAdvancedAMD")(renderbuffer, samples, storageSamples, internalformat, width, height);
+        }
+        public static void RenderbufferStorageMultisampleAdvancedAMD(uint target, int samples, int storageSamples, uint internalformat, int width, int height)
+        {
+            GetDelegate<renderbufferStorageMultisampleAdvancedAMD>("glRenderbufferStorageMultisampleAdvancedAMD")(target, samples, storageSamples, internalformat, width, height);
+        }
+
+        #endregion // GL_AMD_framebuffer_multisample_advanced
+        #region GL_AMD_framebuffer_sample_positions
+
+        private delegate void framebufferSamplePositionsfvAMD(uint target, uint numSamples, uint pixelIndex, float[] values);
+        private delegate void getFramebufferParameterfvAMD(uint target, uint pname, uint numSamples, uint pixelIndex, int size, float[] values);
+        private delegate void getNamedFramebufferParameterfvAMD(uint framebuffer, uint pname, uint numSamples, uint pixelIndex, int size, float[] values);
+        private delegate void namedFramebufferSamplePositionsfvAMD(uint framebuffer, uint numSamples, uint pixelIndex, float[] values);
+        public static void FramebufferSamplePositionsfvAMD(uint target, uint numSamples, uint pixelIndex, float[] values)
+        {
+            GetDelegate<framebufferSamplePositionsfvAMD>("glFramebufferSamplePositionsfvAMD")(target, numSamples, pixelIndex, values);
+        }
+        public static void GetFramebufferParameterfvAMD(uint target, uint pname, uint numSamples, uint pixelIndex, int size, float[] values)
+        {
+            GetDelegate<getFramebufferParameterfvAMD>("glGetFramebufferParameterfvAMD")(target, pname, numSamples, pixelIndex, size, values);
+        }
+        public static void GetNamedFramebufferParameterfvAMD(uint framebuffer, uint pname, uint numSamples, uint pixelIndex, int size, float[] values)
+        {
+            GetDelegate<getNamedFramebufferParameterfvAMD>("glGetNamedFramebufferParameterfvAMD")(framebuffer, pname, numSamples, pixelIndex, size, values);
+        }
+        public static void NamedFramebufferSamplePositionsfvAMD(uint framebuffer, uint numSamples, uint pixelIndex, float[] values)
+        {
+            GetDelegate<namedFramebufferSamplePositionsfvAMD>("glNamedFramebufferSamplePositionsfvAMD")(framebuffer, numSamples, pixelIndex, values);
+        }
+
+        #endregion // GL_AMD_framebuffer_sample_positions
+        #region GL_AMD_interleaved_elements
+
+        private delegate void vertexAttribParameteriAMD(uint index, uint pname, int param);
+        public static void VertexAttribParameteriAMD(uint index, uint pname, int param)
+        {
+            GetDelegate<vertexAttribParameteriAMD>("glVertexAttribParameteriAMD")(index, pname, param);
+        }
+
+        #endregion // GL_AMD_interleaved_elements
+        #region GL_AMD_multi_draw_indirect
+
+        private delegate void multiDrawArraysIndirectAMD(uint mode, IntPtr indirect, int primCount, int stride);
+        private delegate void multiDrawElementsIndirectAMD(uint mode, uint type, IntPtr indirect, int primCount, int stride);
+        public static void MultiDrawArraysIndirectAMD(uint mode, IntPtr indirect, int primCount, int stride)
+        {
+            GetDelegate<multiDrawArraysIndirectAMD>("glMultiDrawArraysIndirectAMD")(mode, indirect, primCount, stride);
+        }
+        public static void MultiDrawElementsIndirectAMD(uint mode, uint type, IntPtr indirect, int primCount, int stride)
+        {
+            GetDelegate<multiDrawElementsIndirectAMD>("glMultiDrawElementsIndirectAMD")(mode, type, indirect, primCount, stride);
+        }
+
+        #endregion // GL_AMD_multi_draw_indirect
+        #region GL_AMD_name_gen_delete
+
+        private delegate void deleteNamesAMD(uint identifier, uint num, uint[] names);
+        private delegate void genNamesAMD(uint identifier, uint num, ref uint[] names);
+        private delegate bool isNameAMD(uint identifier, uint name);
+        public static void DeleteNamesAMD(uint identifier, uint num, uint[] names)
+        {
+            GetDelegate<deleteNamesAMD>("glDeleteNamesAMD")(identifier, num, names);
+        }
+        public static void DeleteNamesAMD(uint identifier, uint[] names)
+        {
+            DeleteNamesAMD(identifier, (uint)names.Length, names);
+        }
+        public static void DeleteNamesAMD(uint identifier, uint name)
+        {
+            DeleteNamesAMD(identifier, new[] { name });
+        }
+        public static void GenNamesAMD(uint identifier, uint num, ref uint[] names)
+        {
+            GetDelegate<genNamesAMD>("glGenNamesAMD")(identifier, num, ref names);
+        }
+        public static void GenNamesAMD(uint identifier, ref uint[] names)
+        {
+            GenNamesAMD(identifier, (uint)names.Length, ref names);
+        }
+        public static void GenNamesAMD(uint identifier, ref uint name)
+        {
+            uint[] pname = { 0 };
+            GenNamesAMD(identifier, ref pname);
+            name = pname[0];
+        }
+        public static uint GenNamesAMD(uint identifier)
+        {
+            uint p = 0;
+            GenNamesAMD(identifier, ref p);
+            return p;
+        }
+        public static bool IsNameAMD(uint identifier, uint name)
+        {
+            return GetDelegate<isNameAMD>("glIsNameAMD")(identifier, name);
+        }
+
+        #endregion // GL_AMD_name_gen_delete
+        #region GL_AMD_occlusion_query_event
+
+        private delegate void queryObjectParameteruiAMD(uint target, uint id, uint pname, uint param);
+        public static void QueryObjectParameteruiAMD(uint target, uint id, uint pname, uint param)
+        {
+            GetDelegate<queryObjectParameteruiAMD>("glQueryObjectParameteruiAMD")(target, id, pname, param);
+        }
+
+        #endregion // GL_AMD_occlusion_query_event
+        #region GL_AMD_performance_monitor
+
+        private delegate void beginPerfMonitorAMD(uint monitor);
+        private delegate void deletePerfMonitorsAMD(int n, uint[] monitors);
+        private delegate void endPerfMonitorAMD(uint monitor);
+        private delegate void genPerfMonitorsAMD(int n, ref uint[] monitors);
+        private delegate void getPerfMonitorCounterDataAMD(uint monitor, uint pname, int dataSize, ref uint[] data, ref int bytesWritten);
+        private delegate void getPerfMonitorCounterInfoAMD(uint group, uint counter, uint pname, IntPtr data);
+        private delegate void getPerfMonitorCounterStringAMD(uint group, uint counter, int bufSize, int[] length, ref string counterString);
+        private delegate void getPerfMonitorCountersAMD(uint group, int[] numCounters, int[] maxActiveCounters, int countersSize, uint[] counters);
+        private delegate void getPerfMonitorGroupStringAMD(uint group, int bufSize, int[] length, ref string groupString);
+        private delegate void getPerfMonitorGroupsAMD(int[] numGroups, int groupsSize, uint[] groups);
+        private delegate void selectPerfMonitorCountersAMD(uint monitor, bool enable, uint group, int numCounters, uint[] counterList);
+        public static void BeginPerfMonitorAMD(uint monitor)
+        {
+            GetDelegate<beginPerfMonitorAMD>("glBeginPerfMonitorAMD")(monitor);
+        }
+        public static void DeletePerfMonitorsAMD(int n, uint[] monitors)
+        {
+            GetDelegate<deletePerfMonitorsAMD>("glDeletePerfMonitorsAMD")(n, monitors);
+        }
+        public static void EndPerfMonitorAMD(uint monitor)
+        {
+            GetDelegate<endPerfMonitorAMD>("glEndPerfMonitorAMD")(monitor);
+        }
+        public static void GenPerfMonitorsAMD(int n, ref uint[] monitors)
+        {
+            GetDelegate<genPerfMonitorsAMD>("glGenPerfMonitorsAMD")(n, ref monitors);
+        }
+        public static void GetPerfMonitorCounterDataAMD(uint monitor, uint pname, int dataSize, ref uint[] data, ref int bytesWritten)
+        {
+            GetDelegate<getPerfMonitorCounterDataAMD>("glGetPerfMonitorCounterDataAMD")(monitor, pname, dataSize, ref data, ref bytesWritten);
+        }
+        public static void GetPerfMonitorCounterInfoAMD(uint group, uint counter, uint pname, IntPtr data)
+        {
+            GetDelegate<getPerfMonitorCounterInfoAMD>("glGetPerfMonitorCounterInfoAMD")(group, counter, pname, data);
+        }
+        public static void GetPerfMonitorCounterStringAMD(uint group, uint counter, int bufSize, int[] length, ref string counterString)
+        {
+            GetDelegate<getPerfMonitorCounterStringAMD>("glGetPerfMonitorCounterStringAMD")(group, counter, bufSize, length, ref counterString);
+        }
+        public static void GetPerfMonitorCountersAMD(uint group, int[] numCounters, int[] maxActiveCounters, int countersSize, uint[] counters)
+        {
+            GetDelegate<getPerfMonitorCountersAMD>("glGetPerfMonitorCountersAMD")(group, numCounters, maxActiveCounters, countersSize, counters);
+        }
+        public static void GetPerfMonitorGroupStringAMD(uint group, int bufSize, int[] length, ref string groupString)
+        {
+            GetDelegate<getPerfMonitorGroupStringAMD>("glGetPerfMonitorGroupStringAMD")(group, bufSize, length, ref groupString);
+        }
+        public static void GetPerfMonitorGroupsAMD(int[] numGroups, int groupsSize, uint[] groups)
+        {
+            GetDelegate<getPerfMonitorGroupsAMD>("glGetPerfMonitorGroupsAMD")(numGroups, groupsSize, groups);
+        }
+        public static void SelectPerfMonitorCountersAMD(uint monitor, bool enable, uint group, int numCounters, uint[] counterList)
+        {
+            GetDelegate<selectPerfMonitorCountersAMD>("glSelectPerfMonitorCountersAMD")(monitor, enable, group, numCounters, counterList);
+        }
+
+        #endregion // GL_AMD_performance_monitor
+        #region GL_AMD_sample_positions
+
+        private delegate void setMultisamplefvAMD(uint pname, uint index, float[] val);
+
+        public static void SetMultisamplefvAMD(uint pname, uint index, float[] val)
+        {
+            GetDelegate<setMultisamplefvAMD>("glSetMultisamplefvAMD")(pname, index, val);
+        }
+
+        #endregion // GL_AMD_sample_positions
+        #region GL_AMD_sparse_texture
+
+        private delegate void texStorageSparseAMD(uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags);
+        private delegate void textureStorageSparseAMD(uint texture, uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags);
+        public static void TexStorageSparseAMD(uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags)
+        {
+            GetDelegate<texStorageSparseAMD>("glTexStorageSparseAMD")(target, internalFormat, width, height, depth, layers, flags);
+        }
+        public static void TextureStorageSparseAMD(uint texture, uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags)
+        {
+            GetDelegate<textureStorageSparseAMD>("glTextureStorageSparseAMD")(texture, target, internalFormat, width, height, depth, layers, flags);
+        }
+
+        #endregion // GL_AMD_sparse_texture
+        #region GL_AMD_stencil_operation_extended
+
+        private delegate void stencilOpValueAMD(uint face, uint value);
+        public static void StencilOpValueAMD(uint face, uint value)
+        {
+            GetDelegate<stencilOpValueAMD>("glStencilOpValueAMD")(face, value);
+        }
+
+        #endregion // GL_AMD_stencil_operation_extended
+        #region GL_AMD_vertex_shader_tessellator
+
+        private delegate void tessellationFactorAMD(float factor);
+        private delegate void tessellationModeAMD(uint mode);
+        public static void TessellationFactorAMD(float factor)
+        {
+            GetDelegate<tessellationFactorAMD>("glTessellationFactorAMD")(factor);
+        }
+        public static void TessellationModeAMD(uint mode)
+        {
+            GetDelegate<tessellationModeAMD>("glTessellationModeAMD")(mode);
+        }
+
+        #endregion // GL_AMD_vertex_shader_tessellator
+        #region GL_ANGLE_framebuffer_blit
+
+        private delegate void blitFramebufferANGLE(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter);
+        public static void BlitFramebufferANGLE(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter)
+        {
+            GetDelegate<blitFramebufferANGLE>("glBlitFramebufferANGLE")(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+        }
+
+        #endregion // GL_ANGLE_framebuffer_blit
+        #region GL_ANGLE_framebuffer_multisample
+
+        private delegate void renderbufferStorageMultisampleANGLE(uint target, int samples, uint internalFormat, int width, int height);
+        public static void RenderbufferStorageMultisampleANGLE(uint target, int samples, uint internalFormat, int width, int height)
+        {
+            GetDelegate<renderbufferStorageMultisampleANGLE>("glRenderbufferStorageMultisampleANGLE")(target, samples, internalFormat, width, height);
+        }
+
+        #endregion // GL_ANGLE_framebuffer_multisample
+        #region GL_ANGLE_instanced_arrays
+
+        private delegate void drawArraysInstancedANGLE(uint mode, int first, int count, int primCount);
+        private delegate void drawElementsInstancedANGLE(uint mode, int count, uint type, IntPtr indices, int primCount);
+        private delegate void vertexAttribDivisorANGLE(uint index, uint divisor);
+        public static void DrawArraysInstancedANGLE(uint mode, int first, int count, int primCount)
+        {
+            GetDelegate<drawArraysInstancedANGLE>("glDrawArraysInstancedANGLE")(mode, first, count, primCount);
+        }
+        public static void DrawElementsInstancedANGLE(uint mode, int count, uint type, IntPtr indices, int primCount)
+        {
+            GetDelegate<drawElementsInstancedANGLE>("glDrawElementsInstancedANGLE")(mode, count, type, indices, primCount);
+        }
+        public static void VertexAttribDivisorANGLE(uint index, uint divisor)
+        {
+            GetDelegate<vertexAttribDivisorANGLE>("glVertexAttribDivisorANGLE")(index, divisor);
+        }
+
+        #endregion // GL_ANGLE_instanced_arrays
+        #region GL_ANGLE_timer_query
+
+        private delegate void beginQueryANGLE(uint target, uint id);
+        private delegate void deleteQueriesANGLE(int n, uint[] ids);
+        private delegate void endQueryANGLE(uint target);
+        private delegate void genQueriesANGLE(int n, ref uint[] ids);
+        private delegate void getQueryObjecti64vANGLE(uint id, uint pname, long[] @params);
+        private delegate void getQueryObjectivANGLE(uint id, uint pname, int[] @params);
+        private delegate void getQueryObjectui64vANGLE(uint id, uint pname, ulong[] @params);
+        private delegate void getQueryObjectuivANGLE(uint id, uint pname, uint[] @params);
+        private delegate void getQueryivANGLE(uint target, uint pname, int[] @params);
+        private delegate bool isQueryANGLE(uint id);
+        private delegate void queryCounterANGLE(uint id, uint target);
+        public static void BeginQueryANGLE(uint target, uint id)
+        {
+            GetDelegate<beginQueryANGLE>("glBeginQueryANGLE")(target, id);
+        }
+        public static void DeleteQueriesANGLE(int n, uint[] ids)
+        {
+            GetDelegate<deleteQueriesANGLE>("glDeleteQueriesANGLE")(n, ids);
+        }
+        public static void EndQueryANGLE(uint target)
+        {
+            GetDelegate<endQueryANGLE>("glEndQueryANGLE")(target);
+        }
+        public static void GenQueriesANGLE(int n, ref uint[] ids)
+        {
+            GetDelegate<genQueriesANGLE>("glGenQueriesANGLE")(n, ref ids);
+        }
+        public static void GetQueryObjecti64vANGLE(uint id, uint pname, long[] @params)
+        {
+            GetDelegate<getQueryObjecti64vANGLE>("glGetQueryObjecti64vANGLE")(id, pname, @params);
+        }
+        public static void GetQueryObjectivANGLE(uint id, uint pname, int[] @params)
+        {
+            GetDelegate<getQueryObjectivANGLE>("glGetQueryObjectivANGLE")(id, pname, @params);
+        }
+        public static void GetQueryObjectui64vANGLE(uint id, uint pname, ulong[] @params)
+        {
+            GetDelegate<getQueryObjectui64vANGLE>("glGetQueryObjectui64vANGLE")(id, pname, @params);
+        }
+        public static void GetQueryObjectuivANGLE(uint id, uint pname, uint[] @params)
+        {
+            GetDelegate<getQueryObjectuivANGLE>("glGetQueryObjectuivANGLE")(id, pname, @params);
+        }
+        public static void GetQueryivANGLE(uint target, uint pname, int[] @params)
+        {
+            GetDelegate<getQueryivANGLE>("glGetQueryivANGLE")(target, pname, @params);
+        }
+        public static bool IsQueryANGLE(uint id)
+        {
+            return GetDelegate<isQueryANGLE>("glIsQueryANGLE")(id);
+        }
+        public static void QueryCounterANGLE(uint id, uint target)
+        {
+            GetDelegate<queryCounterANGLE>("glQueryCounterANGLE")(id, target);
+        }
+
+        #endregion // GL_ANGLE_timer_query
+        #region GL_ANGLE_translated_shader_source
+
+        private delegate void getTranslatedShaderSourceANGLE(uint shader, int bufsize, ref int length, ref string source);
+        public static void GetTranslatedShaderSourceANGLE(uint shader, int bufsize, ref int length, ref string source)
+        {
+            GetDelegate<getTranslatedShaderSourceANGLE>("glGetTranslatedShaderSourceANGLE")(shader, bufsize, ref length, ref source);
+        }
+
+        #endregion // GL_ANGLE_translated_shader_source
     }
 }
