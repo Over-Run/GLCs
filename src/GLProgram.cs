@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace GLCs
 {
@@ -85,6 +86,16 @@ namespace GLCs
         public void SetUniform(string name, int value)
         {
             GL.Uniform1i(GetUniform(name), value);
+        }
+
+        public void SetUniform(string name, float value)
+        {
+            GL.Uniform1f(GetUniform(name), value);
+        }
+
+        public void SetUniform(string name, Matrix4x4 mat)
+        {
+            GL.UniformMatrix4fv(GetUniform(name), false, mat);
         }
 
         public int GetAttrib(string name)

@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -14,6 +12,7 @@ namespace GLCs
 
     public static class GLFW
     {
+        private const string LIB = "glfw3.dll";
         #region Constants
 
         public const int VERSION_MAJOR = 3,
@@ -301,14 +300,14 @@ namespace GLCs
             LOCK_KEY_MODS = 0x00033004,
             RAW_MOUSE_MOTION = 0x00033005,
             CURSOR_NORMAL = 0x00034001,
-            GLFW_CURSOR_HIDDEN = 0x00034002,
-            GLFW_CURSOR_DISABLED = 0x00034003,
-            GLFW_ANY_RELEASE_BEHAVIOR = 0,
-            GLFW_RELEASE_BEHAVIOR_FLUSH = 0x00035001,
-            GLFW_RELEASE_BEHAVIOR_NONE = 0x00035002,
-            GLFW_NATIVE_CONTEXT_API = 0x00036001,
-            GLFW_EGL_CONTEXT_API = 0x00036002,
-            GLFW_OSMESA_CONTEXT_API = 0x00036003;
+            CURSOR_HIDDEN = 0x00034002,
+            CURSOR_DISABLED = 0x00034003,
+            ANY_RELEASE_BEHAVIOR = 0,
+            RELEASE_BEHAVIOR_FLUSH = 0x00035001,
+            RELEASE_BEHAVIOR_NONE = 0x00035002,
+            NATIVE_CONTEXT_API = 0x00036001,
+            EGL_CONTEXT_API = 0x00036002,
+            OSMESA_CONTEXT_API = 0x00036003;
         public const int ARROW_CURSOR = 0x00036001,
             IBEAN_CURSOR = 0x00036002,
             CROSSHAIR_CURSOR = 0x00036003,
@@ -316,7 +315,7 @@ namespace GLCs
             HRESIZE_CURSOR = 0x00036005,
             VRESIZE_CURSOR = 0x00036006;
         public const int CONNECTED = 0x00040001,
-            GLFW_DISCONNECTED = 0x00040002;
+            DISCONNECTED = 0x00040002;
         public const int JOYSTICK_HAT_BUTTONS = 0x00050001,
             COCOA_CHDIR_RESOURCES = 0x00051001,
             COCOA_MENUBAR = 0x00051002;
@@ -325,7 +324,6 @@ namespace GLCs
         #endregion // Constants
         #region Delegates
 
-        public delegate void GlProc();
         public delegate void VkProc();
         public delegate void ErrorFun(int errorCode, string description);
         public delegate void WindowPosFun(GLFWwindow window, int xPos, int yPos);
@@ -382,7 +380,7 @@ namespace GLCs
         #endregion // Structs
         #region Core
 
-        [DllImport("glfw3.dll", EntryPoint = "glfwInit")]
+        [DllImport(LIB, EntryPoint = "glfwInit")]
         private static extern int GlfwInit();
         /// <summary>
         /// Initializes the GLFW library.
@@ -464,7 +462,7 @@ namespace GLCs
         /// </ul>
         /// </para>
         /// </remarks>
-        [DllImport("glfw3.dll", EntryPoint = "glfwTerminate")]
+        [DllImport(LIB, EntryPoint = "glfwTerminate")]
         public static extern void Terminate();
         /// <summary>
         /// Sets the specified init hint to the desired value.
@@ -502,9 +500,9 @@ namespace GLCs
         /// </ul>
         /// </para>
         /// </remarks>
-        [DllImport("glfw3.dll", EntryPoint = "glfwInitHint")]
+        [DllImport(LIB, EntryPoint = "glfwInitHint")]
         public static extern void InitHint(int hint, int value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetVersion")]
+        [DllImport(LIB, EntryPoint = "glfwGetVersion")]
         public static extern void GetVersion(int[]? major, int[]? minor, int[]? rev);
         public static void GetVersion(ref int major, ref int minor, ref int rev)
         {
@@ -520,17 +518,17 @@ namespace GLCs
             GetVersion(ref major, ref minor, ref rev);
             return new int[] { major, minor, rev };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetVersionString")]
+        [DllImport(LIB, EntryPoint = "glfwGetVersionString")]
         public static extern string[] GetVersionString();
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetError")]
+        [DllImport(LIB, EntryPoint = "glfwGetError")]
         public static extern int GetError([Nullable] ref string description);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetErrorCallback"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwSetErrorCallback"), Nullable]
         public static extern ErrorFun SetErrorCallback([Nullable] ErrorFun callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitors"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitors"), Nullable]
         public static extern GLFWmonitor[] GetMonitors(IntPtr count);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetPrimaryMonitor"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetPrimaryMonitor"), Nullable]
         public static extern GLFWmonitor GetPrimaryMonitor();
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorPos")]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorPos")]
         public static extern void GetMonitorPos(GLFWmonitor monitor, ref int? xPos, ref int? yPos);
         public static int[] GetMonitorPos(GLFWmonitor monitor)
         {
@@ -538,7 +536,7 @@ namespace GLCs
             GetMonitorPos(monitor, ref xPos, ref yPos);
             return new int[] { xPos ?? 0, yPos ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorWorkarea")]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorWorkarea")]
         public static extern void GetMonitorWorkarea(GLFWmonitor monitor, ref int? xPos, ref int? yPos, ref int? width, ref int? height);
         public static int[] GetMonitorWorkarea(GLFWmonitor monitor)
         {
@@ -546,7 +544,7 @@ namespace GLCs
             GetMonitorWorkarea(monitor, ref xPos, ref yPos, ref width, ref height);
             return new int[] { xPos ?? 0, yPos ?? 0, width ?? 0, height ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorPhysicalSize")]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorPhysicalSize")]
         public static extern void GetMonitorPhysicalSize(GLFWmonitor monitor, ref int? widthMM, ref int? heightMM);
         public static int[] GetMonitorPhysicalSize(GLFWmonitor monitor)
         {
@@ -554,7 +552,7 @@ namespace GLCs
             GetMonitorPhysicalSize(monitor, ref widthMM, ref heightMM);
             return new int[] { widthMM ?? 0, heightMM ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorContentScale")]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorContentScale")]
         public static extern void GetMonitorContentScale(GLFWmonitor monitor, ref float? xScale, ref float? yScale);
         public static float[] GetMonitorContentScale(GLFWmonitor monitor)
         {
@@ -562,17 +560,17 @@ namespace GLCs
             GetMonitorContentScale(monitor, ref xScale, ref yScale);
             return new float[] { xScale ?? 0, yScale ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorName"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorName"), Nullable]
         public static extern byte[] GetMonitorName(GLFWmonitor monitor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetMonitorUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwSetMonitorUserPointer")]
         public static extern void SetMonitorUserPointer(GLFWmonitor monitor, IntPtr pointer);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMonitorUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwGetMonitorUserPointer")]
         public static extern IntPtr GetMonitorUserPointer(GLFWmonitor monitor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetMonitorCallback"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwSetMonitorCallback"), Nullable]
         public static extern MonitorFun SetMonitorCallback([Nullable] MonitorFun monitor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetVideoModes"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetVideoModes"), Nullable]
         public static extern IntPtr GetVideoModes(GLFWmonitor monitor, ref int count);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetVideoMode"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetVideoMode"), Nullable]
         private static extern IntPtr GlfwGetVideoMode(GLFWmonitor monitor);
         public static VidMode? GetVideoMode(GLFWmonitor monitor)
         {
@@ -583,39 +581,39 @@ namespace GLCs
                 return *(VidMode*)ptr.ToPointer();
             }
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetGamma")]
+        [DllImport(LIB, EntryPoint = "glfwSetGamma")]
         public static extern void SetGamma(GLFWmonitor monitor, float gamma);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetGammaRamp"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetGammaRamp"), Nullable]
         public static extern GammaRamp[] GetGammaRamp(GLFWmonitor monitor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetGammaRamp")]
+        [DllImport(LIB, EntryPoint = "glfwSetGammaRamp")]
         public static extern void SetGammaRamp(GLFWmonitor monitor, GammaRamp[] ramp);
-        [DllImport("glfw3.dll", EntryPoint = "glfwDefaultWindowHints")]
+        [DllImport(LIB, EntryPoint = "glfwDefaultWindowHints")]
         public static extern void DefaultWindowHints();
-        [DllImport("glfw3.dll", EntryPoint = "glfwWindowHint")]
+        [DllImport(LIB, EntryPoint = "glfwWindowHint")]
         public static extern void WindowHint(int hint, int value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwWindowHintString")]
+        [DllImport(LIB, EntryPoint = "glfwWindowHintString")]
         public static extern void WindowHintString(int hint, string value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindow")]
+        [DllImport(LIB, EntryPoint = "glfwCreateWindow")]
         public static extern GLFWwindow CreateWindow(int width, int height, string title, [Nullable] GLFWmonitor monitor, [Nullable] GLFWwindow share);
-        [DllImport("glfw3.dll", EntryPoint = "glfwDestroyWindow")]
+        [DllImport(LIB, EntryPoint = "glfwDestroyWindow")]
         public static extern void DestroyWindow(GLFWwindow window);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern int glfwWindowShouldClose(GLFWwindow window);
         public static bool WindowShouldClose(GLFWwindow window)
         {
             return glfwWindowShouldClose(window) == TRUE;
         }
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern void glfwSetWindowShouldClose(GLFWwindow window, int value);
         public static void SetWindowShouldClose(GLFWwindow window, bool value)
         {
             glfwSetWindowShouldClose(window, value ? TRUE : FALSE);
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowTitle")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowTitle")]
         public static extern void SetWindowTitle(GLFWwindow window, string title);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowIcon")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowIcon")]
         public static extern void SetWindowIcon(GLFWwindow window, int count, Image[] images);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowPos")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowPos")]
         public static extern void GetWindowPos(GLFWwindow window, int[]? xPos, int[]? yPos);
         public static void GetWindowPos(GLFWwindow window, ref int xPos, ref int yPos)
         {
@@ -630,9 +628,9 @@ namespace GLCs
             GetWindowPos(window, ref x, ref y);
             return new int[] { x, y };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowPos")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowPos")]
         public static extern void SetWindowPos(GLFWwindow window, int xPos, int yPos);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowSize")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowSize")]
         public static extern void GetWindowSize(GLFWwindow window, int[]? width, int[]? height);
         public static void GetWindowSize(GLFWwindow window, ref int width, ref int height)
         {
@@ -647,13 +645,13 @@ namespace GLCs
             GetWindowSize(window, ref w, ref h);
             return new int[] { w, h };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowSizeLimits")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowSizeLimits")]
         public static extern void SetWindowSizeLimits(GLFWwindow window, int minWidth, int minHeight, int maxWidth, int maxHeight);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowAspectRatio")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowAspectRatio")]
         public static extern void SetWindowAspectRatio(GLFWwindow window, int numer, int denom);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowSize")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowSize")]
         public static extern void SetWindowSize(GLFWwindow window, int width, int height);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetFramebufferSize")]
+        [DllImport(LIB, EntryPoint = "glfwGetFramebufferSize")]
         public static extern void GetFramebufferSize(GLFWwindow window, ref int width, ref int height);
         public static int[] GetFramebufferSize(GLFWwindow window)
         {
@@ -661,7 +659,7 @@ namespace GLCs
             GetFramebufferSize(window, ref w, ref h);
             return new int[] { w, h };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowFrameSize")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowFrameSize")]
         public static extern void GetWindowFrameSize(GLFWwindow window, ref int? left, ref int? top, ref int? right, ref int? bottom);
         public static int[] GetWindowFrameSize(GLFWwindow window)
         {
@@ -669,7 +667,7 @@ namespace GLCs
             GetWindowFrameSize(window, ref l, ref t, ref r, ref b);
             return new int[] { l ?? 0, t ?? 0, r ?? 0, b ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowContentScale")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowContentScale")]
         public static extern void GetWindowContentScale(GLFWwindow window, ref float? xScale, ref float? yScale);
         public static float[] GetWindowContentScale(GLFWwindow window)
         {
@@ -677,85 +675,85 @@ namespace GLCs
             GetWindowContentScale(window, ref xs, ref ys);
             return new float[] { xs ?? 0, ys ?? 0 };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowOpacity")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowOpacity")]
         public static extern float GetWindowOpacity(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowOpacity")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowOpacity")]
         public static extern void SetWindowOpacity(GLFWwindow window, float opacity);
-        [DllImport("glfw3.dll", EntryPoint = "glfwIconifyWindow")]
+        [DllImport(LIB, EntryPoint = "glfwIconifyWindow")]
         public static extern void IconifyWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwRestoreWindow")]
+        [DllImport(LIB, EntryPoint = "glfwRestoreWindow")]
         public static extern void RestoreWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwMaximizeWindow")]
+        [DllImport(LIB, EntryPoint = "glfwMaximizeWindow")]
         public static extern void MaximizeWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwShowWindow")]
+        [DllImport(LIB, EntryPoint = "glfwShowWindow")]
         public static extern void ShowWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwHideWindow")]
+        [DllImport(LIB, EntryPoint = "glfwHideWindow")]
         public static extern void HideWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwFocusWindow")]
+        [DllImport(LIB, EntryPoint = "glfwFocusWindow")]
         public static extern void FocusWindow(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwRequestWindowAttention")]
+        [DllImport(LIB, EntryPoint = "glfwRequestWindowAttention")]
         public static extern void RequestWindowAttention(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowMonitor"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowMonitor"), Nullable]
         public static extern GLFWmonitor GetWindowMonitor(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowMonitor")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowMonitor")]
         public static extern void SetWindowMonitor(GLFWwindow window, GLFWmonitor monitor, int xPos, int yPos, int width, int height, int refreshRate);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowAttrib")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowAttrib")]
         public static extern int GetWindowAttrib(GLFWwindow window, int attrib);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowAttrib")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowAttrib")]
         public static extern void SetWindowAttrib(GLFWwindow window, int attrib, int value);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowUserPointer")]
         public static extern void SetWindowUserPointer(GLFWwindow window, IntPtr pointer);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetWindowUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwGetWindowUserPointer")]
         public static extern IntPtr GetWindowUserPointer(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowPosCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowPosCallback")]
         public static extern WindowPosFun? SetWindowPosCallback(GLFWwindow window, WindowPosFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowSizeCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowSizeCallback")]
         public static extern WindowSizeFun? SetWindowSizeCallback(GLFWwindow window, WindowSizeFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowCloseCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowCloseCallback")]
         public static extern WindowCloseFun? SetWindowCloseCallback(GLFWwindow window, WindowCloseFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowRefreshCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowRefreshCallback")]
         public static extern WindowRefreshFun? SetWindowRefreshCallback(GLFWwindow window, WindowRefreshFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowFocusCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowFocusCallback")]
         public static extern WindowFocusFun? SetWindowFocusCallback(GLFWwindow window, WindowFocusFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowIconifyCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowIconifyCallback")]
         public static extern WindowIconifyFun? SetWindowIconifyCallback(GLFWwindow window, WindowIconifyFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowMaximizeCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowMaximizeCallback")]
         public static extern WindowMaximizeFun? SetWindowMaximizeCallback(GLFWwindow window, WindowMaximizeFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetFramebufferSizeCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetFramebufferSizeCallback")]
         public static extern FramebufferSizeFun? SetFramebufferSizeCallback(GLFWwindow window, FramebufferSizeFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetWindowContentScaleCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetWindowContentScaleCallback")]
         public static extern WindowContentScaleFun? SetWindowContentScaleCallback(GLFWwindow window, WindowContentScaleFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwPollEvents")]
+        [DllImport(LIB, EntryPoint = "glfwPollEvents")]
         public static extern void PollEvents();
-        [DllImport("glfw3.dll", EntryPoint = "glfwWaitEvents")]
+        [DllImport(LIB, EntryPoint = "glfwWaitEvents")]
         public static extern void WaitEvents();
-        [DllImport("glfw3.dll", EntryPoint = "glfwWaitEventsTimeout")]
+        [DllImport(LIB, EntryPoint = "glfwWaitEventsTimeout")]
         public static extern void WaitEventsTimeout(double timeout);
-        [DllImport("glfw3.dll", EntryPoint = "glfwPostEmptyEvent")]
+        [DllImport(LIB, EntryPoint = "glfwPostEmptyEvent")]
         public static extern void PostEmptyEvent();
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetInputMode")]
+        [DllImport(LIB, EntryPoint = "glfwGetInputMode")]
         public static extern int GetInputMode(GLFWwindow window, int mode);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetInputMode")]
+        [DllImport(LIB, EntryPoint = "glfwSetInputMode")]
         public static extern void SetInputMode(GLFWwindow window, int mode, int value);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern int glfwRawMouseMotionSupported();
         public static bool RawMouseMotionSupported()
         {
             return glfwRawMouseMotionSupported() == TRUE;
         }
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern byte[] glfwGetKeyName(int key, int scancode);
         public static string GetKeyName(int key, int scancode)
         {
             return Encoding.UTF8.GetString(glfwGetKeyName(key, scancode));
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetKeyScancode")]
+        [DllImport(LIB, EntryPoint = "glfwGetKeyScancode")]
         public static extern int GetKeyScancode(int key);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetKey")]
+        [DllImport(LIB, EntryPoint = "glfwGetKey")]
         public static extern int GetKey(GLFWwindow window, int key);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetMouseButton")]
+        [DllImport(LIB, EntryPoint = "glfwGetMouseButton")]
         public static extern int GetMouseButton(GLFWwindow window, int button);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetCursorPos")]
+        [DllImport(LIB, EntryPoint = "glfwGetCursorPos")]
         public static extern void GetCursorPos(GLFWwindow window, double[]? xPos, double[]? yPos);
         public static void GetCursorPos(GLFWwindow window, ref double xPos, ref double yPos)
         {
@@ -770,124 +768,120 @@ namespace GLCs
             GetCursorPos(window, ref x, ref y);
             return new double[] { x, y };
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCursorPos")]
+        [DllImport(LIB, EntryPoint = "glfwSetCursorPos")]
         public static extern void SetCursorPos(GLFWwindow window, double xPos, double yPos);
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateCursor"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwCreateCursor"), Nullable]
         public static extern GLFWcursor CreateCursor(Image[] image, int xHot, int yHot);
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateStandardCursor"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwCreateStandardCursor"), Nullable]
         public static extern GLFWcursor CreateStandardCursor(int shape);
-        [DllImport("glfw3.dll", EntryPoint = "glfwDestroyCursor")]
+        [DllImport(LIB, EntryPoint = "glfwDestroyCursor")]
         public static extern void DestroyCursor(IntPtr cursor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCursor")]
+        [DllImport(LIB, EntryPoint = "glfwSetCursor")]
         public static extern void SetCursor(GLFWwindow window, GLFWcursor? cursor);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetKeyCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetKeyCallback")]
         public static extern KeyFun? SetKeyCallback(GLFWwindow window, KeyFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCharCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetCharCallback")]
         public static extern CharFun? SetCharCallback(GLFWwindow window, CharFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCharModsCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetCharModsCallback")]
         public static extern CharModsFun? SetCharModsCallback(GLFWwindow window, CharModsFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetMouseButtonCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetMouseButtonCallback")]
         public static extern MouseButtonFun? SetMouseButtonCallback(GLFWwindow window, MouseButtonFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCursorPosCallback")]
-        public static extern CursorPosFun? SetMouseCursorPosCallback(GLFWwindow window, CursorPosFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetCursorEnterCallback")]
-        public static extern CursorEnterFun? SetMouseCursorEnterCallback(GLFWwindow window, CursorEnterFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetScrollCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetCursorPosCallback")]
+        public static extern CursorPosFun? SetCursorPosCallback(GLFWwindow window, CursorPosFun? callback);
+        [DllImport(LIB, EntryPoint = "glfwSetCursorEnterCallback")]
+        public static extern CursorEnterFun? SetCursorEnterCallback(GLFWwindow window, CursorEnterFun? callback);
+        [DllImport(LIB, EntryPoint = "glfwSetScrollCallback")]
         public static extern ScrollFun? SetScrollCallback(GLFWwindow window, ScrollFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetDropCallback")]
+        [DllImport(LIB, EntryPoint = "glfwSetDropCallback")]
         public static extern DropFun? SetDropCallback(GLFWwindow window, DropFun? callback);
-        [DllImport("glfw3.dll", EntryPoint = "glfwJoystickPresent")]
+        [DllImport(LIB, EntryPoint = "glfwJoystickPresent")]
         public static extern int JoystickPresent(int jid);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetJoystickAxes"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetJoystickAxes"), Nullable]
         public static extern float[] GetJoystickAxes(int jid, ref int count);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetJoystickButtons"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetJoystickButtons"), Nullable]
         public static extern byte[] GetJoystickButtons(int jid, ref int count);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetJoystickHats"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetJoystickHats"), Nullable]
         public static extern byte[] GetJoystickHats(int jid, ref int count);
-        [DllImport("glfw3.dll"), Nullable]
+        [DllImport(LIB), Nullable]
         public static extern byte[] glfwGetJoystickName(int jid);
         public static string GetJoystickName(int jid)
         {
             return Encoding.UTF8.GetString(glfwGetJoystickName(jid));
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetJoystickGUID"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetJoystickGUID"), Nullable]
         public static extern string GetJoystickGUID(int jid);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetJoystickUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwSetJoystickUserPointer")]
         public static extern void SetJoystickUserPointer(int jid, IntPtr pointer);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetJoystickUserPointer")]
+        [DllImport(LIB, EntryPoint = "glfwGetJoystickUserPointer")]
         public static extern IntPtr GetJoystickUserPointer(int jid);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern int glfwJoystickIsGamepad(int jid);
         public static bool JoystickIsGamepad(int jid)
         {
             return glfwJoystickIsGamepad(jid) == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetJoystickCallback")] public static extern JoystickFun? SetJoystickCallback(IntPtr window, JoystickFun? callback);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB, EntryPoint = "glfwSetJoystickCallback")] public static extern JoystickFun? SetJoystickCallback(IntPtr window, JoystickFun? callback);
+        [DllImport(LIB)]
         public static extern int glfwUpdateGamepadMappings(string @string);
         public static bool UpdateGamepadMappings(string @string)
         {
             return glfwUpdateGamepadMappings(@string) == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetGamepadName")]
+        [DllImport(LIB, EntryPoint = "glfwGetGamepadName")]
         public static extern string GetGamepadName(int jid);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern int glfwGetGamepadState(int jid, IntPtr state);
         public static bool GetGamepadState(int jid, IntPtr state)
         {
             return glfwGetGamepadState(jid, state) == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetClipboardString")]
+        [DllImport(LIB, EntryPoint = "glfwSetClipboardString")]
         public static extern void SetClipboardString(GLFWwindow window, string @string);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetClipboardString")]
+        [DllImport(LIB, EntryPoint = "glfwGetClipboardString")]
         public static extern string GetClipboardString(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetTime")]
+        [DllImport(LIB, EntryPoint = "glfwGetTime")]
         public static extern double GetTime();
-        [DllImport("glfw3.dll", EntryPoint = "glfwSetTime")]
+        [DllImport(LIB, EntryPoint = "glfwSetTime")]
         public static extern void SetTime(double time);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetTimerValue")]
+        [DllImport(LIB, EntryPoint = "glfwGetTimerValue")]
         public static extern ulong GetTimerValue();
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetTimerFrequency")]
+        [DllImport(LIB, EntryPoint = "glfwGetTimerFrequency")]
         public static extern ulong GetTimerFrequency();
-        [DllImport("glfw3.dll", EntryPoint = "glfwMakeContextCurrent")]
+        [DllImport(LIB, EntryPoint = "glfwMakeContextCurrent")]
         public static extern void MakeContextCurrent(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetCurrentContext")]
+        [DllImport(LIB, EntryPoint = "glfwGetCurrentContext")]
         public static extern GLFWwindow GetCurrentContext();
-        [DllImport("glfw3.dll", EntryPoint = "glfwSwapBuffers")]
+        [DllImport(LIB, EntryPoint = "glfwSwapBuffers")]
         public static extern void SwapBuffers(GLFWwindow window);
-        [DllImport("glfw3.dll", EntryPoint = "glfwSwapInterval")]
+        [DllImport(LIB, EntryPoint = "glfwSwapInterval")]
         public static extern void SwapInterval(int interval);
-        [DllImport("glfw3.dll", EntryPoint = "glfwExtensionSupported")]
+        [DllImport(LIB, EntryPoint = "glfwExtensionSupported")]
         private static extern int GlfwExtensionSupported(string extension);
         public static bool ExtensionSupported(string extension)
         {
             return GlfwExtensionSupported(extension) == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetProcAddress"), Nullable]
-        public static extern GlProc GlfwGetProcAddress(string procname);
-        public static GlProc GetProcAddress(string procname)
-        {
-            return GlfwGetProcAddress(procname);
-        }
-        [DllImport("glfw3.dll")]
-        public static extern int glfwVulkanSupported();
+        [DllImport(LIB, EntryPoint = "glfwGetProcAddress"), Nullable]
+        public static extern IntPtr GetProcAddress(string procname);
+        [DllImport(LIB)]
+        private static extern int glfwVulkanSupported();
         public static bool VulkanSupported()
         {
             return glfwVulkanSupported() == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetRequiredInstanceExtensions"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetRequiredInstanceExtensions"), Nullable]
         public static extern string[] GetRequiredInstanceExtensions(ref uint count);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
         public static extern VkProc GetInstanceProcAddress(VkInstance vkInstance, byte[] procName);
-        [DllImport("glfw3.dll", EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
+        [DllImport(LIB, EntryPoint = "glfwGetInstanceProcAddress"), Nullable]
         public static extern VkProc GetInstanceProcAddress(VkInstance vkInstance, string procName);
-        [DllImport("glfw3.dll")]
+        [DllImport(LIB)]
         public static extern int glfwGetPhysicalDevicePresentationSupport(VkInstance vkInstance, IntPtr device, uint queueFamily);
         public static bool GetPhysicalDevicePresentationSupport(VkInstance vkInstance, VkInstance device, uint queueFamily)
         {
             return glfwGetPhysicalDevicePresentationSupport(vkInstance, device, queueFamily) == TRUE;
         }
-        [DllImport("glfw3.dll", EntryPoint = "glfwCreateWindowSurface")]
+        [DllImport(LIB, EntryPoint = "glfwCreateWindowSurface")]
         public static extern IntPtr CreateWindowSurface(VkInstance vkInstance, GLFWwindow window, [Nullable] IntPtr allocator, IntPtr surface);
 
         #endregion // Core

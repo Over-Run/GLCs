@@ -1,15 +1,21 @@
 using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
+using static GLCs.Invokers;
 
 namespace GLCs
 {
     public static class GL
     {
+        internal const string LIB = "opengl32.dll";
         public const int VERSION_MAJOR = 4, VERSION_MINOR = 6;
-        [DllImport("opengl32.dll", EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
+        [DllImport(GL.LIB, EntryPoint = "wglGetProcAddress", CallingConvention = CallingConvention.StdCall), Nullable]
         public static extern IntPtr WglGetProcAddress(string lpszProc);
         public static T GetDelegate<T>(string lpszProc) =>
             Marshal.GetDelegateForFunctionPointer<T>(WglGetProcAddress(lpszProc));
+        public static T GetDelegate<T>(IntPtr proc) =>
+            Marshal.GetDelegateForFunctionPointer<T>(proc);
         #region Constants
 
         public const uint VERSION_1_1 = 1;
@@ -5996,227 +6002,250 @@ namespace GLCs
         public const uint WIN_swap_hint = 1;
 
         #endregion // Constants
+        #region GL_GLCs_ext
+
+        public static void TexParameterui(uint target, uint pname, uint param) =>
+            TexParameteri(target, pname, (int)param);
+        public static void TexParameteruiv(uint target, uint pname, uint[] @params)
+        {
+            int[] p = new int[@params.Length];
+            TexParameteriv(target, pname, p);
+            for (int i = 0; i < @params.Length; ++i)
+            {
+                @params[i] = (uint)p[i];
+            }
+        }
+
+        #endregion // GL_GLCs_ext
         #region GL11
 
-        [DllImport("opengl32.dll", EntryPoint = "glAccum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glAccum", CallingConvention = CallingConvention.StdCall)]
         public static extern void Accum(uint op, float value);
-        [DllImport("opengl32.dll", EntryPoint = "glAlphaFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glAlphaFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void AlphaFunc(uint func, float @ref);
-        [DllImport("opengl32.dll", EntryPoint = "glAreTexturesResident", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glAreTexturesResident", CallingConvention = CallingConvention.StdCall)]
         public static extern byte AreTexturesResident(int n, uint[] textures, byte[] residences);
-        [DllImport("opengl32.dll", EntryPoint = "glArrayElement", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glArrayElement", CallingConvention = CallingConvention.StdCall)]
         public static extern void ArrayElement(int i);
-        [DllImport("opengl32.dll", EntryPoint = "glBegin", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glBegin", CallingConvention = CallingConvention.StdCall)]
         public static extern void Begin(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glBindTexture", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glBindTexture", CallingConvention = CallingConvention.StdCall)]
         public static extern void BindTexture(uint target, uint texture);
-        [DllImport("opengl32.dll", EntryPoint = "glBitmap", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glBitmap", CallingConvention = CallingConvention.StdCall)]
         public static extern void Bitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, byte[] bitmap);
-        [DllImport("opengl32.dll", EntryPoint = "glBlendFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glBlendFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void BlendFunc(uint sfactor, uint dfactor);
-        [DllImport("opengl32.dll", EntryPoint = "glCallList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCallList", CallingConvention = CallingConvention.StdCall)]
         public static extern void CallList(uint list);
-        [DllImport("opengl32.dll", EntryPoint = "glCallLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCallLists", CallingConvention = CallingConvention.StdCall)]
         public static extern void CallLists(int n, uint type, IntPtr lists);
-        [DllImport("opengl32.dll", EntryPoint = "glClear", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClear", CallingConvention = CallingConvention.StdCall)]
         public static extern void Clear(uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glClearAccum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClearAccum", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearAccum(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glClearColor", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClearColor", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearColor(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glClearDepth", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClearDepth", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearDepth(double depth);
-        [DllImport("opengl32.dll", EntryPoint = "glClearIndex", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClearIndex", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearIndex(float c);
-        [DllImport("opengl32.dll", EntryPoint = "glClearStencil", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClearStencil", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearStencil(int s);
-        [DllImport("opengl32.dll", EntryPoint = "glClipPlane", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glClipPlane", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClipPlane(uint plane, double[] equation);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3b(sbyte red, sbyte green, sbyte blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3d(double red, double green, double blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3f(float red, float green, float blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3i(int red, int green, int blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3s(short red, short green, short blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3ub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3ub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ub(byte red, byte green, byte blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3ubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3ubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ubv(byte[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3ui", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3ui", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3ui(uint red, uint green, uint blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3uiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3uiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3uiv(uint[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3us", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3us", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3us(ushort red, ushort green, ushort blue);
-        [DllImport("opengl32.dll", EntryPoint = "glColor3usv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor3usv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color3usv(ushort[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4b(sbyte red, sbyte green, sbyte blue, sbyte alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4d(double red, double green, double blue, double alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4f(float red, float green, float blue, float alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4i(int red, int green, int blue, int alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4s(short red, short green, short blue, short alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4ub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4ub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ub(byte red, byte green, byte blue, byte alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4ubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4ubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ubv(byte[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4ui", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4ui", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4ui(uint red, uint green, uint blue, uint alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4uiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4uiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4uiv(uint[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4us", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4us", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4us(ushort red, ushort green, ushort blue, ushort alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColor4usv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColor4usv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Color4usv(ushort[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glColorMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColorMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorMask(byte red, byte green, byte blue, byte alpha);
-        [DllImport("opengl32.dll", EntryPoint = "glColorMaterial", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColorMaterial", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorMaterial(uint face, uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glColorPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glColorPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void ColorPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glCopyPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCopyPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyPixels(int x, int y, int width, int height, uint type);
-        [DllImport("opengl32.dll", EntryPoint = "glCopyTexImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCopyTexImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexImage1D(uint target, int level, uint internalFormat, int x, int y, int width, int border);
-        [DllImport("opengl32.dll", EntryPoint = "glCopyTexImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCopyTexImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexImage2D(uint target, int level, uint internalFormat, int x, int y, int width, int height, int border);
-        [DllImport("opengl32.dll", EntryPoint = "glCopyTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCopyTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexSubImage1D(uint target, int level, int xoffset, int x, int y, int width);
-        [DllImport("opengl32.dll", EntryPoint = "glCopyTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCopyTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void CopyTexSubImage2D(uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
-        [DllImport("opengl32.dll", EntryPoint = "glCullFace", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glCullFace", CallingConvention = CallingConvention.StdCall)]
         public static extern void CullFace(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glDeleteLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDeleteLists", CallingConvention = CallingConvention.StdCall)]
         public static extern void DeleteLists(uint list, int range);
-        [DllImport("opengl32.dll", EntryPoint = "glDeleteTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDeleteTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void DeleteTextures(int n, uint[] textures);
-        public static void DeleteTexture(uint texture)
+        public static void DeleteTextures(uint[] textures)
         {
-            DeleteTextures(1, new[] { texture });
+            DeleteTextures(textures.Length, textures);
         }
-        [DllImport("opengl32.dll", EntryPoint = "glDepthFunc", CallingConvention = CallingConvention.StdCall)]
+        public static void DeleteTextures(uint texture)
+        {
+            DeleteTextures(new[] { texture });
+        }
+        [DllImport(LIB, EntryPoint = "glDepthFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthFunc(uint func);
-        [DllImport("opengl32.dll", EntryPoint = "glDepthMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDepthMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthMask(byte flag);
-        [DllImport("opengl32.dll", EntryPoint = "glDepthRange", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDepthRange", CallingConvention = CallingConvention.StdCall)]
         public static extern void DepthRange(double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint = "glDisable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDisable", CallingConvention = CallingConvention.StdCall)]
         public static extern void Disable(uint cap);
-        [DllImport("opengl32.dll", EntryPoint = "glDisableClientState", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDisableClientState", CallingConvention = CallingConvention.StdCall)]
         public static extern void DisableClientState(uint array);
-        [DllImport("opengl32.dll", EntryPoint = "glDrawArrays", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDrawArrays", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawArrays(uint mode, int first, int count);
-        [DllImport("opengl32.dll", EntryPoint = "glDrawBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDrawBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawBuffer(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glDrawElements", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glDrawElements", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawElements(uint mode, int count, uint type, IntPtr indices);
-        [DllImport("opengl32.dll", EntryPoint = "glDrawPixels", CallingConvention = CallingConvention.StdCall)]
+        public static void DrawElements(uint mode, int count, uint type, long indices) =>
+            DrawElements(mode, count, type, indices == 0 ? IntPtr.Zero : new(indices));
+        [DllImport(LIB, EntryPoint = "glDrawPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void DrawPixels(int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlag", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEdgeFlag", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlag(byte flag);
-        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlagPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEdgeFlagPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlagPointer(int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glEdgeFlagv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEdgeFlagv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EdgeFlagv(byte[] flag);
-        [DllImport("opengl32.dll", EntryPoint = "glEnable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEnable", CallingConvention = CallingConvention.StdCall)]
         public static extern void Enable(uint cap);
-        [DllImport("opengl32.dll", EntryPoint = "glEnableClientState", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEnableClientState", CallingConvention = CallingConvention.StdCall)]
         public static extern void EnableClientState(uint array);
-        [DllImport("opengl32.dll", EntryPoint = "glEnd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEnd", CallingConvention = CallingConvention.StdCall)]
         public static extern void End();
-        [DllImport("opengl32.dll", EntryPoint = "glEndList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEndList", CallingConvention = CallingConvention.StdCall)]
         public static extern void EndList();
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1d(double u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord1dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1dv(double[] u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1f(float u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord1fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord1fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord1fv(float[] u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2d(double u, double v);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2dv(double[] u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2f(float u, float v);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalCoord2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalCoord2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalCoord2fv(float[] u);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalMesh1", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalMesh1", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalMesh1(uint mode, int i1, int i2);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalMesh2", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalMesh2", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalMesh2(uint mode, int i1, int i2, int j1, int j2);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalPoint1", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalPoint1", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalPoint1(int i);
-        [DllImport("opengl32.dll", EntryPoint = "glEvalPoint2", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glEvalPoint2", CallingConvention = CallingConvention.StdCall)]
         public static extern void EvalPoint2(int i, int j);
-        [DllImport("opengl32.dll", EntryPoint = "glFeedbackBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFeedbackBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void FeedbackBuffer(int size, uint type, float[] buffer);
-        [DllImport("opengl32.dll", EntryPoint = "glFinish", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFinish", CallingConvention = CallingConvention.StdCall)]
         public static extern void Finish();
-        [DllImport("opengl32.dll", EntryPoint = "glFlush", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFlush", CallingConvention = CallingConvention.StdCall)]
         public static extern void Flush();
-        [DllImport("opengl32.dll", EntryPoint = "glFogf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFogf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glFogfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFogfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogfv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glFogi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFogi", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogi(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glFogiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFogiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Fogiv(uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glFrontFace", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFrontFace", CallingConvention = CallingConvention.StdCall)]
         public static extern void FrontFace(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glFrustum", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glFrustum", CallingConvention = CallingConvention.StdCall)]
         public static extern void Frustum(double left, double right, double bottom, double top, double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint = "glGenLists", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGenLists", CallingConvention = CallingConvention.StdCall)]
         public static extern uint GenLists(int range);
-        [DllImport("opengl32.dll", EntryPoint = "glGenTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGenTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void GenTextures(int n, uint[] textures);
+        public static void GenTextures(uint[] textures) =>
+            GenTextures(textures.Length, textures);
         public static uint GenTexture()
         {
             uint[] tex = { 0 };
-            GenTextures(1, tex);
+            GenTextures(tex);
             return tex[0];
         }
-        [DllImport("opengl32.dll", EntryPoint = "glGetBooleanv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetBooleanv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetBooleanv(uint pname, byte[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetClipPlane", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetClipPlane", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetClipPlane(uint plane, double[] equation);
-        [DllImport("opengl32.dll", EntryPoint = "glGetDoublev", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetDoublev", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetDoublev(uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetError", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetError", CallingConvention = CallingConvention.StdCall)]
         public static extern uint GetError();
-        [DllImport("opengl32.dll", EntryPoint = "glGetFloatv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetFloatv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetFloatv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetIntegerv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetIntegerv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetIntegerv(uint pname, int[] @params);
         public static int GetInteger(uint pname)
         {
@@ -6224,924 +6253,734 @@ namespace GLCs
             GetIntegerv(pname, p);
             return p[0];
         }
-        [DllImport("opengl32.dll", EntryPoint = "glGetLightfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetLightfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetLightfv(uint light, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetLightiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetLightiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetLightiv(uint light, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetMapdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetMapdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapdv(uint target, uint query, double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glGetMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapfv(uint target, uint query, float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glGetMapiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetMapiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMapiv(uint target, uint query, int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glGetMaterialfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetMaterialfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMaterialfv(uint face, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetMaterialiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetMaterialiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetMaterialiv(uint face, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetPixelMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapfv(uint map, float[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapuiv(uint map, uint[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glGetPixelMapusv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetPixelMapusv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPixelMapusv(uint map, ushort[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glGetPointerv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetPointerv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPointerv(uint pname, IntPtr[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetPolygonStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetPolygonStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetPolygonStipple(byte[] mask);
-        [DllImport("opengl32.dll", EntryPoint = "glGetString", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetString", CallingConvention = CallingConvention.StdCall)]
         public static extern byte[] GetString(uint name);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexEnvfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexEnvfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexEnvfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexEnviv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexEnviv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexEnviv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexGendv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexGendv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGendv(uint coord, uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexGenfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexGenfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGenfv(uint coord, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexGeniv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexGeniv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexGeniv(uint coord, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexImage", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexImage(uint target, int level, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexLevelParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexLevelParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexLevelParameterfv(uint target, int level, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexLevelParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexLevelParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexLevelParameteriv(uint target, int level, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexParameterfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glGetTexParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glGetTexParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void GetTexParameteriv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glHint", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glHint", CallingConvention = CallingConvention.StdCall)]
         public static extern void Hint(uint target, uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void IndexMask(uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void IndexPointer(uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexd", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexd(double c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexdv(double[] c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexf(float c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexfv(float[] c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexi", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexi(int c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexiv(int[] c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexs", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexs", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexs(short c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexsv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexsv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexsv(short[] c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexub", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexub", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexub(byte c);
-        [DllImport("opengl32.dll", EntryPoint = "glIndexubv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIndexubv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Indexubv(byte[] c);
-        [DllImport("opengl32.dll", EntryPoint = "glInitNames", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glInitNames", CallingConvention = CallingConvention.StdCall)]
         public static extern void InitNames();
-        [DllImport("opengl32.dll", EntryPoint = "interleavedArrays", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "interleavedArrays", CallingConvention = CallingConvention.StdCall)]
         public static extern void InterleavedArrays(uint format, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glIsEnabled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIsEnabled", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsEnabled(uint cap);
-        [DllImport("opengl32.dll", EntryPoint = "glIsList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIsList", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsList(uint list);
-        [DllImport("opengl32.dll", EntryPoint = "glIsTexture", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glIsTexture", CallingConvention = CallingConvention.StdCall)]
         public static extern byte IsTexture(uint texture);
-        [DllImport("opengl32.dll", EntryPoint = "glLightModelf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightModelf", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModelf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glLightModelfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightModelfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModelfv(uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glLightModeli", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightModeli", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModeli(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glLightModeliv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightModeliv", CallingConvention = CallingConvention.StdCall)]
         public static extern void LightModeliv(uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glLightf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightf(uint light, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glLightfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightfv(uint light, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glLighti", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLighti", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lighti(uint light, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glLightiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLightiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Lightiv(uint light, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glLineStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLineStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void LineStipple(int factor, ushort pattern);
-        [DllImport("opengl32.dll", EntryPoint = "glLineWidth", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLineWidth", CallingConvention = CallingConvention.StdCall)]
         public static extern void LineWidth(float width);
-        [DllImport("opengl32.dll", EntryPoint = "glListBase", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glListBase", CallingConvention = CallingConvention.StdCall)]
         public static extern void ListBase(uint @base);
-        [DllImport("opengl32.dll", EntryPoint = "glLoadIdentity", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLoadIdentity", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadIdentity();
-        [DllImport("opengl32.dll", EntryPoint = "glLoadMatrixd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLoadMatrixd", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadMatrixd(double[] m);
-        [DllImport("opengl32.dll", EntryPoint = "glLoadMatrixf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLoadMatrixf", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadMatrixf(float[] m);
-        [DllImport("opengl32.dll", EntryPoint = "glLoadName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLoadName", CallingConvention = CallingConvention.StdCall)]
         public static extern void LoadName(uint name);
-        [DllImport("opengl32.dll", EntryPoint = "glLogicOp", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glLogicOp", CallingConvention = CallingConvention.StdCall)]
         public static extern void LogicOp(uint opcode);
-        [DllImport("opengl32.dll", EntryPoint = "glMap1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMap1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map1d(uint target, double u1, double u2, int stride, int order, double[] points);
-        [DllImport("opengl32.dll", EntryPoint = "glMap1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMap1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map1f(uint target, float u1, float u2, int stride, int order, float[] points);
-        [DllImport("opengl32.dll", EntryPoint = "glMap2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMap2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map2d(uint target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points);
-        [DllImport("opengl32.dll", EntryPoint = "glMap2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMap2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Map2f(uint target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points);
-        [DllImport("opengl32.dll", EntryPoint = "glMapGrid1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMapGrid1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid1d(int un, double u1, double u2);
-        [DllImport("opengl32.dll", EntryPoint = "glMapGrid1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMapGrid1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid1f(int un, float u1, float u2);
-        [DllImport("opengl32.dll", EntryPoint = "glMapGrid2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMapGrid2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
-        [DllImport("opengl32.dll", EntryPoint = "glMapGrid2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMapGrid2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void MapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
-        [DllImport("opengl32.dll", EntryPoint = "glMaterialf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMaterialf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialf(uint face, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glMaterialfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMaterialfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialfv(uint face, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glMateriali", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMateriali", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materiali(uint face, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glMaterialiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMaterialiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Materialiv(uint face, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glMatrixMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMatrixMode", CallingConvention = CallingConvention.StdCall)]
         public static extern void MatrixMode(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glMultMatrixd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMultMatrixd", CallingConvention = CallingConvention.StdCall)]
         public static extern void MultMatrixd(double[] m);
-        [DllImport("opengl32.dll", EntryPoint = "glMultMatrixf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glMultMatrixf", CallingConvention = CallingConvention.StdCall)]
         public static extern void MultMatrixf(float[] m);
-        [DllImport("opengl32.dll", EntryPoint = "glNewList", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNewList", CallingConvention = CallingConvention.StdCall)]
         public static extern void NewList(uint list, uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3b", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3b", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3b(sbyte nx, sbyte ny, sbyte nz);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3bv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3bv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3bv(sbyte[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3d(double nx, double ny, double nz);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3f(float nx, float ny, float nz);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3i(int nx, int ny, int nz);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3s(short nx, short ny, short nz);
-        [DllImport("opengl32.dll", EntryPoint = "glNormal3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormal3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Normal3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glNormalPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glNormalPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void NormalPointer(uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glOrtho", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glOrtho", CallingConvention = CallingConvention.StdCall)]
         public static extern void Ortho(double left, double right, double bottom, double top, double zNear, double zFar);
-        [DllImport("opengl32.dll", EntryPoint = "glPassThrough", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPassThrough", CallingConvention = CallingConvention.StdCall)]
         public static extern void PassThrough(float token);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelMapfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelMapfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapfv(uint map, int mapsize, float[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelMapuiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapuiv(uint map, int mapsize, uint[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelMapusv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelMapusv", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelMapusv(uint map, int mapsize, ushort[] values);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelStoref", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelStoref", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelStoref(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelStorei", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelStorei", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelStorei(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelTransferf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelTransferf", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelTransferf(uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelTransferi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelTransferi", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelTransferi(uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glPixelZoom", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPixelZoom", CallingConvention = CallingConvention.StdCall)]
         public static extern void PixelZoom(float xfactor, float yfactor);
-        [DllImport("opengl32.dll", EntryPoint = "glPointSize", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPointSize", CallingConvention = CallingConvention.StdCall)]
         public static extern void PointSize(float size);
-        [DllImport("opengl32.dll", EntryPoint = "glPolygonMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPolygonMode", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonMode(uint face, uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glPolygonOffset", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPolygonOffset", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonOffset(float factor, float units);
-        [DllImport("opengl32.dll", EntryPoint = "glPolygonStipple", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPolygonStipple", CallingConvention = CallingConvention.StdCall)]
         public static extern void PolygonStipple(byte[] mask);
-        [DllImport("opengl32.dll", EntryPoint = "glPopAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPopAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopAttrib();
-        [DllImport("opengl32.dll", EntryPoint = "glPopClientAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPopClientAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopClientAttrib();
-        [DllImport("opengl32.dll", EntryPoint = "glPopMatrix", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPopMatrix", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopMatrix();
-        [DllImport("opengl32.dll", EntryPoint = "glPopName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPopName", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopName();
-        [DllImport("opengl32.dll", EntryPoint = "glPrioritizeTextures", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPrioritizeTextures", CallingConvention = CallingConvention.StdCall)]
         public static extern void PrioritizeTextures(int n, uint[] textures, float[] priorities);
-        [DllImport("opengl32.dll", EntryPoint = "glPushAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPushAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushAttrib(uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glPushClientAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPushClientAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushClientAttrib(uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glPushMatrix", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPushMatrix", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushMatrix();
-        [DllImport("opengl32.dll", EntryPoint = "glPushName", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glPushName", CallingConvention = CallingConvention.StdCall)]
         public static extern void PushName(uint name);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2d(double x, double y);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2f(float x, float y);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2i(int x, int y);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2s(short x, short y);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3d(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3f(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3i(int x, int y, int z);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3s(short x, short y, short z);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4d(double x, double y, double z, double w);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4f(float x, float y, float z, float w);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4i(int x, int y, int z, int w);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4s(short x, short y, short z, short w);
-        [DllImport("opengl32.dll", EntryPoint = "glRasterPos4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRasterPos4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void RasterPos4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glReadBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glReadBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void ReadBuffer(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glReadPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glReadPixels", CallingConvention = CallingConvention.StdCall)]
         public static extern void ReadPixels(int x, int y, int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glRectd", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectd", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectd(double x1, double y1, double x2, double y2);
-        [DllImport("opengl32.dll", EntryPoint = "glRectdv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectdv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectdv(double[] v1, double[] v2);
-        [DllImport("opengl32.dll", EntryPoint = "glRectf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectf", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectf(float x1, float y1, float x2, float y2);
-        [DllImport("opengl32.dll", EntryPoint = "glRectfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectfv(float[] v1, float[] v2);
-        [DllImport("opengl32.dll", EntryPoint = "glRecti", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRecti", CallingConvention = CallingConvention.StdCall)]
         public static extern void Recti(int x1, int y1, int x2, int y2);
-        [DllImport("opengl32.dll", EntryPoint = "glRectiv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectiv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectiv(int[] v1, int[] v2);
-        [DllImport("opengl32.dll", EntryPoint = "glRects", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRects", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rects(short x1, short y1, short x2, short y2);
-        [DllImport("opengl32.dll", EntryPoint = "glRectsv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRectsv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rectsv(short[] v1, short[] v2);
-        [DllImport("opengl32.dll", EntryPoint = "glRenderMode", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRenderMode", CallingConvention = CallingConvention.StdCall)]
         public static extern int RenderMode(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glRotated", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRotated", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rotated(double angle, double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint = "glRotatef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glRotatef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Rotatef(float angle, float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint = "glScaled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glScaled", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scaled(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint = "glScalef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glScalef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scalef(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint = "glScissor", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glScissor", CallingConvention = CallingConvention.StdCall)]
         public static extern void Scissor(int x, int y, int width, int height);
-        [DllImport("opengl32.dll", EntryPoint = "glSelectBuffer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glSelectBuffer", CallingConvention = CallingConvention.StdCall)]
         public static extern void SelectBuffer(int size, IntPtr buffer);
-        [DllImport("opengl32.dll", EntryPoint = "glShadeModel", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glShadeModel", CallingConvention = CallingConvention.StdCall)]
         public static extern void ShadeModel(uint mode);
-        [DllImport("opengl32.dll", EntryPoint = "glStencilFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glStencilFunc", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilFunc(uint func, int @ref, uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glStencilMask", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glStencilMask", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilMask(uint mask);
-        [DllImport("opengl32.dll", EntryPoint = "glStencilOp", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glStencilOp", CallingConvention = CallingConvention.StdCall)]
         public static extern void StencilOp(uint fail, uint zfail, uint zpass);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1d(double s);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1f(float s);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1i(int s);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1s(short s);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord1sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord1sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord1sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2d(double s, double t);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2f(float s, float t);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2i(int s, int t);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2s(short s, short t);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3d(double s, double t, double r);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3f(float s, float t, float r);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3i(int s, int t, int r);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3s(short s, short t, short r);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4d(double s, double t, double r, double q);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4f(float s, float t, float r, float q);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4i(int s, int t, int r, int q);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4s(short s, short t, short r, short q);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoord4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoord4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoord4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glTexCoordPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexCoordPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexCoordPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glTexEnvf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexEnvf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvf(uint target, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexEnvfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexEnvfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexEnvi", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexEnvi", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnvi(uint target, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexEnviv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexEnviv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexEnviv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGend", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGend", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGend(uint coord, uint pname, double param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGendv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGendv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGendv(uint coord, uint pname, double[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGenf", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGenf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGenf(uint coord, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGenfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGenfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGenfv(uint coord, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGeni", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGeni", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGeni(uint coord, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexGeniv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexGeniv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexGeniv(uint coord, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexImage1D(uint target, int level, int internalformat, int width, int border, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glTexImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexImage2D(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glTexParameterf", CallingConvention = CallingConvention.StdCall)]
+        public static void TexImage2D<T>(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, T[] pixels) where T : unmanaged
+        {
+            unsafe
+            {
+                fixed (T* ptr = pixels)
+                {
+                    TexImage2D(target, level, internalformat, width, height, border, format, type, new(ptr));
+                }
+            }
+        }
+        [DllImport(LIB, EntryPoint = "glTexParameterf", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameterf(uint target, uint pname, float param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexParameterfv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexParameterfv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameterfv(uint target, uint pname, float[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexParameteri", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexParameteri", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameteri(uint target, uint pname, int param);
-        [DllImport("opengl32.dll", EntryPoint = "glTexParameteriv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexParameteriv", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexParameteriv(uint target, uint pname, int[] @params);
-        [DllImport("opengl32.dll", EntryPoint = "glTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexSubImage1D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTexSubImage2D", CallingConvention = CallingConvention.StdCall)]
         public static extern void TexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels);
-        [DllImport("opengl32.dll", EntryPoint = "glTranslated", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTranslated", CallingConvention = CallingConvention.StdCall)]
         public static extern void Translated(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint = "glTranslatef", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glTranslatef", CallingConvention = CallingConvention.StdCall)]
         public static extern void Translatef(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2d(double x, double y);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2f(float x, float y);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2i(int x, int y);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2s(short x, short y);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex2sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex2sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex2sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3d(double x, double y, double z);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3f(float x, float y, float z);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3i(int x, int y, int z);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3s(short x, short y, short z);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex3sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex3sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex3sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4d", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4d", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4d(double x, double y, double z, double w);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4dv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4dv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4dv(double[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4f", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4f", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4f(float x, float y, float z, float w);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4fv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4fv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4fv(float[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4i", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4i", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4i(int x, int y, int z, int w);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4iv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4iv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4iv(int[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4s", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4s", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4s(short x, short y, short z, short w);
-        [DllImport("opengl32.dll", EntryPoint = "glVertex4sv", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertex4sv", CallingConvention = CallingConvention.StdCall)]
         public static extern void Vertex4sv(short[] v);
-        [DllImport("opengl32.dll", EntryPoint = "glVertexPointer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glVertexPointer", CallingConvention = CallingConvention.StdCall)]
         public static extern void VertexPointer(int size, uint type, int stride, IntPtr pointer);
-        [DllImport("opengl32.dll", EntryPoint = "glViewport", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(LIB, EntryPoint = "glViewport", CallingConvention = CallingConvention.StdCall)]
         public static extern void Viewport(int x, int y, int width, int height);
 
         #endregion // GL11
         #region GL12
 
-        private delegate void copyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
-        private delegate void drawRangeElements(uint mode, uint start, uint end, int count, uint type, IntPtr indices);
-        private delegate void texImage3D(uint target, int level, int internalFormat, int width, int height, int depth, int border, uint format, uint type, IntPtr pixels);
-        private delegate void texSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels);
         public static void CopyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) =>
-            GetDelegate<copyTexSubImage3D>("glCopyTexSubImage3D")(target, level, xoffset, yoffset, zoffset, x, y, width, height);
+            GetDelegate<InvokeUIIIIIIIIV>(GLCaps.CopyTexSubImage3D)(target, level, xoffset, yoffset, zoffset, x, y, width, height);
         public static void DrawRangeElements(uint mode, uint start, uint end, int count, uint type, IntPtr indices) =>
-            GetDelegate<drawRangeElements>("glDrawRangeElements")(mode, start, end, count, type, indices);
+            GetDelegate<InvokeUUUIUPV>(GLCaps.DrawRangeElements)(mode, start, end, count, type, indices);
         public static void TexImage3D(uint target, int level, int internalFormat, int width, int height, int depth, int border, uint format, uint type, IntPtr pixels) =>
-            GetDelegate<texImage3D>("glTexImage3D")(target, level, internalFormat, width, height, depth, border, format, type, pixels);
+            GetDelegate<InvokeUIIIIIIUUPV>(GLCaps.TexImage3D)(target, level, internalFormat, width, height, depth, border, format, type, pixels);
         public static void TexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels) =>
-            GetDelegate<texSubImage3D>("glTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+            GetDelegate<InvokeUIIIIIIIUUPV>(GLCaps.TexSubImage3D)(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 
         #endregion // GL12
         #region GL13
 
-        private delegate void activeTexture(uint texture);
-        private delegate void clientActiveTexture(uint texture);
-        private delegate void compressedTexImage1D(uint target, int level, uint internalformat, int width, int border, int imageSize, IntPtr data);
-        private delegate void compressedTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, int imageSize, IntPtr data);
-        private delegate void compressedTexImage3D(uint target, int level, uint internalformat, int width, int height, int depth, int border, int imageSize, IntPtr data);
-        private delegate void compressedTexSubImage1D(uint target, int level, int xoffset, int width, uint format, int imageSize, IntPtr data);
-        private delegate void compressedTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data);
-        private delegate void compressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data);
-        private delegate void getCompressedTexImage(uint target, int lod, IntPtr img);
-        private delegate void loadTransposeMatrixd(double[] m);
-        private delegate void loadTransposeMatrixf(float[] m);
-        private delegate void multTransposeMatrixd(double[] m);
-        private delegate void multTransposeMatrixf(float[] m);
-        private delegate void multiTexCoord1d(uint target, double s);
-        private delegate void multiTexCoord1dv(uint target, double[] v);
-        private delegate void multiTexCoord1f(uint target, float s);
-        private delegate void multiTexCoord1fv(uint target, float[] v);
-        private delegate void multiTexCoord1i(uint target, int s);
-        private delegate void multiTexCoord1iv(uint target, int[] v);
-        private delegate void multiTexCoord1s(uint target, short s);
-        private delegate void multiTexCoord1sv(uint target, short[] v);
-        private delegate void multiTexCoord2d(uint target, double s, double t);
-        private delegate void multiTexCoord2dv(uint target, double[] v);
-        private delegate void multiTexCoord2f(uint target, float s, float t);
-        private delegate void multiTexCoord2fv(uint target, float[] v);
-        private delegate void multiTexCoord2i(uint target, int s, int t);
-        private delegate void multiTexCoord2iv(uint target, int[] v);
-        private delegate void multiTexCoord2s(uint target, short s, short t);
-        private delegate void multiTexCoord2sv(uint target, short[] v);
-        private delegate void multiTexCoord3d(uint target, double s, double t, double r);
-        private delegate void multiTexCoord3dv(uint target, double[] v);
-        private delegate void multiTexCoord3f(uint target, float s, float t, float r);
-        private delegate void multiTexCoord3fv(uint target, float[] v);
-        private delegate void multiTexCoord3i(uint target, int s, int t, int r);
-        private delegate void multiTexCoord3iv(uint target, int[] v);
-        private delegate void multiTexCoord3s(uint target, short s, short t, short r);
-        private delegate void multiTexCoord3sv(uint target, short[] v);
-        private delegate void multiTexCoord4d(uint target, double s, double t, double r, double q);
-        private delegate void multiTexCoord4dv(uint target, double[] v);
-        private delegate void multiTexCoord4f(uint target, float s, float t, float r, float q);
-        private delegate void multiTexCoord4fv(uint target, float[] v);
-        private delegate void multiTexCoord4i(uint target, int s, int t, int r, int q);
-        private delegate void multiTexCoord4iv(uint target, int[] v);
-        private delegate void multiTexCoord4s(uint target, short s, short t, short r, short q);
-        private delegate void multiTexCoord4sv(uint target, short[] v);
-        private delegate void sampleCoverage(float value, bool invert);
         public static void ActiveTexture(uint texture) =>
-            GetDelegate<activeTexture>("glActiveTexture")(texture);
+            GetDelegate<InvokeUV>(GLCaps.ActiveTexture)(texture);
         public static void ClientActiveTexture(uint texture) =>
-            GetDelegate<clientActiveTexture>("glClientActiveTexture")(texture);
+            GetDelegate<InvokeUV>(GLCaps.ClientActiveTexture)(texture);
         public static void CompressedTexImage1D(uint target, int level, uint internalformat, int width, int border, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexImage1D>("glCompressedTexImage1D")(target, level, internalformat, width, border, imageSize, data);
+            GetDelegate<InvokeUIUIIIPV>(GLCaps.CompressedTexImage1D)(target, level, internalformat, width, border, imageSize, data);
         public static void CompressedTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexImage2D>("glCompressedTexImage2D")(target, level, internalformat, width, height, border, imageSize, data);
+            GetDelegate<InvokeUIUIIIIPV>(GLCaps.CompressedTexImage2D)(target, level, internalformat, width, height, border, imageSize, data);
         public static void CompressedTexImage3D(uint target, int level, uint internalformat, int width, int height, int depth, int border, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexImage3D>("glCompressedTexImage3D")(target, level, internalformat, width, height, depth, border, imageSize, data);
+            GetDelegate<InvokeUIUIIIIIPV>(GLCaps.CompressedTexImage3D)(target, level, internalformat, width, height, depth, border, imageSize, data);
         public static void CompressedTexSubImage1D(uint target, int level, int xoffset, int width, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexSubImage1D>("glCompressedTexSubImage1D")(target, level, xoffset, width, format, imageSize, data);
+            GetDelegate<InvokeUIIIUIPV>(GLCaps.CompressedTexSubImage1D)(target, level, xoffset, width, format, imageSize, data);
         public static void CompressedTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexSubImage2D>("glCompressedTexSubImage2D")(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+            GetDelegate<InvokeUIIIIIUIPV>(GLCaps.CompressedTexSubImage2D)(target, level, xoffset, yoffset, width, height, format, imageSize, data);
         public static void CompressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTexSubImage3D>("glCompressedTexSubImage3D")(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+            GetDelegate<InvokeUIIIIIIIUIPV>(GLCaps.CompressedTexSubImage3D)(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
         public static void GetCompressedTexImage(uint target, int lod, IntPtr img) =>
-            GetDelegate<getCompressedTexImage>("glGetCompressedTexImage")(target, lod, img);
+            GetDelegate<InvokeUIPV>(GLCaps.GetCompressedTexImage)(target, lod, img);
         public static void LoadTransposeMatrixd(double[] m) =>
-            GetDelegate<loadTransposeMatrixd>("glLoadTransposeMatrixd")(m);
+            GetDelegate<InvokeOdV>(GLCaps.LoadTransposeMatrixd)(m);
         public static void LoadTransposeMatrixf(float[] m) =>
-            GetDelegate<loadTransposeMatrixf>("glLoadTransposeMatrixf")(m);
+            GetDelegate<InvokeOfV>(GLCaps.LoadTransposeMatrixf)(m);
         public static void MultTransposeMatrixd(double[] m) =>
-            GetDelegate<multTransposeMatrixd>("glMultTransposeMatrixd")(m);
+            GetDelegate<InvokeOdV>(GLCaps.MultTransposeMatrixd)(m);
         public static void MultTransposeMatrixf(float[] m) =>
-            GetDelegate<multTransposeMatrixf>("glMultTransposeMatrixf")(m);
+            GetDelegate<InvokeOfV>(GLCaps.MultTransposeMatrixf)(m);
         public static void MultiTexCoord1d(uint target, double s) =>
-            GetDelegate<multiTexCoord1d>("glMultiTexCoord1d")(target, s);
+            GetDelegate<InvokeUDV>(GLCaps.MultiTexCoord1d)(target, s);
         public static void MultiTexCoord1dv(uint target, double[] v) =>
-            GetDelegate<multiTexCoord1dv>("glMultiTexCoord1dv")(target, v);
+            GetDelegate<InvokeUOdV>(GLCaps.MultiTexCoord1dv)(target, v);
         public static void MultiTexCoord1f(uint target, float s) =>
-            GetDelegate<multiTexCoord1f>("glMultiTexCoord1f")(target, s);
+            GetDelegate<InvokeUFV>(GLCaps.MultiTexCoord1f)(target, s);
         public static void MultiTexCoord1fv(uint target, float[] v) =>
-            GetDelegate<multiTexCoord1fv>("glMultiTexCoord1fv")(target, v);
+            GetDelegate<InvokeUOfV>(GLCaps.MultiTexCoord1fv)(target, v);
         public static void MultiTexCoord1i(uint target, int s) =>
-            GetDelegate<multiTexCoord1i>("glMultiTexCoord1i")(target, s);
+            GetDelegate<InvokeUIV>(GLCaps.MultiTexCoord1i)(target, s);
         public static void MultiTexCoord1iv(uint target, int[] v) =>
-            GetDelegate<multiTexCoord1iv>("glMultiTexCoord1iv")(target, v);
+            GetDelegate<InvokeUOiV>(GLCaps.MultiTexCoord1iv)(target, v);
         public static void MultiTexCoord1s(uint target, short s) =>
-            GetDelegate<multiTexCoord1s>("glMultiTexCoord1s")(target, s);
+            GetDelegate<InvokeUSV>(GLCaps.MultiTexCoord1s)(target, s);
         public static void MultiTexCoord1sv(uint target, short[] v) =>
-            GetDelegate<multiTexCoord1sv>("glMultiTexCoord1sv")(target, v);
+            GetDelegate<InvokeUOsV>(GLCaps.MultiTexCoord1sv)(target, v);
         public static void MultiTexCoord2d(uint target, double s, double t) =>
-            GetDelegate<multiTexCoord2d>("glMultiTexCoord2d")(target, s, t);
+            GetDelegate<InvokeUDDV>(GLCaps.MultiTexCoord2d)(target, s, t);
         public static void MultiTexCoord2dv(uint target, double[] v) =>
-            GetDelegate<multiTexCoord2dv>("glMultiTexCoord2dv")(target, v);
+            GetDelegate<InvokeUOdV>(GLCaps.MultiTexCoord2dv)(target, v);
         public static void MultiTexCoord2f(uint target, float s, float t) =>
-            GetDelegate<multiTexCoord2f>("glMultiTexCoord2f")(target, s, t);
+            GetDelegate<InvokeUFFV>(GLCaps.MultiTexCoord2f)(target, s, t);
         public static void MultiTexCoord2fv(uint target, float[] v) =>
-            GetDelegate<multiTexCoord2fv>("glMultiTexCoord2fv")(target, v);
+            GetDelegate<InvokeUOfV>(GLCaps.MultiTexCoord2fv)(target, v);
         public static void MultiTexCoord2i(uint target, int s, int t) =>
-            GetDelegate<multiTexCoord2i>("glMultiTexCoord2i")(target, s, t);
+            GetDelegate<InvokeUIIV>(GLCaps.MultiTexCoord2i)(target, s, t);
         public static void MultiTexCoord2iv(uint target, int[] v) =>
-            GetDelegate<multiTexCoord2iv>("glMultiTexCoord2iv")(target, v);
+            GetDelegate<InvokeUOiV>(GLCaps.MultiTexCoord2iv)(target, v);
         public static void MultiTexCoord2s(uint target, short s, short t) =>
-            GetDelegate<multiTexCoord2s>("glMultiTexCoord2s")(target, s, t);
+            GetDelegate<InvokeUSSV>(GLCaps.MultiTexCoord2s)(target, s, t);
         public static void MultiTexCoord2sv(uint target, short[] v) =>
-            GetDelegate<multiTexCoord2sv>("glMultiTexCoord2sv")(target, v);
+            GetDelegate<InvokeUOsV>(GLCaps.MultiTexCoord2sv)(target, v);
         public static void MultiTexCoord3d(uint target, double s, double t, double r) =>
-            GetDelegate<multiTexCoord3d>("glMultiTexCoord3d")(target, s, t, r);
+            GetDelegate<InvokeUDDDV>(GLCaps.MultiTexCoord3d)(target, s, t, r);
         public static void MultiTexCoord3dv(uint target, double[] v) =>
-            GetDelegate<multiTexCoord3dv>("glMultiTexCoord3dv")(target, v);
+            GetDelegate<InvokeUOdV>(GLCaps.MultiTexCoord3dv)(target, v);
         public static void MultiTexCoord3f(uint target, float s, float t, float r) =>
-            GetDelegate<multiTexCoord3f>("glMultiTexCoord3f")(target, s, t, r);
+            GetDelegate<InvokeUFFFV>(GLCaps.MultiTexCoord3f)(target, s, t, r);
         public static void MultiTexCoord3fv(uint target, float[] v) =>
-            GetDelegate<multiTexCoord3fv>("glMultiTexCoord3fv")(target, v);
+            GetDelegate<InvokeUOfV>(GLCaps.MultiTexCoord3fv)(target, v);
         public static void MultiTexCoord3i(uint target, int s, int t, int r) =>
-            GetDelegate<multiTexCoord3i>("glMultiTexCoord3i")(target, s, t, r);
+            GetDelegate<InvokeUIIIV>(GLCaps.MultiTexCoord3i)(target, s, t, r);
         public static void MultiTexCoord3iv(uint target, int[] v) =>
-            GetDelegate<multiTexCoord3iv>("glMultiTexCoord3iv")(target, v);
+            GetDelegate<InvokeUOiV>(GLCaps.MultiTexCoord3iv)(target, v);
         public static void MultiTexCoord3s(uint target, short s, short t, short r) =>
-            GetDelegate<multiTexCoord3s>("glMultiTexCoord3s")(target, s, t, r);
+            GetDelegate<InvokeUSSSV>(GLCaps.MultiTexCoord3s)(target, s, t, r);
         public static void MultiTexCoord3sv(uint target, short[] v) =>
-            GetDelegate<multiTexCoord3sv>("glMultiTexCoord3sv")(target, v);
+            GetDelegate<InvokeUOsV>(GLCaps.MultiTexCoord3sv)(target, v);
         public static void MultiTexCoord4d(uint target, double s, double t, double r, double q) =>
-            GetDelegate<multiTexCoord4d>("glMultiTexCoord4d")(target, s, t, r, q);
+            GetDelegate<InvokeUDDDDV>(GLCaps.MultiTexCoord4d)(target, s, t, r, q);
         public static void MultiTexCoord4dv(uint target, double[] v) =>
-            GetDelegate<multiTexCoord4dv>("glMultiTexCoord4dv")(target, v);
+            GetDelegate<InvokeUOdV>(GLCaps.MultiTexCoord4dv)(target, v);
         public static void MultiTexCoord4f(uint target, float s, float t, float r, float q) =>
-            GetDelegate<multiTexCoord4f>("glMultiTexCoord4f")(target, s, t, r, q);
+            GetDelegate<InvokeUFFFFV>(GLCaps.MultiTexCoord4f)(target, s, t, r, q);
         public static void MultiTexCoord4fv(uint target, float[] v) =>
-            GetDelegate<multiTexCoord4fv>("glMultiTexCoord4fv")(target, v);
+            GetDelegate<InvokeUOfV>(GLCaps.MultiTexCoord4fv)(target, v);
         public static void MultiTexCoord4i(uint target, int s, int t, int r, int q) =>
-            GetDelegate<multiTexCoord4i>("glMultiTexCoord4i")(target, s, t, r, q);
+            GetDelegate<InvokeUIIIIV>(GLCaps.MultiTexCoord4i)(target, s, t, r, q);
         public static void MultiTexCoord4iv(uint target, int[] v) =>
-            GetDelegate<multiTexCoord4iv>("glMultiTexCoord4iv")(target, v);
+            GetDelegate<InvokeUOiV>(GLCaps.MultiTexCoord4iv)(target, v);
         public static void MultiTexCoord4s(uint target, short s, short t, short r, short q) =>
-            GetDelegate<multiTexCoord4s>("glMultiTexCoord4s")(target, s, t, r, q);
+            GetDelegate<InvokeUSSSSV>(GLCaps.MultiTexCoord4s)(target, s, t, r, q);
         public static void MultiTexCoord4sv(uint target, short[] v) =>
-            GetDelegate<multiTexCoord4sv>("glMultiTexCoord4sv")(target, v);
+            GetDelegate<InvokeUOsV>(GLCaps.MultiTexCoord4sv)(target, v);
         public static void SampleCoverage(float value, bool invert) =>
-            GetDelegate<sampleCoverage>("glSampleCoverage")(value, invert);
+            GetDelegate<InvokeFZV>(GLCaps.SampleCoverage)(value, invert);
 
         #endregion // GL13
         #region GL14
 
-        private delegate void blendColor(float red, float green, float blue, float alpha);
-        private delegate void blendEquation(uint mode);
-        private delegate void blendFuncSeparate(uint sfactorRGB, uint dfactorRGB, uint sfactorAlpha, uint dfactorAlpha);
-        private delegate void fogCoordPointer(uint type, int stride, IntPtr pointer);
-        private delegate void fogCoordd(double coord);
-        private delegate void fogCoorddv(double[] coord);
-        private delegate void fogCoordf(float coord);
-        private delegate void fogCoordfv(float[] coord);
-        private delegate void multiDrawArrays(uint mode, int[] first, int[] count, int drawcount);
-        private delegate void multiDrawElements(uint mode, int[] count, uint type, IntPtr[] indices, int drawcount);
-        private delegate void pointParameterf(uint pname, float param);
-        private delegate void pointParameterfv(uint pname, float[] @params);
-        private delegate void pointParameteri(uint pname, int param);
-        private delegate void pointParameteriv(uint pname, int[] @params);
-        private delegate void secondaryColor3b(sbyte red, sbyte green, sbyte blue);
-        private delegate void secondaryColor3bv(sbyte[] v);
-        private delegate void secondaryColor3d(double red, double green, double blue);
-        private delegate void secondaryColor3dv(double[] v);
-        private delegate void secondaryColor3f(float red, float green, float blue);
-        private delegate void secondaryColor3fv(float[] v);
-        private delegate void secondaryColor3i(int red, int green, int blue);
-        private delegate void secondaryColor3iv(int[] v);
-        private delegate void secondaryColor3s(short red, short green, short blue);
-        private delegate void secondaryColor3sv(short[] v);
-        private delegate void secondaryColor3ub(byte red, byte green, byte blue);
-        private delegate void secondaryColor3ubv(byte[] v);
-        private delegate void secondaryColor3ui(uint red, uint green, uint blue);
-        private delegate void secondaryColor3uiv(uint[] v);
-        private delegate void secondaryColor3us(ushort red, ushort green, ushort blue);
-        private delegate void secondaryColor3usv(ushort[] v);
-        private delegate void secondaryColorPointer(int size, uint type, int stride, IntPtr pointer);
-        private delegate void windowPos2d(double x, double y);
-        private delegate void windowPos2dv(double[] p);
-        private delegate void windowPos2f(float x, float y);
-        private delegate void windowPos2fv(float[] p);
-        private delegate void windowPos2i(int x, int y);
-        private delegate void windowPos2iv(int[] p);
-        private delegate void windowPos2s(short x, short y);
-        private delegate void windowPos2sv(short[] p);
-        private delegate void windowPos3d(double x, double y, double z);
-        private delegate void windowPos3dv(double[] p);
-        private delegate void windowPos3f(float x, float y, float z);
-        private delegate void windowPos3fv(float[] p);
-        private delegate void windowPos3i(int x, int y, int z);
-        private delegate void windowPos3iv(int[] p);
-        private delegate void windowPos3s(short x, short y, short z);
-        private delegate void windowPos3sv(short[] p);
         public static void BlendColor(float red, float green, float blue, float alpha) =>
-            GetDelegate<blendColor>("glBlendColor")(red, green, blue, alpha);
+            GetDelegate<InvokeFFFFV>(GLCaps.BlendColor)(red, green, blue, alpha);
         public static void BlendEquation(uint mode) =>
-            GetDelegate<blendEquation>("glBlendEquation")(mode);
+            GetDelegate<InvokeUV>(GLCaps.BlendEquation)(mode);
         public static void BlendFuncSeparate(uint sfactorRGB, uint dfactorRGB, uint sfactorAlpha, uint dfactorAlpha) =>
-            GetDelegate<blendFuncSeparate>("glBlendFuncSeparate")(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+            GetDelegate<InvokeUUUUV>(GLCaps.BlendFuncSeparate)(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
         public static void FogCoordPointer(uint type, int stride, IntPtr pointer) =>
-            GetDelegate<fogCoordPointer>("glFogCoordPointer")(type, stride, pointer);
+            GetDelegate<InvokeUIPV>(GLCaps.FogCoordPointer)(type, stride, pointer);
         public static void FogCoordd(double coord) =>
-            GetDelegate<fogCoordd>("glFogCoordd")(coord);
+            GetDelegate<InvokeDV>(GLCaps.FogCoordd)(coord);
         public static void FogCoorddv(double[] coord) =>
-            GetDelegate<fogCoorddv>("glFogCoorddv")(coord);
+            GetDelegate<InvokeOdV>(GLCaps.FogCoorddv)(coord);
         public static void FogCoordf(float coord) =>
-            GetDelegate<fogCoordf>("glFogCoordf")(coord);
+            GetDelegate<InvokeFV>(GLCaps.FogCoordf)(coord);
         public static void FogCoordfv(float[] coord) =>
-            GetDelegate<fogCoordfv>("glFogCoordfv")(coord);
+            GetDelegate<InvokeOfV>(GLCaps.FogCoordfv)(coord);
         public static void MultiDrawArrays(uint mode, int[] first, int[] count, int drawcount) =>
-            GetDelegate<multiDrawArrays>("glMultiDrawArrays")(mode, first, count, drawcount);
+            GetDelegate<InvokeUOiOiIV>(GLCaps.MultiDrawArrays)(mode, first, count, drawcount);
         public static void MultiDrawElements(uint mode, int[] count, uint type, IntPtr[] indices, int drawcount) =>
-            GetDelegate<multiDrawElements>("glMultiDrawElements")(mode, count, type, indices, drawcount);
+            GetDelegate<InvokeUOiUOpIV>(GLCaps.MultiDrawElements)(mode, count, type, indices, drawcount);
         public static void PointParameterf(uint pname, float param) =>
-            GetDelegate<pointParameterf>("glPointParameterf")(pname, param);
+            GetDelegate<InvokeUFV>(GLCaps.PointParameterf)(pname, param);
         public static void PointParameterfv(uint pname, float[] @params) =>
-            GetDelegate<pointParameterfv>("glPointParameterfv")(pname, @params);
+            GetDelegate<InvokeUOfV>(GLCaps.PointParameterfv)(pname, @params);
         public static void PointParameteri(uint pname, int param) =>
-            GetDelegate<pointParameteri>("glPointParameteri")(pname, param);
+            GetDelegate<InvokeUIV>(GLCaps.PointParameteri)(pname, param);
         public static void PointParameteriv(uint pname, int[] @params) =>
-            GetDelegate<pointParameteriv>("glPointParameteriv")(pname, @params);
+            GetDelegate<InvokeUOiV>(GLCaps.PointParameteriv)(pname, @params);
         public static void SecondaryColor3b(sbyte red, sbyte green, sbyte blue) =>
-            GetDelegate<secondaryColor3b>("glSecondaryColor3b")(red, green, blue);
+            GetDelegate<InvokeBBBV>(GLCaps.SecondaryColor3b)(red, green, blue);
         public static void SecondaryColor3bv(sbyte[] v) =>
-            GetDelegate<secondaryColor3bv>("glSecondaryColor3bv")(v);
+            GetDelegate<InvokeObV>(GLCaps.SecondaryColor3bv)(v);
         public static void SecondaryColor3d(double red, double green, double blue) =>
-            GetDelegate<secondaryColor3d>("glSecondaryColor3d")(red, green, blue);
+            GetDelegate<InvokeDDDV>(GLCaps.SecondaryColor3d)(red, green, blue);
         public static void SecondaryColor3dv(double[] v) =>
-            GetDelegate<secondaryColor3dv>("glSecondaryColor3dv")(v);
+            GetDelegate<InvokeOdV>(GLCaps.SecondaryColor3dv)(v);
         public static void SecondaryColor3f(float red, float green, float blue) =>
-            GetDelegate<secondaryColor3f>("glSecondaryColor3f")(red, green, blue);
+            GetDelegate<InvokeFFFV>(GLCaps.SecondaryColor3f)(red, green, blue);
         public static void SecondaryColor3fv(float[] v) =>
-            GetDelegate<secondaryColor3fv>("glSecondaryColor3fv")(v);
+            GetDelegate<InvokeOfV>(GLCaps.SecondaryColor3fv)(v);
         public static void SecondaryColor3i(int red, int green, int blue) =>
-            GetDelegate<secondaryColor3i>("glSecondaryColor3i")(red, green, blue);
+            GetDelegate<InvokeIIIV>(GLCaps.SecondaryColor3i)(red, green, blue);
         public static void SecondaryColor3iv(int[] v) =>
-            GetDelegate<secondaryColor3iv>("glSecondaryColor3iv")(v);
+            GetDelegate<InvokeOiV>(GLCaps.SecondaryColor3iv)(v);
         public static void SecondaryColor3s(short red, short green, short blue) =>
-            GetDelegate<secondaryColor3s>("glSecondaryColor3s")(red, green, blue);
+            GetDelegate<InvokeSSSV>(GLCaps.SecondaryColor3s)(red, green, blue);
         public static void SecondaryColor3sv(short[] v) =>
-            GetDelegate<secondaryColor3sv>("glSecondaryColor3sv")(v);
+            GetDelegate<InvokeOsV>(GLCaps.SecondaryColor3sv)(v);
         public static void SecondaryColor3ub(byte red, byte green, byte blue) =>
-            GetDelegate<secondaryColor3ub>("glSecondaryColor3ub")(red, green, blue);
+            GetDelegate<InvokeAAAV>(GLCaps.SecondaryColor3ub)(red, green, blue);
         public static void SecondaryColor3ubv(byte[] v) =>
-            GetDelegate<secondaryColor3ubv>("glSecondaryColor3ubv")(v);
+            GetDelegate<InvokeOaV>(GLCaps.SecondaryColor3ubv)(v);
         public static void SecondaryColor3ui(uint red, uint green, uint blue) =>
-            GetDelegate<secondaryColor3ui>("glSecondaryColor3ui")(red, green, blue);
+            GetDelegate<InvokeUUUV>(GLCaps.SecondaryColor3ui)(red, green, blue);
         public static void SecondaryColor3uiv(uint[] v) =>
-            GetDelegate<secondaryColor3uiv>("glSecondaryColor3uiv")(v);
+            GetDelegate<InvokeOuV>(GLCaps.SecondaryColor3uiv)(v);
         public static void SecondaryColor3us(ushort red, ushort green, ushort blue) =>
-            GetDelegate<secondaryColor3us>("glSecondaryColor3us")(red, green, blue);
+            GetDelegate<InvokeHHHV>(GLCaps.SecondaryColor3us)(red, green, blue);
         public static void SecondaryColor3usv(ushort[] v) =>
-            GetDelegate<secondaryColor3usv>("glSecondaryColor3usv")(v);
+            GetDelegate<InvokeOhV>(GLCaps.SecondaryColor3usv)(v);
         public static void SecondaryColorPointer(int size, uint type, int stride, IntPtr pointer) =>
-            GetDelegate<secondaryColorPointer>("glSecondaryColorPointer")(size, type, stride, pointer);
+            GetDelegate<InvokeIUIPV>(GLCaps.SecondaryColorPointer)(size, type, stride, pointer);
         public static void WindowPos2d(double x, double y) =>
-            GetDelegate<windowPos2d>("glWindowPos2d")(x, y);
+            GetDelegate<InvokeDDV>(GLCaps.WindowPos2d)(x, y);
         public static void WindowPos2dv(double[] p) =>
-            GetDelegate<windowPos2dv>("glWindowPos2dv")(p);
+            GetDelegate<InvokeOdV>(GLCaps.WindowPos2dv)(p);
         public static void WindowPos2f(float x, float y) =>
-            GetDelegate<windowPos2f>("glWindowPos2f")(x, y);
+            GetDelegate<InvokeFFV>(GLCaps.WindowPos2f)(x, y);
         public static void WindowPos2fv(float[] p) =>
-            GetDelegate<windowPos2fv>("glWindowPos2fv")(p);
+            GetDelegate<InvokeOfV>(GLCaps.WindowPos2fv)(p);
         public static void WindowPos2i(int x, int y) =>
-            GetDelegate<windowPos2i>("glWindowPos2i")(x, y);
+            GetDelegate<InvokeIIV>(GLCaps.WindowPos2i)(x, y);
         public static void WindowPos2iv(int[] p) =>
-            GetDelegate<windowPos2iv>("glWindowPos2iv")(p);
+            GetDelegate<InvokeOiV>(GLCaps.WindowPos2iv)(p);
         public static void WindowPos2s(short x, short y) =>
-            GetDelegate<windowPos2s>("glWindowPos2s")(x, y);
+            GetDelegate<InvokeSSV>(GLCaps.WindowPos2s)(x, y);
         public static void WindowPos2sv(short[] p) =>
-            GetDelegate<windowPos2sv>("glWindowPos2sv")(p);
+            GetDelegate<InvokeOsV>(GLCaps.WindowPos2sv)(p);
         public static void WindowPos3d(double x, double y, double z) =>
-            GetDelegate<windowPos3d>("glWindowPos3d")(x, y, z);
+            GetDelegate<InvokeDDDV>(GLCaps.WindowPos3d)(x, y, z);
         public static void WindowPos3dv(double[] p) =>
-            GetDelegate<windowPos3dv>("glWindowPos3dv")(p);
+            GetDelegate<InvokeOdV>(GLCaps.WindowPos3dv)(p);
         public static void WindowPos3f(float x, float y, float z) =>
-            GetDelegate<windowPos3f>("glWindowPos3f")(x, y, z);
+            GetDelegate<InvokeFFFV>(GLCaps.WindowPos3f)(x, y, z);
         public static void WindowPos3fv(float[] p) =>
-            GetDelegate<windowPos3fv>("glWindowPos3fv")(p);
+            GetDelegate<InvokeOfV>(GLCaps.WindowPos3fv)(p);
         public static void WindowPos3i(int x, int y, int z) =>
-            GetDelegate<windowPos3i>("glWindowPos3i")(x, y, z);
+            GetDelegate<InvokeIIIV>(GLCaps.WindowPos3i)(x, y, z);
         public static void WindowPos3iv(int[] p) =>
-            GetDelegate<windowPos3iv>("glWindowPos3iv")(p);
+            GetDelegate<InvokeOiV>(GLCaps.WindowPos3iv)(p);
         public static void WindowPos3s(short x, short y, short z) =>
-            GetDelegate<windowPos3s>("glWindowPos3s")(x, y, z);
+            GetDelegate<InvokeSSSV>(GLCaps.WindowPos3s)(x, y, z);
         public static void WindowPos3sv(short[] p) =>
-            GetDelegate<windowPos3sv>("glWindowPos3sv")(p);
+            GetDelegate<InvokeOsV>(GLCaps.WindowPos3sv)(p);
 
         #endregion // GL14
         #region GL15
 
-        private delegate void beginQuery(uint target, uint id);
-        private delegate void bindBuffer(uint target, uint buffer);
-        private unsafe delegate void bufferData(uint target, long size, void* data, uint usage);
-        private delegate void bufferSubData(uint target, long offset, long size, IntPtr data);
-        private delegate void deleteBuffers(int n, IntPtr buffers);
-        private delegate void deleteQueries(int n, uint[] ids);
-        private delegate void endQuery(uint target);
-        private delegate void genBuffers(int n, uint[] buffers);
-        private delegate void genQueries(int n, uint[] ids);
-        private delegate void getBufferParameteriv(uint target, uint pname, int[] @params);
-        private delegate void getBufferPointerv(uint target, uint pname, IntPtr[] @params);
-        private delegate void getBufferSubData(uint target, long offset, long size, IntPtr data);
-        private delegate void getQueryObjectiv(uint id, uint pname, int[] @params);
-        private delegate void getQueryObjectuiv(uint id, uint pname, uint[] @params);
-        private delegate void getQueryiv(uint target, uint pname, int[] @params);
-        private delegate bool isBuffer(uint buffer);
-        private delegate bool isQuery(uint id);
-        private delegate IntPtr mapBuffer(uint target, uint access);
-        private delegate bool unmapBuffer(uint target);
         public static void BeginQuery(uint target, uint id) =>
-            GetDelegate<beginQuery>("glBeginQuery")(target, id);
+            GetDelegate<InvokeUUV>(GLCaps.BeginQuery)(target, id);
         public static void BindBuffer(uint target, uint buffer) =>
-            GetDelegate<bindBuffer>("glBindBuffer")(target, buffer);
-        public static unsafe void BufferData(uint target, long size, void* data, uint usage) =>
-            GetDelegate<bufferData>("glBufferData")(target, size, data, usage);
-        public static void BufferData(uint target, sbyte[] data, uint usage)
+            GetDelegate<InvokeUUV>(GLCaps.BindBuffer)(target, buffer);
+        public static unsafe void BufferData(uint target, long size, IntPtr data, uint usage) =>
+            GetDelegate<InvokeUJPUV>(GLCaps.BufferData)(target, size, data, usage);
+        public static void BufferData<T>(uint target, T[] data, uint usage) where T : unmanaged
         {
             unsafe
             {
-                fixed (sbyte* ptr = data)
+                fixed (T* ptr = data)
                 {
-                    BufferData(target, data.Length * sizeof(sbyte), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, byte[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (byte* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(byte), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, short[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (short* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(short), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, ushort[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (ushort* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(ushort), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, int[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (int* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(int), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, uint[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (uint* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(uint), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, long[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (long* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(long), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, ulong[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (ulong* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(ulong), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, float[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (float* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(float), ptr, usage);
-                }
-            }
-        }
-        public static void BufferData(uint target, double[] data, uint usage)
-        {
-            unsafe
-            {
-                fixed (double* ptr = data)
-                {
-                    BufferData(target, data.Length * sizeof(double), ptr, usage);
+                    BufferData(target, data.Length * sizeof(T), new(ptr), usage);
                 }
             }
         }
         public static void BufferData(uint target, long size, uint usage)
         {
-            unsafe
-            {
-                BufferData(target, size, null, usage);
-            }
+            BufferData(target, size, IntPtr.Zero, usage);
         }
         public static void BufferSubData(uint target, long offset, long size, IntPtr data) =>
-            GetDelegate<bufferSubData>("glBufferSubData")(target, offset, size, data);
-        public static void DeleteBuffers(int n, IntPtr buffers) =>
-            GetDelegate<deleteBuffers>("glDeleteBuffers")(n, buffers);
-        public static void DeleteBuffer(uint buffer)
+            GetDelegate<InvokeUJJPV>(GLCaps.BufferSubData)(target, offset, size, data);
+        public static void BufferSubData<T>(uint target, long offset, T[] data) where T : unmanaged
         {
             unsafe
             {
-                DeleteBuffers(1, new IntPtr(&buffer));
+                fixed (T* ptr = data)
+                {
+                    BufferSubData(target, offset, data.Length * sizeof(T), new(ptr));
+                }
             }
         }
+        public static void DeleteBuffers(int n, uint[] buffers) =>
+            GetDelegate<InvokeIOuV>(GLCaps.DeleteBuffers)(n, buffers);
+        public static void DeleteBuffers(uint[] buffers) =>
+            DeleteBuffers(1, buffers);
+        public static void DeleteBuffers(uint buffer) =>
+            DeleteBuffers(new[] { buffer });
         public static void DeleteQueries(int n, uint[] ids) =>
-            GetDelegate<deleteQueries>("glDeleteQueries")(n, ids);
+            GetDelegate<InvokeIOuV>(GLCaps.DeleteQueries)(n, ids);
         public static void EndQuery(uint target) =>
-            GetDelegate<endQuery>("glEndQuery")(target);
+            GetDelegate<InvokeUV>(GLCaps.EndQuery)(target);
+        public static void GenBuffers(int n, uint[] buffers) =>
+            GetDelegate<InvokeIOuV>(GLCaps.GenBuffers)(n, buffers);
         public static void GenBuffers(uint[] buffers) =>
-            GetDelegate<genBuffers>("glGenBuffers")(buffers.Length, buffers);
+            GenBuffers(buffers.Length, buffers);
         public static uint GenBuffers()
         {
             uint[] buf = { 0 };
@@ -7149,190 +6988,102 @@ namespace GLCs
             return buf[0];
         }
         public static void GenQueries(int n, uint[] ids) =>
-            GetDelegate<genQueries>("glGenQueries")(n, ids);
+            GetDelegate<InvokeIOuV>(GLCaps.GenQueries)(n, ids);
         public static void GetBufferParameteriv(uint target, uint pname, int[] @params) =>
-            GetDelegate<getBufferParameteriv>("glGetBufferParameteriv")(target, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetBufferParameteriv)(target, pname, @params);
         public static void GetBufferPointerv(uint target, uint pname, IntPtr[] @params) =>
-            GetDelegate<getBufferPointerv>("glGetBufferPointerv")(target, pname, @params);
+            GetDelegate<InvokeUUOpV>(GLCaps.GetBufferPointerv)(target, pname, @params);
         public static void GetBufferSubData(uint target, long offset, long size, IntPtr data) =>
-            GetDelegate<getBufferSubData>("glGetBufferSubData")(target, offset, size, data);
+            GetDelegate<InvokeUJJPV>(GLCaps.GetBufferSubData)(target, offset, size, data);
         public static void GetQueryObjectiv(uint id, uint pname, int[] @params) =>
-            GetDelegate<getQueryObjectiv>("glGetQueryObjectiv")(id, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetQueryObjectiv)(id, pname, @params);
         public static void GetQueryObjectuiv(uint id, uint pname, uint[] @params) =>
-            GetDelegate<getQueryObjectuiv>("glGetQueryObjectuiv")(id, pname, @params);
+            GetDelegate<InvokeUUOuV>(GLCaps.GetQueryObjectuiv)(id, pname, @params);
         public static void GetQueryiv(uint target, uint pname, int[] @params) =>
-            GetDelegate<getQueryiv>("glGetQueryiv")(target, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetQueryiv)(target, pname, @params);
         public static bool IsBuffer(uint buffer) =>
-            GetDelegate<isBuffer>("glIsBuffer")(buffer);
+            GetDelegate<InvokeUZ>(GLCaps.IsBuffer)(buffer);
         public static bool IsQuery(uint id) =>
-            GetDelegate<isQuery>("glIsQuery")(id);
+            GetDelegate<InvokeUZ>(GLCaps.IsQuery)(id);
         public static IntPtr MapBuffer(uint target, uint access) =>
-            GetDelegate<mapBuffer>("glMapBuffer")(target, access);
+            GetDelegate<InvokeUUP>(GLCaps.MapBuffer)(target, access);
         public static bool UnmapBuffer(uint target) =>
-            GetDelegate<unmapBuffer>("glUnmapBuffer")(target);
+            GetDelegate<InvokeUZ>(GLCaps.UnmapBuffer)(target);
 
         #endregion // GL15
         #region GL20
 
-        private delegate void attachShader(uint program, uint shader);
-        private delegate void bindAttribLocation(uint program, uint index, string name);
-        private delegate void blendEquationSeparate(uint modeRGB, uint modeAlpha);
-        private delegate void compileShader(uint shader);
-        private delegate uint createProgram();
-        private delegate uint createShader(uint type);
-        private delegate void deleteProgram(uint program);
-        private delegate void deleteShader(uint shader);
-        private delegate void detachShader(uint program, uint shader);
-        private delegate void disableVertexAttribArray(uint index);
-        private delegate void drawBuffers(int n, uint[] bufs);
-        private delegate void enableVertexAttribArray(uint index);
-        private delegate void getActiveAttrib(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name);
-        private delegate void getActiveUniform(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name);
-        private delegate void getAttachedShaders(uint program, int maxCount, ref int count, uint[] shaders);
-        private delegate int getAttribLocation(uint program, string name);
-        private delegate void getProgramInfoLog(uint program, int bufSize, ref int length, ref string infoLog);
-        private delegate void getProgramiv(uint program, uint pname, int[] param);
-        private delegate void getShaderInfoLog(uint shader, int bufSize, ref int length, ref string infoLog);
-        private delegate void getShaderSource(uint obj, int maxLength, ref int length, ref string source);
-        private delegate void getShaderiv(uint shader, uint pname, int[] param);
-        private delegate int getUniformLocation(uint program, string name);
-        private delegate void getUniformfv(uint program, int location, float[] @params);
-        private delegate void getUniformiv(uint program, int location, int[] @params);
-        private delegate void getVertexAttribPointerv(uint index, uint pname, IntPtr[] pointer);
-        private delegate void getVertexAttribdv(uint index, uint pname, double[] @params);
-        private delegate void getVertexAttribfv(uint index, uint pname, float[] @params);
-        private delegate void getVertexAttribiv(uint index, uint pname, int[] @params);
-        private delegate bool isProgram(uint program);
-        private delegate bool isShader(uint shader);
-        private delegate void linkProgram(uint program);
-        private delegate void shaderSource(uint shader, int count, string[] @string, int[] length);
-        private delegate void stencilFuncSeparate(uint face, uint func, int @ref, uint mask);
-        private delegate void stencilMaskSeparate(uint face, uint mask);
-        private delegate void stencilOpSeparate(uint face, uint sfail, uint dpfail, uint dppass);
-        private delegate void uniform1f(int location, float v0);
-        private delegate void uniform1fv(int location, int count, float[] value);
-        private delegate void uniform1i(int location, int v0);
-        private delegate void uniform1iv(int location, int count, int[] value);
-        private delegate void uniform2f(int location, float v0, float v1);
-        private delegate void uniform2fv(int location, int count, float[] value);
-        private delegate void uniform2i(int location, int v0, int v1);
-        private delegate void uniform2iv(int location, int count, int[] value);
-        private delegate void uniform3f(int location, float v0, float v1, float v2);
-        private delegate void uniform3fv(int location, int count, float[] value);
-        private delegate void uniform3i(int location, int v0, int v1, int v2);
-        private delegate void uniform3iv(int location, int count, int[] value);
-        private delegate void uniform4f(int location, float v0, float v1, float v2, float v3);
-        private delegate void uniform4fv(int location, int count, float[] value);
-        private delegate void uniform4i(int location, int v0, int v1, int v2, int v3);
-        private delegate void uniform4iv(int location, int count, int[] value);
-        private delegate void uniformMatrix2fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix3fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix4fv(int location, int count, bool transpose, float[] value);
-        private delegate void useProgram(uint program);
-        private delegate void validateProgram(uint program);
-        private delegate void vertexAttrib1d(uint index, double x);
-        private delegate void vertexAttrib1dv(uint index, double[] v);
-        private delegate void vertexAttrib1f(uint index, float x);
-        private delegate void vertexAttrib1fv(uint index, float[] v);
-        private delegate void vertexAttrib1s(uint index, short x);
-        private delegate void vertexAttrib1sv(uint index, short[] v);
-        private delegate void vertexAttrib2d(uint index, double x, double y);
-        private delegate void vertexAttrib2dv(uint index, double[] v);
-        private delegate void vertexAttrib2f(uint index, float x, float y);
-        private delegate void vertexAttrib2fv(uint index, float[] v);
-        private delegate void vertexAttrib2s(uint index, short x, short y);
-        private delegate void vertexAttrib2sv(uint index, short[] v);
-        private delegate void vertexAttrib3d(uint index, double x, double y, double z);
-        private delegate void vertexAttrib3dv(uint index, double[] v);
-        private delegate void vertexAttrib3f(uint index, float x, float y, float z);
-        private delegate void vertexAttrib3fv(uint index, float[] v);
-        private delegate void vertexAttrib3S(uint index, short x, short y, short z);
-        private delegate void vertexAttrib3SV(uint index, short[] v);
-        private delegate void vertexAttrib4Nbv(uint index, sbyte[] v);
-        private delegate void vertexAttrib4Niv(uint index, int[] v);
-        private delegate void vertexAttrib4Nsv(uint index, short[] v);
-        private delegate void vertexAttrib4Nub(uint index, byte x, byte y, byte z, byte w);
-        private delegate void vertexAttrib4Nubv(uint index, byte[] v);
-        private delegate void vertexAttrib4Nuiv(uint index, uint[] v);
-        private delegate void vertexAttrib4Nusv(uint index, ushort[] v);
-        private delegate void vertexAttrib4bv(uint index, sbyte[] v);
-        private delegate void vertexAttrib4d(uint index, double x, double y, double z, double w);
-        private delegate void vertexAttrib4dv(uint index, double[] v);
-        private delegate void vertexAttrib4f(uint index, float x, float y, float z, float w);
-        private delegate void vertexAttrib4fv(uint index, float[] v);
-        private delegate void vertexAttrib4iv(uint index, int[] v);
-        private delegate void vertexAttrib4s(uint index, short x, short y, short z, short w);
-        private delegate void vertexAttrib4sv(uint index, short[] v);
-        private delegate void vertexAttrib4ubv(uint index, byte[] v);
-        private delegate void vertexAttrib4uiv(uint index, uint[] v);
-        private delegate void vertexAttrib4usv(uint index, ushort[] v);
-        private delegate void vertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer);
         public static void AttachShader(uint program, uint shader) =>
-            GetDelegate<attachShader>("glAttachShader")(program, shader);
+             GetDelegate<InvokeUUV>(GLCaps.AttachShader)(program, shader);
         public static void BindAttribLocation(uint program, uint index, string name) =>
-            GetDelegate<bindAttribLocation>("glBindAttribLocation")(program, index, name);
+            GetDelegate<InvokeUUXV>(GLCaps.BindAttribLocation)(program, index, name);
         public static void BlendEquationSeparate(uint modeRGB, uint modeAlpha) =>
-            GetDelegate<blendEquationSeparate>("glBlendEquationSeparate")(modeRGB, modeAlpha);
+            GetDelegate<InvokeUUV>(GLCaps.BlendEquationSeparate)(modeRGB, modeAlpha);
         public static void CompileShader(uint shader) =>
-            GetDelegate<compileShader>("glCompileShader")(shader);
+            GetDelegate<InvokeUV>(GLCaps.CompileShader)(shader);
         public static uint CreateProgram() =>
-            GetDelegate<createProgram>("glCreateProgram")();
+            GetDelegate<InvokeU>(GLCaps.CreateProgram)();
         public static uint CreateShader(uint type) =>
-            GetDelegate<createShader>("glCreateShader")(type);
+            GetDelegate<InvokeUU>(GLCaps.CreateShader)(type);
         public static void DeleteProgram(uint program) =>
-            GetDelegate<deleteProgram>("glDeleteProgram")(program);
+            GetDelegate<InvokeUV>(GLCaps.DeleteProgram)(program);
         public static void DeleteShader(uint shader) =>
-            GetDelegate<deleteShader>("glDeleteShader")(shader);
+            GetDelegate<InvokeUV>(GLCaps.DeleteShader)(shader);
         public static void DetachShader(uint program, uint shader) =>
-            GetDelegate<detachShader>("glDetachShader")(program, shader);
+            GetDelegate<InvokeUUV>(GLCaps.DetachShader)(program, shader);
         public static void DisableVertexAttribArray(uint index) =>
-            GetDelegate<disableVertexAttribArray>("glDisableVertexAttribArray")(index);
+            GetDelegate<InvokeUV>(GLCaps.DisableVertexAttribArray)(index);
         public static void DrawBuffers(int n, uint[] bufs) =>
-            GetDelegate<drawBuffers>("glDrawBuffers")(n, bufs);
+            GetDelegate<InvokeIOuV>(GLCaps.DrawBuffers)(n, bufs);
         public static void DrawBuffers(uint[] bufs) =>
             DrawBuffers(bufs.Length, bufs);
         public static void EnableVertexAttribArray(uint index) =>
-            GetDelegate<enableVertexAttribArray>("glEnableVertexAttribArray")(index);
+            GetDelegate<InvokeUV>(GLCaps.EnableVertexAttribArray)(index);
         public static void GetActiveAttrib(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name) =>
-            GetDelegate<getActiveAttrib>("glGetActiveAttrib")(program, index, maxLength, ref length, ref size, ref type, name);
+            GetDelegate<InvokeUUIRiRiRuXV>(GLCaps.GetActiveAttrib)(program, index, maxLength, ref length, ref size, ref type, name);
         public static void GetActiveUniform(uint program, uint index, int maxLength, ref int length, ref int size, ref uint type, string name) =>
-            GetDelegate<getActiveUniform>("glGetActiveUniform")(program, index, maxLength, ref length, ref size, ref type, name);
+            GetDelegate<InvokeUUIRiRiRuXV>(GLCaps.GetActiveUniform)(program, index, maxLength, ref length, ref size, ref type, name);
         public static void GetAttachedShaders(uint program, int maxCount, ref int count, uint[] shaders) =>
-            GetDelegate<getAttachedShaders>("glGetAttachedShaders")(program, maxCount, ref count, shaders);
+            GetDelegate<InvokeUIRiOuV>(GLCaps.GetAttachedShaders)(program, maxCount, ref count, shaders);
         public static int GetAttribLocation(uint program, string name) =>
-            GetDelegate<getAttribLocation>("glGetAttribLocation")(program, name);
-        public static void GetProgramInfoLog(uint program, int bufSize, ref int length, ref string infoLog) =>
-            GetDelegate<getProgramInfoLog>("glGetProgramInfoLog")(program, bufSize, ref length, ref infoLog);
+            GetDelegate<InvokeUXI>(GLCaps.GetAttribLocation)(program, name);
+        public static void GetProgramInfoLog(uint program, int bufSize, ref int length, StringBuilder infoLog) =>
+            GetDelegate<InvokeUIRiYV>(GLCaps.GetProgramInfoLog)(program, bufSize, ref length, infoLog);
         public static string GetProgramInfoLog(uint program)
         {
-            int maxLen = GetProgrami(program, INFO_LOG_LENGTH);
-            string infoLog = new(new char[maxLen]);
             int l = 0;
-            GetProgramInfoLog(program, maxLen, ref l, ref infoLog);
-            return infoLog;
+            StringBuilder infoLog = new(1024);
+            GetProgramInfoLog(program, 1024, ref l, infoLog);
+            return infoLog.ToString();
         }
         public static void GetProgramiv(uint program, uint pname, int[] param) =>
-            GetDelegate<getProgramiv>("glGetProgramiv")(program, pname, param);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetProgramiv)(program, pname, param);
         public static int GetProgrami(uint program, uint pname)
         {
             int[] p = { 0 };
             GetProgramiv(program, pname, p);
             return p[0];
         }
-        public static void GetShaderInfoLog(uint shader, int bufSize, ref int length, ref string infoLog) =>
-            GetDelegate<getShaderInfoLog>("glGetShaderInfoLog")(shader, bufSize, ref length, ref infoLog);
+        public static void GetShaderInfoLog(uint shader, int bufSize, ref int length, StringBuilder infoLog) =>
+            GetDelegate<InvokeUIRiYV>(GLCaps.GetShaderInfoLog)(shader, bufSize, ref length, infoLog);
         public static string GetShaderInfoLog(uint shader)
         {
-            int maxLen = GetShaderi(shader, INFO_LOG_LENGTH);
-            string infoLog = new(new char[maxLen]);
             int l = 0;
-            GetShaderInfoLog(shader, maxLen, ref l, ref infoLog);
-            return infoLog;
+            StringBuilder infoLog = new(1024);
+            GetShaderInfoLog(shader, 1024, ref l, infoLog);
+            return infoLog.ToString();
         }
-        public static void GetShaderSource(uint obj, int maxLength, ref int length, ref string source) =>
-            GetDelegate<getShaderSource>("glGetShaderSource")(obj, maxLength, ref length, ref source);
+        public static void GetShaderSource(uint obj, int maxLength, ref int length, StringBuilder source) =>
+            GetDelegate<InvokeUIRiYV>(GLCaps.GetShaderSource)(obj, maxLength, ref length, source);
+        public static string GetShaderSource(uint obj)
+        {
+            int l = 0;
+            StringBuilder source = new(2048);
+            GetShaderSource(obj, 2048, ref l, source);
+            return source.ToString();
+        }
         public static void GetShaderiv(uint shader, uint pname, int[] param) =>
-            GetDelegate<getShaderiv>("glGetShaderiv")(shader, pname, param);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetShaderiv)(shader, pname, param);
         public static int GetShaderi(uint shader, uint pname)
         {
             int[] p = { 0 };
@@ -7340,537 +7091,535 @@ namespace GLCs
             return p[0];
         }
         public static int GetUniformLocation(uint program, string name) =>
-            GetDelegate<getUniformLocation>("glGetUniformLocation")(program, name);
+            GetDelegate<InvokeUXI>(GLCaps.GetUniformLocation)(program, name);
         public static void GetUniformfv(uint program, int location, float[] @params) =>
-            GetDelegate<getUniformfv>("glGetUniformfv")(program, location, @params);
+            GetDelegate<InvokeUIOfV>(GLCaps.GetUniformfv)(program, location, @params);
         public static void GetUniformiv(uint program, int location, int[] @params) =>
-            GetDelegate<getUniformiv>("glGetUniformiv")(program, location, @params);
+            GetDelegate<InvokeUIOiV>(GLCaps.GetUniformiv)(program, location, @params);
         public static void GetVertexAttribPointerv(uint index, uint pname, IntPtr[] pointer) =>
-            GetDelegate<getVertexAttribPointerv>("glGetVertexAttribPointerv")(index, pname, pointer);
+            GetDelegate<InvokeUUOpV>(GLCaps.GetVertexAttribPointerv)(index, pname, pointer);
         public static void GetVertexAttribdv(uint index, uint pname, double[] @params) =>
-            GetDelegate<getVertexAttribdv>("glGetVertexAttribdv")(index, pname, @params);
+            GetDelegate<InvokeUUOdV>(GLCaps.GetVertexAttribdv)(index, pname, @params);
         public static void GetVertexAttribfv(uint index, uint pname, float[] @params) =>
-            GetDelegate<getVertexAttribfv>("glGetVertexAttribfv")(index, pname, @params);
+            GetDelegate<InvokeUUOfV>(GLCaps.GetVertexAttribfv)(index, pname, @params);
         public static void GetVertexAttribiv(uint index, uint pname, int[] @params) =>
-            GetDelegate<getVertexAttribiv>("glGetVertexAttribiv")(index, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetVertexAttribiv)(index, pname, @params);
         public static bool IsProgram(uint program) =>
-            GetDelegate<isProgram>("glIsProgram")(program);
+            GetDelegate<InvokeUZ>(GLCaps.IsProgram)(program);
         public static bool IsShader(uint shader) =>
-            GetDelegate<isShader>("glIsShader")(shader);
+            GetDelegate<InvokeUZ>(GLCaps.IsShader)(shader);
         public static void LinkProgram(uint program) =>
-            GetDelegate<linkProgram>("glLinkProgram")(program);
+            GetDelegate<InvokeUV>(GLCaps.LinkProgram)(program);
         public static void ShaderSource(uint shader, int count, string[] @string, int[] length) =>
-            GetDelegate<shaderSource>("glShaderSource")(shader, count, @string, length);
+            GetDelegate<InvokeUIOxOiV>(GLCaps.ShaderSource)(shader, count, @string, length);
         public static void ShaderSource(uint shader, string source) =>
-            GetDelegate<shaderSource>("glShaderSource")(
+            ShaderSource(
                 shader,
                 1,
                 new[] { source },
                 new[] { source.Length });
         public static void StencilFuncSeparate(uint face, uint func, int @ref, uint mask) =>
-            GetDelegate<stencilFuncSeparate>("glStencilFuncSeparate")(face, func, @ref, mask);
+            GetDelegate<InvokeUUIUV>(GLCaps.StencilFuncSeparate)(face, func, @ref, mask);
         public static void StencilMaskSeparate(uint face, uint mask) =>
-            GetDelegate<stencilMaskSeparate>("glStencilMaskSeparate")(face, mask);
+            GetDelegate<InvokeUUV>(GLCaps.StencilMaskSeparate)(face, mask);
         public static void StencilOpSeparate(uint face, uint sfail, uint dpfail, uint dppass) =>
-            GetDelegate<stencilOpSeparate>("glStencilOpSeparate")(face, sfail, dpfail, dppass);
+            GetDelegate<InvokeUUUUV>(GLCaps.StencilOpSeparate)(face, sfail, dpfail, dppass);
         public static void Uniform1f(int location, float v0) =>
-            GetDelegate<uniform1f>("glUniform1f")(location, v0);
+            GetDelegate<InvokeIFV>(GLCaps.Uniform1f)(location, v0);
         public static void Uniform1fv(int location, int count, float[] value) =>
-            GetDelegate<uniform1fv>("glUniform1fv")(location, count, value);
+            GetDelegate<InvokeIIOfV>(GLCaps.Uniform1fv)(location, count, value);
         public static void Uniform1i(int location, int v0) =>
-            GetDelegate<uniform1i>("glUniform1i")(location, v0);
+            GetDelegate<InvokeIIV>(GLCaps.Uniform1i)(location, v0);
         public static void Uniform1iv(int location, int count, int[] value) =>
-            GetDelegate<uniform1iv>("glUniform1iv")(location, count, value);
+            GetDelegate<InvokeIIOiV>(GLCaps.Uniform1iv)(location, count, value);
         public static void Uniform2f(int location, float v0, float v1) =>
-            GetDelegate<uniform2f>("glUniform2f")(location, v0, v1);
+            GetDelegate<InvokeIFFV>(GLCaps.Uniform2f)(location, v0, v1);
         public static void Uniform2fv(int location, int count, float[] value) =>
-            GetDelegate<uniform2fv>("glUniform2fv")(location, count, value);
+            GetDelegate<InvokeIIOfV>(GLCaps.Uniform2fv)(location, count, value);
         public static void Uniform2i(int location, int v0, int v1) =>
-            GetDelegate<uniform2i>("glUniform2i")(location, v0, v1);
+            GetDelegate<InvokeIIIV>(GLCaps.Uniform2i)(location, v0, v1);
         public static void Uniform2iv(int location, int count, int[] value) =>
-            GetDelegate<uniform2iv>("glUniform2iv")(location, count, value);
+            GetDelegate<InvokeIIOiV>(GLCaps.Uniform2iv)(location, count, value);
         public static void Uniform3f(int location, float v0, float v1, float v2) =>
-            GetDelegate<uniform3f>("glUniform3f")(location, v0, v1, v2);
+            GetDelegate<InvokeIFFFV>(GLCaps.Uniform3f)(location, v0, v1, v2);
         public static void Uniform3fv(int location, int count, float[] value) =>
-            GetDelegate<uniform3fv>("glUniform3fv")(location, count, value);
+            GetDelegate<InvokeIIOfV>(GLCaps.Uniform3fv)(location, count, value);
         public static void Uniform3i(int location, int v0, int v1, int v2) =>
-            GetDelegate<uniform3i>("glUniform3i")(location, v0, v1, v2);
+            GetDelegate<InvokeIIIIV>(GLCaps.Uniform3i)(location, v0, v1, v2);
         public static void Uniform3iv(int location, int count, int[] value) =>
-            GetDelegate<uniform3iv>("glUniform3iv")(location, count, value);
+            GetDelegate<InvokeIIOiV>(GLCaps.Uniform3iv)(location, count, value);
         public static void Uniform4f(int location, float v0, float v1, float v2, float v3) =>
-            GetDelegate<uniform4f>("glUniform4f")(location, v0, v1, v2, v3);
+            GetDelegate<InvokeIFFFFV>(GLCaps.Uniform4f)(location, v0, v1, v2, v3);
         public static void Uniform4fv(int location, int count, float[] value) =>
-            GetDelegate<uniform4fv>("glUniform4fv")(location, count, value);
+            GetDelegate<InvokeIIOfV>(GLCaps.Uniform4fv)(location, count, value);
         public static void Uniform4i(int location, int v0, int v1, int v2, int v3) =>
-            GetDelegate<uniform4i>("glUniform4i")(location, v0, v1, v2, v3);
+            GetDelegate<InvokeIIIIIV>(GLCaps.Uniform4i)(location, v0, v1, v2, v3);
         public static void Uniform4iv(int location, int count, int[] value) =>
-            GetDelegate<uniform4iv>("glUniform4iv")(location, count, value);
+            GetDelegate<InvokeIIOiV>(GLCaps.Uniform4iv)(location, count, value);
         public static void UniformMatrix2fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix2fv>("glUniformMatrix2fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix2fv)(location, count, transpose, value);
+        public static void UniformMatrix2fv(int location, bool transpose, float[] value) =>
+            UniformMatrix2fv(location, value.Length / 16, transpose, value);
         public static void UniformMatrix3fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix3fv>("glUniformMatrix3fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix3fv)(location, count, transpose, value);
+        public static void UniformMatrix3fv(int location, bool transpose, float[] value) =>
+            UniformMatrix3fv(location, value.Length / 16, transpose, value);
         public static void UniformMatrix4fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix4fv>("glUniformMatrix4fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix4fv)(location, count, transpose, value);
+        public static void UniformMatrix4fv(int location, bool transpose, float[] value) =>
+            UniformMatrix4fv(location, value.Length / 16, transpose, value);
+        public static void UniformMatrix4fv(int location, bool transpose, Matrix4x4 value) =>
+            UniformMatrix4fv(location, transpose, new[]
+            {
+                value.M11, value.M12, value.M13, value.M14,
+                value.M21, value.M22, value.M23, value.M24,
+                value.M31, value.M32, value.M33, value.M34,
+                value.M41, value.M42, value.M43, value.M44
+            });
         public static void UseProgram(uint program) =>
-            GetDelegate<useProgram>("glUseProgram")(program);
+            GetDelegate<InvokeUV>(GLCaps.UseProgram)(program);
         public static void ValidateProgram(uint program) =>
-            GetDelegate<validateProgram>("glValidateProgram")(program);
+            GetDelegate<InvokeUV>(GLCaps.ValidateProgram)(program);
         public static void VertexAttrib1d(uint index, double x) =>
-            GetDelegate<vertexAttrib1d>("glVertexAttrib1d")(index, x);
+            GetDelegate<InvokeUDV>(GLCaps.VertexAttrib1d)(index, x);
         public static void VertexAttrib1dv(uint index, double[] v) =>
-            GetDelegate<vertexAttrib1dv>("glVertexAttrib1dv")(index, v);
+            GetDelegate<InvokeUOdV>(GLCaps.VertexAttrib1dv)(index, v);
         public static void VertexAttrib1f(uint index, float x) =>
-            GetDelegate<vertexAttrib1f>("glVertexAttrib1f")(index, x);
+            GetDelegate<InvokeUFV>(GLCaps.VertexAttrib1f)(index, x);
         public static void VertexAttrib1fv(uint index, float[] v) =>
-            GetDelegate<vertexAttrib1fv>("glVertexAttrib1fv")(index, v);
+            GetDelegate<InvokeUOfV>(GLCaps.VertexAttrib1fv)(index, v);
         public static void VertexAttrib1s(uint index, short x) =>
-            GetDelegate<vertexAttrib1s>("glVertexAttrib1s")(index, x);
+            GetDelegate<InvokeUSV>(GLCaps.VertexAttrib1s)(index, x);
         public static void VertexAttrib1sv(uint index, short[] v) =>
-            GetDelegate<vertexAttrib1sv>("glVertexAttrib1sv")(index, v);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttrib1sv)(index, v);
         public static void VertexAttrib2d(uint index, double x, double y) =>
-            GetDelegate<vertexAttrib2d>("glVertexAttrib2d")(index, x, y);
+            GetDelegate<InvokeUDDV>(GLCaps.VertexAttrib2d)(index, x, y);
         public static void VertexAttrib2dv(uint index, double[] v) =>
-            GetDelegate<vertexAttrib2dv>("glVertexAttrib2dv")(index, v);
+            GetDelegate<InvokeUOdV>(GLCaps.VertexAttrib2dv)(index, v);
         public static void VertexAttrib2f(uint index, float x, float y) =>
-            GetDelegate<vertexAttrib2f>("glVertexAttrib2f")(index, x, y);
+            GetDelegate<InvokeUFFV>(GLCaps.VertexAttrib2f)(index, x, y);
         public static void VertexAttrib2fv(uint index, float[] v) =>
-            GetDelegate<vertexAttrib2fv>("glVertexAttrib2fv")(index, v);
+            GetDelegate<InvokeUOfV>(GLCaps.VertexAttrib2fv)(index, v);
         public static void VertexAttrib2s(uint index, short x, short y) =>
-            GetDelegate<vertexAttrib2s>("glVertexAttrib2s")(index, x, y);
+            GetDelegate<InvokeUSSV>(GLCaps.VertexAttrib2s)(index, x, y);
         public static void VertexAttrib2sv(uint index, short[] v) =>
-            GetDelegate<vertexAttrib2sv>("glVertexAttrib2sv")(index, v);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttrib2sv)(index, v);
         public static void VertexAttrib3d(uint index, double x, double y, double z) =>
-            GetDelegate<vertexAttrib3d>("glVertexAttrib3d")(index, x, y, z);
+            GetDelegate<InvokeUDDDV>(GLCaps.VertexAttrib3d)(index, x, y, z);
         public static void VertexAttrib3dv(uint index, double[] v) =>
-            GetDelegate<vertexAttrib3dv>("glVertexAttrib3dv")(index, v);
+            GetDelegate<InvokeUOdV>(GLCaps.VertexAttrib3dv)(index, v);
         public static void VertexAttrib3f(uint index, float x, float y, float z) =>
-            GetDelegate<vertexAttrib3f>("glVertexAttrib3f")(index, x, y, z);
+            GetDelegate<InvokeUFFFV>(GLCaps.VertexAttrib3f)(index, x, y, z);
         public static void VertexAttrib3fv(uint index, float[] v) =>
-            GetDelegate<vertexAttrib3fv>("glVertexAttrib3fv")(index, v);
+            GetDelegate<InvokeUOfV>(GLCaps.VertexAttrib3fv)(index, v);
         public static void VertexAttrib3S(uint index, short x, short y, short z) =>
-            GetDelegate<vertexAttrib3S>("glVertexAttrib3S")(index, x, y, z);
+            GetDelegate<InvokeUSSSV>(GLCaps.VertexAttrib3S)(index, x, y, z);
         public static void VertexAttrib3SV(uint index, short[] v) =>
-            GetDelegate<vertexAttrib3SV>("glVertexAttrib3SV")(index, v);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttrib3SV)(index, v);
         public static void VertexAttrib4Nbv(uint index, sbyte[] v) =>
-            GetDelegate<vertexAttrib4Nbv>("glVertexAttrib4Nbv")(index, v);
+            GetDelegate<InvokeUObV>(GLCaps.VertexAttrib4Nbv)(index, v);
         public static void VertexAttrib4Niv(uint index, int[] v) =>
-            GetDelegate<vertexAttrib4Niv>("glVertexAttrib4Niv")(index, v);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttrib4Niv)(index, v);
         public static void VertexAttrib4Nsv(uint index, short[] v) =>
-            GetDelegate<vertexAttrib4Nsv>("glVertexAttrib4Nsv")(index, v);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttrib4Nsv)(index, v);
         public static void VertexAttrib4Nub(uint index, byte x, byte y, byte z, byte w) =>
-            GetDelegate<vertexAttrib4Nub>("glVertexAttrib4Nub")(index, x, y, z, w);
+            GetDelegate<InvokeUAAAAV>(GLCaps.VertexAttrib4Nub)(index, x, y, z, w);
         public static void VertexAttrib4Nubv(uint index, byte[] v) =>
-            GetDelegate<vertexAttrib4Nubv>("glVertexAttrib4Nubv")(index, v);
+            GetDelegate<InvokeUOaV>(GLCaps.VertexAttrib4Nubv)(index, v);
         public static void VertexAttrib4Nuiv(uint index, uint[] v) =>
-            GetDelegate<vertexAttrib4Nuiv>("glVertexAttrib4Nuiv")(index, v);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttrib4Nuiv)(index, v);
         public static void VertexAttrib4Nusv(uint index, ushort[] v) =>
-            GetDelegate<vertexAttrib4Nusv>("glVertexAttrib4Nusv")(index, v);
+            GetDelegate<InvokeUOhV>(GLCaps.VertexAttrib4Nusv)(index, v);
         public static void VertexAttrib4bv(uint index, sbyte[] v) =>
-            GetDelegate<vertexAttrib4bv>("glVertexAttrib4bv")(index, v);
+            GetDelegate<InvokeUObV>(GLCaps.VertexAttrib4bv)(index, v);
         public static void VertexAttrib4d(uint index, double x, double y, double z, double w) =>
-            GetDelegate<vertexAttrib4d>("glVertexAttrib4d")(index, x, y, z, w);
+            GetDelegate<InvokeUDDDDV>(GLCaps.VertexAttrib4d)(index, x, y, z, w);
         public static void VertexAttrib4dv(uint index, double[] v) =>
-            GetDelegate<vertexAttrib4dv>("glVertexAttrib4dv")(index, v);
+            GetDelegate<InvokeUOdV>(GLCaps.VertexAttrib4dv)(index, v);
         public static void VertexAttrib4f(uint index, float x, float y, float z, float w) =>
-            GetDelegate<vertexAttrib4f>("glVertexAttrib4f")(index, x, y, z, w);
+            GetDelegate<InvokeUFFFFV>(GLCaps.VertexAttrib4f)(index, x, y, z, w);
         public static void VertexAttrib4fv(uint index, float[] v) =>
-            GetDelegate<vertexAttrib4fv>("glVertexAttrib4fv")(index, v);
+            GetDelegate<InvokeUOfV>(GLCaps.VertexAttrib4fv)(index, v);
         public static void VertexAttrib4iv(uint index, int[] v) =>
-            GetDelegate<vertexAttrib4iv>("glVertexAttrib4iv")(index, v);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttrib4iv)(index, v);
         public static void VertexAttrib4s(uint index, short x, short y, short z, short w) =>
-            GetDelegate<vertexAttrib4s>("glVertexAttrib4s")(index, x, y, z, w);
+            GetDelegate<InvokeUSSSSV>(GLCaps.VertexAttrib4s)(index, x, y, z, w);
         public static void VertexAttrib4sv(uint index, short[] v) =>
-            GetDelegate<vertexAttrib4sv>("glVertexAttrib4sv")(index, v);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttrib4sv)(index, v);
         public static void VertexAttrib4ubv(uint index, byte[] v) =>
-            GetDelegate<vertexAttrib4ubv>("glVertexAttrib4ubv")(index, v);
+            GetDelegate<InvokeUOaV>(GLCaps.VertexAttrib4ubv)(index, v);
         public static void VertexAttrib4uiv(uint index, uint[] v) =>
-            GetDelegate<vertexAttrib4uiv>("glVertexAttrib4uiv")(index, v);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttrib4uiv)(index, v);
         public static void VertexAttrib4usv(uint index, ushort[] v) =>
-            GetDelegate<vertexAttrib4usv>("glVertexAttrib4usv")(index, v);
+            GetDelegate<InvokeUOhV>(GLCaps.VertexAttrib4usv)(index, v);
         public static void VertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer) =>
-            GetDelegate<vertexAttribPointer>("glVertexAttribPointer")(index, size, type, normalized, stride, pointer);
+            GetDelegate<InvokeUIUZIPV>(GLCaps.VertexAttribPointer)(index, size, type, normalized, stride, pointer);
         public static void VertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, long pointer) =>
-            VertexAttribPointer(index, size, type, normalized, stride, new IntPtr(pointer));
+            VertexAttribPointer(index, size, type, normalized, stride, pointer == 0 ? IntPtr.Zero : new(pointer));
 
         #endregion // GL20
         #region GL21
 
-        private delegate void uniformMatrix2x3fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix2x4fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix3x2fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix3x4fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix4x2fv(int location, int count, bool transpose, float[] value);
-        private delegate void uniformMatrix4x3fv(int location, int count, bool transpose, float[] value);
         public static void UniformMatrix2x3fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix2x3fv>("glUniformMatrix2x3fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix2x3fv)(location, count, transpose, value);
         public static void UniformMatrix2x4fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix2x4fv>("glUniformMatrix2x4fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix2x4fv)(location, count, transpose, value);
         public static void UniformMatrix3x2fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix3x2fv>("glUniformMatrix3x2fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix3x2fv)(location, count, transpose, value);
         public static void UniformMatrix3x4fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix3x4fv>("glUniformMatrix3x4fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix3x4fv)(location, count, transpose, value);
         public static void UniformMatrix4x2fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix4x2fv>("glUniformMatrix4x2fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix4x2fv)(location, count, transpose, value);
         public static void UniformMatrix4x3fv(int location, int count, bool transpose, float[] value) =>
-            GetDelegate<uniformMatrix4x3fv>("glUniformMatrix4x3fv")(location, count, transpose, value);
+            GetDelegate<InvokeIIZOfV>(GLCaps.UniformMatrix4x3fv)(location, count, transpose, value);
 
         #endregion // GL21
         #region GL30
 
-        private delegate void beginConditionalRender(uint id, uint mode);
-        private delegate void beginTransformFeedback(uint primitiveMode);
-        private delegate void bindFragDataLocation(uint program, uint colorNumber, string name);
-        private delegate void clampColor(uint target, uint clamp);
-        private delegate void clearBufferfi(uint buffer, int drawBuffer, float depth, int stencil);
-        private delegate void clearBufferfv(uint buffer, int drawBuffer, float[] value);
-        private delegate void clearBufferiv(uint buffer, int drawBuffer, int[] value);
-        private delegate void clearBufferuiv(uint buffer, int drawBuffer, uint[] value);
-        private delegate void colorMaski(uint buf, bool red, bool green, bool blue, bool alpha);
-        private delegate void disablei(uint cap, uint index);
-        private delegate void enablei(uint cap, uint index);
-        private delegate void endConditionalRender();
-        private delegate void eenTransformFeedback();
-        private delegate void getBooleani_v(uint pname, uint index, bool[] data);
-        private delegate int getFragDataLocation(uint program, string name);
-        private delegate byte[] getStringi(uint name, uint index);
-        private delegate void getTexParameterIiv(uint target, uint pname, int[] @params);
-        private delegate void getTexParameterIuiv(uint target, uint pname, uint[] @params);
-        private delegate void getTransformFeedbackVarying(uint program, uint index, int bufSize, ref int length, ref int size, ref uint type, string name);
-        private delegate void getUniformuiv(uint program, int location, uint[] @params);
-        private delegate void getVertexAttribIiv(uint index, uint pname, int[] @params);
-        private delegate void getVertexAttribIuiv(uint index, uint pname, uint[] @params);
-        private delegate bool isEnabledi(uint cap, uint index);
-        private delegate void texParameterIiv(uint target, uint pname, int[] @params);
-        private delegate void texParameterIuiv(uint target, uint pname, uint[] @params);
-        private delegate void transformFeedbackVaryings(uint program, int count, string[] varyings, uint bufferMode);
-        private delegate void uniform1ui(int location, uint v0);
-        private delegate void uniform1uiv(int location, int count, uint[] value);
-        private delegate void uniform2ui(int location, uint v0, uint v1);
-        private delegate void uniform2uiv(int location, int count, uint[] value);
-        private delegate void uniform3ui(int location, uint v0, uint v1, uint v2);
-        private delegate void uniform3uiv(int location, int count, uint[] value);
-        private delegate void uniform4ui(int location, uint v0, uint v1, uint v2, uint v3);
-        private delegate void uniform4uiv(int location, int count, uint[] value);
-        private delegate void vertexAttribI1i(uint index, int v0);
-        private delegate void vertexAttribI1iv(uint index, int[] v0);
-        private delegate void vertexAttribI1ui(uint index, uint v0);
-        private delegate void vertexAttribI1uiv(uint index, uint[] v0);
-        private delegate void vertexAttribI2i(uint index, int v0, int v1);
-        private delegate void vertexAttribI2iv(uint index, int[] v0);
-        private delegate void vertexAttribI2ui(uint index, uint v0, uint v1);
-        private delegate void vertexAttribI2uiv(uint index, uint[] v0);
-        private delegate void vertexAttribI3i(uint index, int v0, int v1, int v2);
-        private delegate void vertexAttribI3iv(uint index, int[] v0);
-        private delegate void vertexAttribI3ui(uint index, uint v0, uint v1, uint v2);
-        private delegate void vertexAttribI3uiv(uint index, uint[] v0);
-        private delegate void vertexAttribI4bv(uint index, sbyte[] v0);
-        private delegate void vertexAttribI4i(uint index, int v0, int v1, int v2, int v3);
-        private delegate void vertexAttribI4iv(uint index, int[] v0);
-        private delegate void vertexAttribI4sv(uint index, short[] v0);
-        private delegate void vertexAttribI4ubv(uint index, byte[] v0);
-        private delegate void vertexAttribI4ui(uint index, uint v0, uint v1, uint v2, uint v3);
-        private delegate void vertexAttribI4uiv(uint index, uint[] v0);
-        private delegate void vertexAttribI4usv(uint index, ushort[] v0);
-        private delegate void vertexAttribIPointer(uint index, int size, uint type, int stride, IntPtr pointer);
         public static void BeginConditionalRender(uint id, uint mode) =>
-            GetDelegate<beginConditionalRender>("glBeginConditionalRender")(id, mode);
+            GetDelegate<InvokeUUV>(GLCaps.BeginConditionalRender)(id, mode);
         public static void BeginTransformFeedback(uint primitiveMode) =>
-            GetDelegate<beginTransformFeedback>("glBeginTransformFeedback")(primitiveMode);
+            GetDelegate<InvokeUV>(GLCaps.BeginTransformFeedback)(primitiveMode);
         public static void BindFragDataLocation(uint program, uint colorNumber, string name) =>
-            GetDelegate<bindFragDataLocation>("glBindFragDataLocation")(program, colorNumber, name);
+            GetDelegate<InvokeUUXV>(GLCaps.BindFragDataLocation)(program, colorNumber, name);
         public static void ClampColor(uint target, uint clamp) =>
-            GetDelegate<clampColor>("glClampColor")(target, clamp);
+            GetDelegate<InvokeUUV>(GLCaps.ClampColor)(target, clamp);
         public static void ClearBufferfi(uint buffer, int drawBuffer, float depth, int stencil) =>
-            GetDelegate<clearBufferfi>("glClearBufferfi")(buffer, drawBuffer, depth, stencil);
+            GetDelegate<InvokeUIFIV>(GLCaps.ClearBufferfi)(buffer, drawBuffer, depth, stencil);
         public static void ClearBufferfv(uint buffer, int drawBuffer, float[] value) =>
-            GetDelegate<clearBufferfv>("glClearBufferfv")(buffer, drawBuffer, value);
+            GetDelegate<InvokeUIOfV>(GLCaps.ClearBufferfv)(buffer, drawBuffer, value);
         public static void ClearBufferiv(uint buffer, int drawBuffer, int[] value) =>
-            GetDelegate<clearBufferiv>("glClearBufferiv")(buffer, drawBuffer, value);
+            GetDelegate<InvokeUIOiV>(GLCaps.ClearBufferiv)(buffer, drawBuffer, value);
         public static void ClearBufferuiv(uint buffer, int drawBuffer, uint[] value) =>
-            GetDelegate<clearBufferuiv>("glClearBufferuiv")(buffer, drawBuffer, value);
+            GetDelegate<InvokeUIOuV>(GLCaps.ClearBufferuiv)(buffer, drawBuffer, value);
         public static void ColorMaski(uint buf, bool red, bool green, bool blue, bool alpha) =>
-            GetDelegate<colorMaski>("glColorMaski")(buf, red, green, blue, alpha);
+            GetDelegate<InvokeUZZZZV>(GLCaps.ColorMaski)(buf, red, green, blue, alpha);
         public static void Disablei(uint cap, uint index) =>
-            GetDelegate<disablei>("glDisablei")(cap, index);
+            GetDelegate<InvokeUUV>(GLCaps.Disablei)(cap, index);
         public static void Enablei(uint cap, uint index) =>
-            GetDelegate<enablei>("glEnablei")(cap, index);
+            GetDelegate<InvokeUUV>(GLCaps.Enablei)(cap, index);
         public static void EndConditionalRender() =>
-            GetDelegate<endConditionalRender>("glEndConditionalRender")();
+            GetDelegate<InvokeV>(GLCaps.EndConditionalRender)();
         public static void EenTransformFeedback() =>
-            GetDelegate<eenTransformFeedback>("glEenTransformFeedback")();
+            GetDelegate<InvokeV>(GLCaps.EenTransformFeedback)();
         public static void GetBooleani_v(uint pname, uint index, bool[] data) =>
-            GetDelegate<getBooleani_v>("glGetBooleani_v")(pname, index, data);
+            GetDelegate<InvokeUUOzV>(GLCaps.GetBooleani_v)(pname, index, data);
         public static int GetFragDataLocation(uint program, string name) =>
-            GetDelegate<getFragDataLocation>("glGetFragDataLocation")(program, name);
-        public static byte[] GetStringi(uint name, uint index) =>
-            GetDelegate<getStringi>("glGetStringi")(name, index);
+            GetDelegate<InvokeUXI>(GLCaps.GetFragDataLocation)(program, name);
+        public static string GetStringi(uint name, uint index) =>
+            GetDelegate<InvokeUUX>(GLCaps.GetStringi)(name, index);
         public static void GetTexParameterIiv(uint target, uint pname, int[] @params) =>
-            GetDelegate<getTexParameterIiv>("glGetTexParameterIiv")(target, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetTexParameterIiv)(target, pname, @params);
         public static void GetTexParameterIuiv(uint target, uint pname, uint[] @params) =>
-            GetDelegate<getTexParameterIuiv>("glGetTexParameterIuiv")(target, pname, @params);
+            GetDelegate<InvokeUUOuV>(GLCaps.GetTexParameterIuiv)(target, pname, @params);
         public static void GetTransformFeedbackVarying(uint program, uint index, int bufSize, ref int length, ref int size, ref uint type, string name) =>
-            GetDelegate<getTransformFeedbackVarying>("glGetTransformFeedbackVarying")(program, index, bufSize, ref length, ref size, ref type, name);
+            GetDelegate<InvokeUUIRiRiRuXV>(GLCaps.GetTransformFeedbackVarying)(program, index, bufSize, ref length, ref size, ref type, name);
         public static void GetUniformuiv(uint program, int location, uint[] @params) =>
-            GetDelegate<getUniformuiv>("glGetUniformuiv")(program, location, @params);
+            GetDelegate<InvokeUIOuV>(GLCaps.GetUniformuiv)(program, location, @params);
         public static void GetVertexAttribIiv(uint index, uint pname, int[] @params) =>
-            GetDelegate<getVertexAttribIiv>("glGetVertexAttribIiv")(index, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.GetVertexAttribIiv)(index, pname, @params);
         public static void GetVertexAttribIuiv(uint index, uint pname, uint[] @params) =>
-            GetDelegate<getVertexAttribIuiv>("glGetVertexAttribIuiv")(index, pname, @params);
+            GetDelegate<InvokeUUOuV>(GLCaps.GetVertexAttribIuiv)(index, pname, @params);
         public static bool IsEnabledi(uint cap, uint index) =>
-            GetDelegate<isEnabledi>("glIsEnabledi")(cap, index);
+            GetDelegate<InvokeUUZ>(GLCaps.IsEnabledi)(cap, index);
         public static void TexParameterIiv(uint target, uint pname, int[] @params) =>
-            GetDelegate<texParameterIiv>("glTexParameterIiv")(target, pname, @params);
+            GetDelegate<InvokeUUOiV>(GLCaps.TexParameterIiv)(target, pname, @params);
         public static void TexParameterIuiv(uint target, uint pname, uint[] @params) =>
-            GetDelegate<texParameterIuiv>("glTexParameterIuiv")(target, pname, @params);
+            GetDelegate<InvokeUUOuV>(GLCaps.TexParameterIuiv)(target, pname, @params);
         public static void TransformFeedbackVaryings(uint program, int count, string[] varyings, uint bufferMode) =>
-            GetDelegate<transformFeedbackVaryings>("glTransformFeedbackVaryings")(program, count, varyings, bufferMode);
+            GetDelegate<InvokeUIOxUV>(GLCaps.TransformFeedbackVaryings)(program, count, varyings, bufferMode);
         public static void Uniform1ui(int location, uint v0) =>
-            GetDelegate<uniform1ui>("glUniform1ui")(location, v0);
+            GetDelegate<InvokeIUV>(GLCaps.Uniform1ui)(location, v0);
         public static void Uniform1uiv(int location, int count, uint[] value) =>
-            GetDelegate<uniform1uiv>("glUniform1uiv")(location, count, value);
+            GetDelegate<InvokeIIOuV>(GLCaps.Uniform1uiv)(location, count, value);
         public static void Uniform2ui(int location, uint v0, uint v1) =>
-            GetDelegate<uniform2ui>("glUniform2ui")(location, v0, v1);
+            GetDelegate<InvokeIUUV>(GLCaps.Uniform2ui)(location, v0, v1);
         public static void Uniform2uiv(int location, int count, uint[] value) =>
-            GetDelegate<uniform2uiv>("glUniform2uiv")(location, count, value);
+            GetDelegate<InvokeIIOuV>(GLCaps.Uniform2uiv)(location, count, value);
         public static void Uniform3ui(int location, uint v0, uint v1, uint v2) =>
-            GetDelegate<uniform3ui>("glUniform3ui")(location, v0, v1, v2);
+            GetDelegate<InvokeIUUUV>(GLCaps.Uniform3ui)(location, v0, v1, v2);
         public static void Uniform3uiv(int location, int count, uint[] value) =>
-            GetDelegate<uniform3uiv>("glUniform3uiv")(location, count, value);
+            GetDelegate<InvokeIIOuV>(GLCaps.Uniform3uiv)(location, count, value);
         public static void Uniform4ui(int location, uint v0, uint v1, uint v2, uint v3) =>
-            GetDelegate<uniform4ui>("glUniform4ui")(location, v0, v1, v2, v3);
+            GetDelegate<InvokeIUUUUV>(GLCaps.Uniform4ui)(location, v0, v1, v2, v3);
         public static void Uniform4uiv(int location, int count, uint[] value) =>
-            GetDelegate<uniform4uiv>("glUniform4uiv")(location, count, value);
+            GetDelegate<InvokeIIOuV>(GLCaps.Uniform4uiv)(location, count, value);
         public static void VertexAttribI1i(uint index, int v0) =>
-            GetDelegate<vertexAttribI1i>("glVertexAttribI1i")(index, v0);
+            GetDelegate<InvokeUIV>(GLCaps.VertexAttribI1i)(index, v0);
         public static void VertexAttribI1iv(uint index, int[] v0) =>
-            GetDelegate<vertexAttribI1iv>("glVertexAttribI1iv")(index, v0);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttribI1iv)(index, v0);
         public static void VertexAttribI1ui(uint index, uint v0) =>
-            GetDelegate<vertexAttribI1ui>("glVertexAttribI1ui")(index, v0);
+            GetDelegate<InvokeUUV>(GLCaps.VertexAttribI1ui)(index, v0);
         public static void VertexAttribI1uiv(uint index, uint[] v0) =>
-            GetDelegate<vertexAttribI1uiv>("glVertexAttribI1uiv")(index, v0);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttribI1uiv)(index, v0);
         public static void VertexAttribI2i(uint index, int v0, int v1) =>
-            GetDelegate<vertexAttribI2i>("glVertexAttribI2i")(index, v0, v1);
+            GetDelegate<InvokeUIIV>(GLCaps.VertexAttribI2i)(index, v0, v1);
         public static void VertexAttribI2iv(uint index, int[] v0) =>
-            GetDelegate<vertexAttribI2iv>("glVertexAttribI2iv")(index, v0);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttribI2iv)(index, v0);
         public static void VertexAttribI2ui(uint index, uint v0, uint v1) =>
-            GetDelegate<vertexAttribI2ui>("glVertexAttribI2ui")(index, v0, v1);
+            GetDelegate<InvokeUUUV>(GLCaps.VertexAttribI2ui)(index, v0, v1);
         public static void VertexAttribI2uiv(uint index, uint[] v0) =>
-            GetDelegate<vertexAttribI2uiv>("glVertexAttribI2uiv")(index, v0);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttribI2uiv)(index, v0);
         public static void VertexAttribI3i(uint index, int v0, int v1, int v2) =>
-            GetDelegate<vertexAttribI3i>("glVertexAttribI3i")(index, v0, v1, v2);
+            GetDelegate<InvokeUIIIV>(GLCaps.VertexAttribI3i)(index, v0, v1, v2);
         public static void VertexAttribI3iv(uint index, int[] v0) =>
-            GetDelegate<vertexAttribI3iv>("glVertexAttribI3iv")(index, v0);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttribI3iv)(index, v0);
         public static void VertexAttribI3ui(uint index, uint v0, uint v1, uint v2) =>
-            GetDelegate<vertexAttribI3ui>("glVertexAttribI3ui")(index, v0, v1, v2);
+            GetDelegate<InvokeUUUUV>(GLCaps.VertexAttribI3ui)(index, v0, v1, v2);
         public static void VertexAttribI3uiv(uint index, uint[] v0) =>
-            GetDelegate<vertexAttribI3uiv>("glVertexAttribI3uiv")(index, v0);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttribI3uiv)(index, v0);
         public static void VertexAttribI4bv(uint index, sbyte[] v0) =>
-            GetDelegate<vertexAttribI4bv>("glVertexAttribI4bv")(index, v0);
+            GetDelegate<InvokeUObV>(GLCaps.VertexAttribI4bv)(index, v0);
         public static void VertexAttribI4i(uint index, int v0, int v1, int v2, int v3) =>
-            GetDelegate<vertexAttribI4i>("glVertexAttribI4i")(index, v0, v1, v2, v3);
+            GetDelegate<InvokeUIIIIV>(GLCaps.VertexAttribI4i)(index, v0, v1, v2, v3);
         public static void VertexAttribI4iv(uint index, int[] v0) =>
-            GetDelegate<vertexAttribI4iv>("glVertexAttribI4iv")(index, v0);
+            GetDelegate<InvokeUOiV>(GLCaps.VertexAttribI4iv)(index, v0);
         public static void VertexAttribI4sv(uint index, short[] v0) =>
-            GetDelegate<vertexAttribI4sv>("glVertexAttribI4sv")(index, v0);
+            GetDelegate<InvokeUOsV>(GLCaps.VertexAttribI4sv)(index, v0);
         public static void VertexAttribI4ubv(uint index, byte[] v0) =>
-            GetDelegate<vertexAttribI4ubv>("glVertexAttribI4ubv")(index, v0);
+            GetDelegate<InvokeUOaV>(GLCaps.VertexAttribI4ubv)(index, v0);
         public static void VertexAttribI4ui(uint index, uint v0, uint v1, uint v2, uint v3) =>
-            GetDelegate<vertexAttribI4ui>("glVertexAttribI4ui")(index, v0, v1, v2, v3);
+            GetDelegate<InvokeUUUUUV>(GLCaps.VertexAttribI4ui)(index, v0, v1, v2, v3);
         public static void VertexAttribI4uiv(uint index, uint[] v0) =>
-            GetDelegate<vertexAttribI4uiv>("glVertexAttribI4uiv")(index, v0);
+            GetDelegate<InvokeUOuV>(GLCaps.VertexAttribI4uiv)(index, v0);
         public static void VertexAttribI4usv(uint index, ushort[] v0) =>
-            GetDelegate<vertexAttribI4usv>("glVertexAttribI4usv")(index, v0);
+            GetDelegate<InvokeUOhV>(GLCaps.VertexAttribI4usv)(index, v0);
         public static void VertexAttribIPointer(uint index, int size, uint type, int stride, IntPtr pointer) =>
-            GetDelegate<vertexAttribIPointer>("glVertexAttribIPointer")(index, size, type, stride, pointer);
+            GetDelegate<InvokeUIUIPV>(GLCaps.VertexAttribIPointer)(index, size, type, stride, pointer);
+        public static void BindVertexArray(uint array) =>
+            GetDelegate<InvokeUV>(GLCaps.BindVertexArray)(array);
+        public static void DeleteVertexArrays(int n, uint[] arrays) =>
+            GetDelegate<InvokeIOuV>(GLCaps.DeleteVertexArrays)(n, arrays);
+        public static void DeleteVertexArrays(uint array)
+        {
+            uint[] p = { array };
+            DeleteVertexArrays(1, p);
+        }
+        public static void GenVertexArrays(int n, uint[] arrays) =>
+            GetDelegate<InvokeIOuV>(GLCaps.GenVertexArrays)(n, arrays);
+        public static uint GenVertexArrays()
+        {
+            uint[] p = { 0 };
+            GenVertexArrays(1, p);
+            return p[0];
+        }
+        public static bool IsVertexArray(uint array) =>
+            GetDelegate<InvokeUZ>(GLCaps.IsVertexArray)(array);
+        public static void BindFramebuffer(uint target, uint framebuffer) =>
+            GetDelegate<InvokeUUV>("glBindFramebuffer")(target, framebuffer);
+        public static void BindRenderbuffer(uint target, uint renderbuffer) =>
+            GetDelegate<InvokeUUV>("glBindRenderbuffer")(target, renderbuffer);
+        public static void BlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter) =>
+            GetDelegate<InvokeIIIIIIIIUUV>("glBlitFramebuffer")(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+        public static uint CheckFramebufferStatus(uint target) =>
+            GetDelegate<InvokeUU>("glCheckFramebufferStatus")(target);
+        public static void DeleteFramebuffers(int n, uint[] framebuffers) =>
+            GetDelegate<InvokeIOuV>("glDeleteFramebuffers")(n, framebuffers);
+        public static void DeleteFramebuffers(uint[] framebuffers) =>
+            DeleteFramebuffers(framebuffers.Length, framebuffers);
+        public static void DeleteFramebuffers(uint framebuffer) =>
+            DeleteFramebuffers(new[] { framebuffer });
+        public static void DeleteRenderbuffers(int n, uint[] renderbuffers) =>
+            GetDelegate<InvokeIOuV>("glDeleteRenderbuffers")(n, renderbuffers);
+        public static void DeleteRenderbuffers(uint[] renderbuffers) =>
+            DeleteRenderbuffers(renderbuffers.Length, renderbuffers);
+        public static void DeleteRenderbuffers(uint renderbuffer) =>
+            DeleteRenderbuffers(new[] { renderbuffer });
+        public static void FramebufferRenderbuffer(uint target, uint attachment, uint renderbuffertarget, uint renderbuffer) =>
+            GetDelegate<InvokeUUUUV>("glFramebufferRenderbuffer")(target, attachment, renderbuffertarget, renderbuffer);
+        public static void FramebufferTexture1D(uint target, uint attachment, uint textarget, uint texture, int level) =>
+            GetDelegate<InvokeUUUUIV>("glFramebufferTexture1D")(target, attachment, textarget, texture, level);
+        public static void FramebufferTexture2D(uint target, uint attachment, uint textarget, uint texture, int level) =>
+            GetDelegate<InvokeUUUUIV>("glFramebufferTexture2D")(target, attachment, textarget, texture, level);
+        public static void FramebufferTexture3D(uint target, uint attachment, uint textarget, uint texture, int level, int layer) =>
+            GetDelegate<InvokeUUUUIIV>("glFramebufferTexture3D")(target, attachment, textarget, texture, level, layer);
+        public static void FramebufferTextureLayer(uint target, uint attachment, uint texture, int level, int layer) =>
+            GetDelegate<InvokeUUUIIV>("glFramebufferTextureLayer")(target, attachment, texture, level, layer);
+        public static void GenFramebuffers(int n, uint[] framebuffers) =>
+            GetDelegate<InvokeIOuV>("glGenFramebuffers")(n, framebuffers);
+        public static void GenFramebuffers(uint[] framebuffers) =>
+            GenFramebuffers(framebuffers.Length, framebuffers);
+        public static uint GenFramebuffers()
+        {
+            uint[] p = { 0 };
+            GenFramebuffers(p);
+            return p[0];
+        }
+        public static void GenRenderbuffers(int n, uint[] renderbuffers) =>
+            GetDelegate<InvokeIOuV>("glGenRenderbuffers")(n, renderbuffers);
+        public static void GenRenderbuffers(uint[] renderbuffers) =>
+            GenRenderbuffers(renderbuffers.Length, renderbuffers);
+        public static uint GenRenderbuffers()
+        {
+            uint[] p = { 0 };
+            GenRenderbuffers(p);
+            return p[0];
+        }
+        public static void GenerateMipmap(uint target) =>
+            GetDelegate<InvokeUV>("glGenerateMipmap")(target);
+        public static void GetFramebufferAttachmentParameteriv(uint target, uint attachment, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUUOiV>("glGetFramebufferAttachmentParameteriv")(target, attachment, pname, @params);
+        public static void GetRenderbufferParameteriv(uint target, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUOiV>("glGetRenderbufferParameteriv")(target, pname, @params);
+        public static bool IsFramebuffer(uint framebuffer) =>
+            GetDelegate<InvokeUZ>("glIsFramebuffer")(framebuffer);
+        public static bool IsRenderbuffer(uint renderbuffer) =>
+            GetDelegate<InvokeUZ>("glIsRenderbuffer")(renderbuffer);
+        public static void RenderbufferStorage(uint target, uint internalformat, int width, int height) =>
+            GetDelegate<InvokeUUIIV>("glRenderbufferStorage")(target, internalformat, width, height);
+        public static void RenderbufferStorageMultisample(uint target, int samples, uint internalformat, int width, int height) =>
+            GetDelegate<InvokeUIUIIV>("glRenderbufferStorageMultisample")(target, samples, internalformat, width, height);
 
         #endregion // GL30
         #region GL31
 
-        private delegate void drawArraysInstanced(uint mode, int first, int count, int primCount);
-        private delegate void drawElementsInstanced(uint mode, int count, uint type, IntPtr indices, int primCount);
-        private delegate void primitiveRestartIndex(uint buffer);
-        private delegate void texBuffer(uint target, uint internalFormat, uint buffer);
         public static void DrawArraysInstanced(uint mode, int first, int count, int primCount) =>
-            GetDelegate<drawArraysInstanced>("glDrawArraysInstanced")(mode, first, count, primCount);
+            GetDelegate<InvokeUIIIV>(GLCaps.DrawArraysInstanced)(mode, first, count, primCount);
         public static void DrawElementsInstanced(uint mode, int count, uint type, IntPtr indices, int primCount) =>
-            GetDelegate<drawElementsInstanced>("glDrawElementsInstanced")(mode, count, type, indices, primCount);
+            GetDelegate<InvokeUIUPIV>(GLCaps.DrawElementsInstanced)(mode, count, type, indices, primCount);
         public static void PrimitiveRestartIndex(uint buffer) =>
-            GetDelegate<primitiveRestartIndex>("glPrimitiveRestartIndex")(buffer);
+            GetDelegate<InvokeUV>(GLCaps.PrimitiveRestartIndex)(buffer);
         public static void TexBuffer(uint target, uint internalFormat, uint buffer) =>
-            GetDelegate<texBuffer>("glTexBuffer")(target, internalFormat, buffer);
+            GetDelegate<InvokeUUUV>(GLCaps.TexBuffer)(target, internalFormat, buffer);
 
         #endregion // GL31
         #region GL32
 
-        private delegate void framebufferTexture(uint target, uint attachment, uint texture, int level);
-        private delegate void getBufferParameteri64v(uint target, uint value, long[] data);
-        private delegate void getInteger64i_v(uint pname, uint index, long[] data);
         public static void FramebufferTexture(uint target, uint attachment, uint texture, int level) =>
-            GetDelegate<framebufferTexture>("glFramebufferTexture")(target, attachment, texture, level);
+            GetDelegate<InvokeUUUIV>(GLCaps.FramebufferTexture)(target, attachment, texture, level);
         public static void GetBufferParameteri64v(uint target, uint value, long[] data) =>
-            GetDelegate<getBufferParameteri64v>("glGetBufferParameteri64v")(target, value, data);
+            GetDelegate<InvokeUUOjV>(GLCaps.GetBufferParameteri64v)(target, value, data);
         public static void GetInteger64i_v(uint pname, uint index, long[] data) =>
-            GetDelegate<getInteger64i_v>("glGetInteger64i_v")(pname, index, data);
+            GetDelegate<InvokeUUOjV>(GLCaps.GetInteger64i_v)(pname, index, data);
 
         #endregion // GL32
         #region GL33
 
-        private delegate void vertexAttribDivisor(uint index, uint divisor);
         public static void VertexAttribDivisor(uint index, uint divisor) =>
-            GetDelegate<vertexAttribDivisor>("glVertexAttribDivisor")(index, divisor);
+            GetDelegate<InvokeUUV>(GLCaps.VertexAttribDivisor)(index, divisor);
 
         #endregion // GL33
         #region GL40
 
-        private delegate void blendEquationSeparatei(uint buf, uint modeRGB, uint modeAlpha);
-        private delegate void blendEquationI(uint buf, uint mode);
-        private delegate void blendFuncSeparatei(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha);
-        private delegate void blendFunci(uint buf, uint src, uint dst);
-        private delegate void minSampleShading(float value);
         public static void BlendEquationSeparatei(uint buf, uint modeRGB, uint modeAlpha) =>
-            GetDelegate<blendEquationSeparatei>("glBlendEquationSeparatei")(buf, modeRGB, modeAlpha);
+            GetDelegate<InvokeUUUV>(GLCaps.BlendEquationSeparatei)(buf, modeRGB, modeAlpha);
         public static void BlendEquationI(uint buf, uint mode) =>
-            GetDelegate<blendEquationI>("glBlendEquationI")(buf, mode);
+            GetDelegate<InvokeUUV>(GLCaps.BlendEquationI)(buf, mode);
         public static void BlendFuncSeparatei(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha) =>
-            GetDelegate<blendFuncSeparatei>("glBlendFuncSeparatei")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            GetDelegate<InvokeUUUUUV>(GLCaps.BlendFuncSeparatei)(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
         public static void BlendFunci(uint buf, uint src, uint dst) =>
-            GetDelegate<blendFunci>("glBlendFunci")(buf, src, dst);
+            GetDelegate<InvokeUUUV>(GLCaps.BlendFunci)(buf, src, dst);
         public static void MinSampleShading(float value) =>
-            GetDelegate<minSampleShading>("glMinSampleShading")(value);
+            GetDelegate<InvokeFV>(GLCaps.MinSampleShading)(value);
 
         #endregion // GL40
         #region GL45
 
-        private delegate uint getGraphicsResetStatus();
-        private delegate void getnCompressedTexImage(uint target, int lod, int bufSize, IntPtr pixels);
-        private delegate void getnTexImage(uint tex, int level, uint format, uint type, int bufSize, IntPtr pixels);
-        private delegate void getnUniformdv(uint program, int location, int bufSize, double[] @params);
         public static uint GetGraphicsResetStatus() =>
-            GetDelegate<getGraphicsResetStatus>("glGetGraphicsResetStatus")();
+            GetDelegate<InvokeU>(GLCaps.GetGraphicsResetStatus)();
         public static void GetnCompressedTexImage(uint target, int lod, int bufSize, IntPtr pixels) =>
-            GetDelegate<getnCompressedTexImage>("glGetnCompressedTexImage")(target, lod, bufSize, pixels);
+            GetDelegate<InvokeUIIPV>(GLCaps.GetnCompressedTexImage)(target, lod, bufSize, pixels);
         public static void GetnTexImage(uint tex, int level, uint format, uint type, int bufSize, IntPtr pixels) =>
-            GetDelegate<getnTexImage>("glGetnTexImage")(tex, level, format, type, bufSize, pixels);
+            GetDelegate<InvokeUIUUIPV>(GLCaps.GetnTexImage)(tex, level, format, type, bufSize, pixels);
         public static void GetnUniformdv(uint program, int location, int bufSize, double[] @params) =>
-            GetDelegate<getnUniformdv>("glGetnUniformdv")(program, location, bufSize, @params);
+            GetDelegate<InvokeUIIOdV>(GLCaps.GetnUniformdv)(program, location, bufSize, @params);
+        public static void ClipControl(uint origin, uint depth) =>
+            GetDelegate<InvokeUUV>(GLCaps.ClipControl)(origin, depth);
 
         #endregion // GL45
         #region GL46
 
-        private delegate void multiDrawArraysIndirectCount(uint mode, IntPtr indirect, int[] drawcount, int maxdrawcount, int stride);
-        private delegate void multiDrawElementsIndirectCount(uint mode, uint type, IntPtr indirect, int[] drawcount, int maxdrawcount, int stride);
-        private delegate void specializeShader(uint shader, string pEntryPoint, uint numSpecializationConstants, uint[] pConstantIndex, uint[] pConstantValue);
         public static void MultiDrawArraysIndirectCount(uint mode, IntPtr indirect, int[] drawcount, int maxdrawcount, int stride) =>
-            GetDelegate<multiDrawArraysIndirectCount>("glMultiDrawArraysIndirectCount")(mode, indirect, drawcount, maxdrawcount, stride);
+            GetDelegate<InvokeUPOiIIV>(GLCaps.MultiDrawArraysIndirectCount)(mode, indirect, drawcount, maxdrawcount, stride);
         public static void MultiDrawElementsIndirectCount(uint mode, uint type, IntPtr indirect, int[] drawcount, int maxdrawcount, int stride) =>
-            GetDelegate<multiDrawElementsIndirectCount>("glMultiDrawElementsIndirectCount")(mode, type, indirect, drawcount, maxdrawcount, stride);
+            GetDelegate<InvokeUUPOiIIV>(GLCaps.MultiDrawElementsIndirectCount)(mode, type, indirect, drawcount, maxdrawcount, stride);
         public static void SpecializeShader(uint shader, string pEntryPoint, uint numSpecializationConstants, uint[] pConstantIndex, uint[] pConstantValue) =>
-            GetDelegate<specializeShader>("glSpecializeShader")(shader, pEntryPoint, numSpecializationConstants, pConstantIndex, pConstantValue);
+            GetDelegate<InvokeUXUOuOuV>(GLCaps.SpecializeShader)(shader, pEntryPoint, numSpecializationConstants, pConstantIndex, pConstantValue);
 
         #endregion // GL46
         #region GL_3DFX_tbuffer
 
-        private delegate void tbufferMask3DFX(uint mask);
         public static void TbufferMask3DFX(uint mask) =>
-            GetDelegate<tbufferMask3DFX>("glTbufferMask3DFX")(mask);
+            GetDelegate<InvokeUV>(GLCaps.TbufferMask3DFX)(mask);
 
         #endregion // GL_3DFX_tbuffer
         #region GL_AMD_debug_output
 
         public delegate void DebugProcAMD(uint id, uint category, uint severity, int length, string message, IntPtr userParam);
         private delegate void debugMessageCallbackAMD(DebugProcAMD callback, IntPtr userParam);
-        private delegate void debugMessageEnableAMD(uint category, uint severity, int count, uint[] ids, bool enabled);
-        private delegate void debugMessageInsertAMD(uint category, uint severity, uint id, int length, string buf);
-        private delegate uint getDebugMessageLogAMD(uint count, int bufSize, uint[] categories, uint[] severities, uint[] ids, int[] lengths, [Nullable] ref string? messageLog);
         public static void DebugMessageCallbackAMD(DebugProcAMD callback, IntPtr userParam) =>
             GetDelegate<debugMessageCallbackAMD>("glDebugMessageCallbackAMD")(callback, userParam);
         public static void DebugMessageEnableAMD(uint category, uint severity, int count, uint[] ids, bool enabled) =>
-            GetDelegate<debugMessageEnableAMD>("glDebugMessageEnableAMD")(category, severity, count, ids, enabled);
+            GetDelegate<InvokeUUIOuZV>("glDebugMessageEnableAMD")(category, severity, count, ids, enabled);
         public static void DebugMessageEnableAMD(uint category, uint severity, uint[] ids, bool enabled) =>
             DebugMessageEnableAMD(category, severity, ids.Length, ids, enabled);
         public static void DebugMessageEnableAMD(uint category, uint severity, uint id, bool enabled) =>
             DebugMessageEnableAMD(category, severity, new[] { id }, enabled);
         public static void DebugMessageInsertAMD(uint category, uint severity, uint id, int length, string buf) =>
-            GetDelegate<debugMessageInsertAMD>("glDebugMessageInsertAMD")(category, severity, id, length, buf);
+            GetDelegate<InvokeUUUIXV>("glDebugMessageInsertAMD")(category, severity, id, length, buf);
         public static void DebugMessageInsertAMD(uint category, uint severity, uint id, string buf) =>
             DebugMessageInsertAMD(category, severity, id, buf.Length, buf);
-        public static uint GetDebugMessageLogAMD(uint count, int bufSize, uint[] categories, uint[] severities, uint[] ids, int[] lengths, [Nullable] ref string? messageLog) =>
-            GetDelegate<getDebugMessageLogAMD>("glGetDebugMessageLogAMD")(count, bufSize, categories, severities, ids, lengths, ref messageLog);
+        public static uint GetDebugMessageLogAMD(uint count, int bufSize, uint[] categories, uint[] severities, uint[] ids, int[] lengths, StringBuilder messageLog) =>
+            GetDelegate<InvokeUIOuOuOuOiYU>("glGetDebugMessageLogAMD")(count, bufSize, categories, severities, ids, lengths, messageLog);
 
         #endregion // GL_AMD_debug_output
         #region GL_AMD_draw_buffers_blend
 
-        private delegate void blendEquationIndexedAMD(uint buf, uint mode);
-        private delegate void blendEquationSeparateIndexedAMD(uint buf, uint modeRGB, uint modeAlpha);
-        private delegate void blendFuncIndexedAMD(uint buf, uint src, uint dst);
-        private delegate void blendFuncSeparateIndexedAMD(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha);
         public static void BlendEquationIndexedAMD(uint buf, uint mode) =>
-            GetDelegate<blendEquationIndexedAMD>("glBlendEquationIndexedAMD")(buf, mode);
+            GetDelegate<InvokeUUV>("glBlendEquationIndexedAMD")(buf, mode);
         public static void BlendEquationSeparateIndexedAMD(uint buf, uint modeRGB, uint modeAlpha) =>
-            GetDelegate<blendEquationSeparateIndexedAMD>("glBlendEquationSeparateIndexedAMD")(buf, modeRGB, modeAlpha);
+            GetDelegate<InvokeUUUV>("glBlendEquationSeparateIndexedAMD")(buf, modeRGB, modeAlpha);
         public static void BlendFuncIndexedAMD(uint buf, uint src, uint dst) =>
-            GetDelegate<blendFuncIndexedAMD>("glBlendFuncIndexedAMD")(buf, src, dst);
+            GetDelegate<InvokeUUUV>("glBlendFuncIndexedAMD")(buf, src, dst);
         public static void BlendFuncSeparateIndexedAMD(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha) =>
-            GetDelegate<blendFuncSeparateIndexedAMD>("glBlendFuncSeparateIndexedAMD")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            GetDelegate<InvokeUUUUUV>("glBlendFuncSeparateIndexedAMD")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
 
         #endregion // GL_AMD_draw_buffers_blend
         #region GL_AMD_framebuffer_multisample_advanced
 
-        private delegate void namedRenderbufferStorageMultisampleAdvancedAMD(uint renderbuffer, int samples, int storageSamples, uint internalformat, int width, int height);
-        private delegate void renderbufferStorageMultisampleAdvancedAMD(uint target, int samples, int storageSamples, uint internalformat, int width, int height);
         public static void NamedRenderbufferStorageMultisampleAdvancedAMD(uint renderbuffer, int samples, int storageSamples, uint internalformat, int width, int height) =>
-            GetDelegate<namedRenderbufferStorageMultisampleAdvancedAMD>("glNamedRenderbufferStorageMultisampleAdvancedAMD")(renderbuffer, samples, storageSamples, internalformat, width, height);
+            GetDelegate<InvokeUIIUIIV>("glNamedRenderbufferStorageMultisampleAdvancedAMD")(renderbuffer, samples, storageSamples, internalformat, width, height);
         public static void RenderbufferStorageMultisampleAdvancedAMD(uint target, int samples, int storageSamples, uint internalformat, int width, int height) =>
-            GetDelegate<renderbufferStorageMultisampleAdvancedAMD>("glRenderbufferStorageMultisampleAdvancedAMD")(target, samples, storageSamples, internalformat, width, height);
+            GetDelegate<InvokeUIIUIIV>("glRenderbufferStorageMultisampleAdvancedAMD")(target, samples, storageSamples, internalformat, width, height);
 
         #endregion // GL_AMD_framebuffer_multisample_advanced
         #region GL_AMD_framebuffer_sample_positions
 
-        private delegate void framebufferSamplePositionsfvAMD(uint target, uint numSamples, uint pixelIndex, float[] values);
-        private delegate void getFramebufferParameterfvAMD(uint target, uint pname, uint numSamples, uint pixelIndex, int size, float[] values);
-        private delegate void getNamedFramebufferParameterfvAMD(uint framebuffer, uint pname, uint numSamples, uint pixelIndex, int size, float[] values);
-        private delegate void namedFramebufferSamplePositionsfvAMD(uint framebuffer, uint numSamples, uint pixelIndex, float[] values);
         public static void FramebufferSamplePositionsfvAMD(uint target, uint numSamples, uint pixelIndex, float[] values) =>
-            GetDelegate<framebufferSamplePositionsfvAMD>("glFramebufferSamplePositionsfvAMD")(target, numSamples, pixelIndex, values);
+            GetDelegate<InvokeUUUOfV>("glFramebufferSamplePositionsfvAMD")(target, numSamples, pixelIndex, values);
         public static void GetFramebufferParameterfvAMD(uint target, uint pname, uint numSamples, uint pixelIndex, int size, float[] values) =>
-            GetDelegate<getFramebufferParameterfvAMD>("glGetFramebufferParameterfvAMD")(target, pname, numSamples, pixelIndex, size, values);
+            GetDelegate<InvokeUUUUIOfV>("glGetFramebufferParameterfvAMD")(target, pname, numSamples, pixelIndex, size, values);
         public static void GetNamedFramebufferParameterfvAMD(uint framebuffer, uint pname, uint numSamples, uint pixelIndex, int size, float[] values) =>
-            GetDelegate<getNamedFramebufferParameterfvAMD>("glGetNamedFramebufferParameterfvAMD")(framebuffer, pname, numSamples, pixelIndex, size, values);
+            GetDelegate<InvokeUUUUIOfV>("glGetNamedFramebufferParameterfvAMD")(framebuffer, pname, numSamples, pixelIndex, size, values);
         public static void NamedFramebufferSamplePositionsfvAMD(uint framebuffer, uint numSamples, uint pixelIndex, float[] values) =>
-            GetDelegate<namedFramebufferSamplePositionsfvAMD>("glNamedFramebufferSamplePositionsfvAMD")(framebuffer, numSamples, pixelIndex, values);
+            GetDelegate<InvokeUUUOfV>("glNamedFramebufferSamplePositionsfvAMD")(framebuffer, numSamples, pixelIndex, values);
 
         #endregion // GL_AMD_framebuffer_sample_positions
         #region GL_AMD_interleaved_elements
 
-        private delegate void vertexAttribParameteriAMD(uint index, uint pname, int param);
         public static void VertexAttribParameteriAMD(uint index, uint pname, int param) =>
-            GetDelegate<vertexAttribParameteriAMD>("glVertexAttribParameteriAMD")(index, pname, param);
+            GetDelegate<InvokeUUIV>("glVertexAttribParameteriAMD")(index, pname, param);
 
         #endregion // GL_AMD_interleaved_elements
         #region GL_AMD_multi_draw_indirect
 
-        private delegate void multiDrawArraysIndirectAMD(uint mode, IntPtr indirect, int primCount, int stride);
-        private delegate void multiDrawElementsIndirectAMD(uint mode, uint type, IntPtr indirect, int primCount, int stride);
         public static void MultiDrawArraysIndirectAMD(uint mode, IntPtr indirect, int primCount, int stride) =>
-            GetDelegate<multiDrawArraysIndirectAMD>("glMultiDrawArraysIndirectAMD")(mode, indirect, primCount, stride);
+            GetDelegate<InvokeUPIIV>("glMultiDrawArraysIndirectAMD")(mode, indirect, primCount, stride);
         public static void MultiDrawElementsIndirectAMD(uint mode, uint type, IntPtr indirect, int primCount, int stride) =>
-            GetDelegate<multiDrawElementsIndirectAMD>("glMultiDrawElementsIndirectAMD")(mode, type, indirect, primCount, stride);
+            GetDelegate<InvokeUUPIIV>("glMultiDrawElementsIndirectAMD")(mode, type, indirect, primCount, stride);
 
         #endregion // GL_AMD_multi_draw_indirect
         #region GL_AMD_name_gen_delete
 
-        private delegate void deleteNamesAMD(uint identifier, uint num, uint[] names);
-        private delegate void genNamesAMD(uint identifier, uint num, uint[] names);
-        private delegate bool isNameAMD(uint identifier, uint name);
         public static void DeleteNamesAMD(uint identifier, uint num, uint[] names) =>
-            GetDelegate<deleteNamesAMD>("glDeleteNamesAMD")(identifier, num, names);
+            GetDelegate<InvokeUUOuV>("glDeleteNamesAMD")(identifier, num, names);
         public static void DeleteNamesAMD(uint identifier, uint[] names) =>
             DeleteNamesAMD(identifier, (uint)names.Length, names);
         public static void DeleteNamesAMD(uint identifier, uint name) =>
             DeleteNamesAMD(identifier, new[] { name });
         public static void GenNamesAMD(uint identifier, uint num, uint[] names)
         {
-            GetDelegate<genNamesAMD>("glGenNamesAMD")(identifier, num, names);
+            GetDelegate<InvokeUUOuV>("glGenNamesAMD")(identifier, num, names);
         }
         public static void GenNamesAMD(uint identifier, uint[] names)
         {
@@ -7890,298 +7639,200 @@ namespace GLCs
         }
         public static bool IsNameAMD(uint identifier, uint name)
         {
-            return GetDelegate<isNameAMD>("glIsNameAMD")(identifier, name);
+            return GetDelegate<InvokeUUZ>("glIsNameAMD")(identifier, name);
         }
 
         #endregion // GL_AMD_name_gen_delete
         #region GL_AMD_occlusion_query_event
 
-        private delegate void queryObjectParameteruiAMD(uint target, uint id, uint pname, uint param);
         public static void QueryObjectParameteruiAMD(uint target, uint id, uint pname, uint param) =>
-            GetDelegate<queryObjectParameteruiAMD>("glQueryObjectParameteruiAMD")(target, id, pname, param);
+            GetDelegate<InvokeUUUUV>("glQueryObjectParameteruiAMD")(target, id, pname, param);
 
         #endregion // GL_AMD_occlusion_query_event
         #region GL_AMD_performance_monitor
 
-        private delegate void beginPerfMonitorAMD(uint monitor);
-        private delegate void deletePerfMonitorsAMD(int n, uint[] monitors);
-        private delegate void endPerfMonitorAMD(uint monitor);
-        private delegate void genPerfMonitorsAMD(int n, uint[] monitors);
-        private delegate void getPerfMonitorCounterDataAMD(uint monitor, uint pname, int dataSize, uint[] data, ref int bytesWritten);
-        private delegate void getPerfMonitorCounterInfoAMD(uint group, uint counter, uint pname, IntPtr data);
-        private delegate void getPerfMonitorCounterStringAMD(uint group, uint counter, int bufSize, int[] length, ref string counterString);
-        private delegate void getPerfMonitorCountersAMD(uint group, int[] numCounters, int[] maxActiveCounters, int countersSize, uint[] counters);
-        private delegate void getPerfMonitorGroupStringAMD(uint group, int bufSize, int[] length, ref string groupString);
-        private delegate void getPerfMonitorGroupsAMD(int[] numGroups, int groupsSize, uint[] groups);
-        private delegate void selectPerfMonitorCountersAMD(uint monitor, bool enable, uint group, int numCounters, uint[] counterList);
         public static void BeginPerfMonitorAMD(uint monitor) =>
-            GetDelegate<beginPerfMonitorAMD>("glBeginPerfMonitorAMD")(monitor);
+            GetDelegate<InvokeUV>("glBeginPerfMonitorAMD")(monitor);
         public static void DeletePerfMonitorsAMD(int n, uint[] monitors) =>
-            GetDelegate<deletePerfMonitorsAMD>("glDeletePerfMonitorsAMD")(n, monitors);
+            GetDelegate<InvokeIOuV>("glDeletePerfMonitorsAMD")(n, monitors);
         public static void EndPerfMonitorAMD(uint monitor) =>
-            GetDelegate<endPerfMonitorAMD>("glEndPerfMonitorAMD")(monitor);
+            GetDelegate<InvokeUV>("glEndPerfMonitorAMD")(monitor);
         public static void GenPerfMonitorsAMD(int n, uint[] monitors) =>
-            GetDelegate<genPerfMonitorsAMD>("glGenPerfMonitorsAMD")(n, monitors);
+            GetDelegate<InvokeIOuV>("glGenPerfMonitorsAMD")(n, monitors);
         public static void GetPerfMonitorCounterDataAMD(uint monitor, uint pname, int dataSize, uint[] data, ref int bytesWritten) =>
-            GetDelegate<getPerfMonitorCounterDataAMD>("glGetPerfMonitorCounterDataAMD")(monitor, pname, dataSize, data, ref bytesWritten);
+            GetDelegate<InvokeUUIOuRiV>("glGetPerfMonitorCounterDataAMD")(monitor, pname, dataSize, data, ref bytesWritten);
         public static void GetPerfMonitorCounterInfoAMD(uint group, uint counter, uint pname, IntPtr data) =>
-            GetDelegate<getPerfMonitorCounterInfoAMD>("glGetPerfMonitorCounterInfoAMD")(group, counter, pname, data);
-        public static void GetPerfMonitorCounterStringAMD(uint group, uint counter, int bufSize, int[] length, ref string counterString) =>
-            GetDelegate<getPerfMonitorCounterStringAMD>("glGetPerfMonitorCounterStringAMD")(group, counter, bufSize, length, ref counterString);
+            GetDelegate<InvokeUUUPV>("glGetPerfMonitorCounterInfoAMD")(group, counter, pname, data);
+        public static void GetPerfMonitorCounterStringAMD(uint group, uint counter, int bufSize, int[] length, StringBuilder counterString) =>
+            GetDelegate<InvokeUUIOiYV>("glGetPerfMonitorCounterStringAMD")(group, counter, bufSize, length, counterString);
         public static void GetPerfMonitorCountersAMD(uint group, int[] numCounters, int[] maxActiveCounters, int countersSize, uint[] counters) =>
-            GetDelegate<getPerfMonitorCountersAMD>("glGetPerfMonitorCountersAMD")(group, numCounters, maxActiveCounters, countersSize, counters);
-        public static void GetPerfMonitorGroupStringAMD(uint group, int bufSize, int[] length, ref string groupString) =>
-            GetDelegate<getPerfMonitorGroupStringAMD>("glGetPerfMonitorGroupStringAMD")(group, bufSize, length, ref groupString);
+            GetDelegate<InvokeUOiOiIOuV>("glGetPerfMonitorCountersAMD")(group, numCounters, maxActiveCounters, countersSize, counters);
+        public static void GetPerfMonitorGroupStringAMD(uint group, int bufSize, int[] length, StringBuilder groupString) =>
+            GetDelegate<InvokeUIOiYV>("glGetPerfMonitorGroupStringAMD")(group, bufSize, length, groupString);
         public static void GetPerfMonitorGroupsAMD(int[] numGroups, int groupsSize, uint[] groups) =>
-            GetDelegate<getPerfMonitorGroupsAMD>("glGetPerfMonitorGroupsAMD")(numGroups, groupsSize, groups);
+            GetDelegate<InvokeOiIOuV>("glGetPerfMonitorGroupsAMD")(numGroups, groupsSize, groups);
         public static void SelectPerfMonitorCountersAMD(uint monitor, bool enable, uint group, int numCounters, uint[] counterList) =>
-            GetDelegate<selectPerfMonitorCountersAMD>("glSelectPerfMonitorCountersAMD")(monitor, enable, group, numCounters, counterList);
+            GetDelegate<InvokeUZUIOuV>("glSelectPerfMonitorCountersAMD")(monitor, enable, group, numCounters, counterList);
 
         #endregion // GL_AMD_performance_monitor
         #region GL_AMD_sample_positions
 
-        private delegate void setMultisamplefvAMD(uint pname, uint index, float[] val);
-
         public static void SetMultisamplefvAMD(uint pname, uint index, float[] val) =>
-            GetDelegate<setMultisamplefvAMD>("glSetMultisamplefvAMD")(pname, index, val);
+            GetDelegate<InvokeUUOfV>("glSetMultisamplefvAMD")(pname, index, val);
 
         #endregion // GL_AMD_sample_positions
         #region GL_AMD_sparse_texture
 
-        private delegate void texStorageSparseAMD(uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags);
-        private delegate void textureStorageSparseAMD(uint texture, uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags);
         public static void TexStorageSparseAMD(uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags) =>
-            GetDelegate<texStorageSparseAMD>("glTexStorageSparseAMD")(target, internalFormat, width, height, depth, layers, flags);
+            GetDelegate<InvokeUUIIIIUV>("glTexStorageSparseAMD")(target, internalFormat, width, height, depth, layers, flags);
         public static void TextureStorageSparseAMD(uint texture, uint target, uint internalFormat, int width, int height, int depth, int layers, uint flags) =>
-            GetDelegate<textureStorageSparseAMD>("glTextureStorageSparseAMD")(texture, target, internalFormat, width, height, depth, layers, flags);
+            GetDelegate<InvokeUUUIIIIUV>("glTextureStorageSparseAMD")(texture, target, internalFormat, width, height, depth, layers, flags);
 
         #endregion // GL_AMD_sparse_texture
         #region GL_AMD_stencil_operation_extended
 
-        private delegate void stencilOpValueAMD(uint face, uint value);
         public static void StencilOpValueAMD(uint face, uint value) =>
-            GetDelegate<stencilOpValueAMD>("glStencilOpValueAMD")(face, value);
+            GetDelegate<InvokeUUV>("glStencilOpValueAMD")(face, value);
 
         #endregion // GL_AMD_stencil_operation_extended
         #region GL_AMD_vertex_shader_tessellator
 
-        private delegate void tessellationFactorAMD(float factor);
-        private delegate void tessellationModeAMD(uint mode);
         public static void TessellationFactorAMD(float factor) =>
-            GetDelegate<tessellationFactorAMD>("glTessellationFactorAMD")(factor);
+            GetDelegate<InvokeFV>("glTessellationFactorAMD")(factor);
         public static void TessellationModeAMD(uint mode) =>
-            GetDelegate<tessellationModeAMD>("glTessellationModeAMD")(mode);
+            GetDelegate<InvokeUV>("glTessellationModeAMD")(mode);
 
         #endregion // GL_AMD_vertex_shader_tessellator
         #region GL_ANGLE_framebuffer_blit
 
-        private delegate void blitFramebufferANGLE(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter);
         public static void BlitFramebufferANGLE(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter) =>
-            GetDelegate<blitFramebufferANGLE>("glBlitFramebufferANGLE")(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+            GetDelegate<InvokeIIIIIIIIUUV>("glBlitFramebufferANGLE")(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
 
         #endregion // GL_ANGLE_framebuffer_blit
         #region GL_ANGLE_framebuffer_multisample
 
-        private delegate void renderbufferStorageMultisampleANGLE(uint target, int samples, uint internalFormat, int width, int height);
         public static void RenderbufferStorageMultisampleANGLE(uint target, int samples, uint internalFormat, int width, int height) =>
-            GetDelegate<renderbufferStorageMultisampleANGLE>("glRenderbufferStorageMultisampleANGLE")(target, samples, internalFormat, width, height);
+            GetDelegate<InvokeUIUIIV>("glRenderbufferStorageMultisampleANGLE")(target, samples, internalFormat, width, height);
 
         #endregion // GL_ANGLE_framebuffer_multisample
         #region GL_ANGLE_instanced_arrays
 
-        private delegate void drawArraysInstancedANGLE(uint mode, int first, int count, int primCount);
-        private delegate void drawElementsInstancedANGLE(uint mode, int count, uint type, IntPtr indices, int primCount);
-        private delegate void vertexAttribDivisorANGLE(uint index, uint divisor);
         public static void DrawArraysInstancedANGLE(uint mode, int first, int count, int primCount) =>
-            GetDelegate<drawArraysInstancedANGLE>("glDrawArraysInstancedANGLE")(mode, first, count, primCount);
+            GetDelegate<InvokeUIIIV>("glDrawArraysInstancedANGLE")(mode, first, count, primCount);
         public static void DrawElementsInstancedANGLE(uint mode, int count, uint type, IntPtr indices, int primCount) =>
-            GetDelegate<drawElementsInstancedANGLE>("glDrawElementsInstancedANGLE")(mode, count, type, indices, primCount);
+            GetDelegate<InvokeUIUPIV>("glDrawElementsInstancedANGLE")(mode, count, type, indices, primCount);
         public static void VertexAttribDivisorANGLE(uint index, uint divisor) =>
-            GetDelegate<vertexAttribDivisorANGLE>("glVertexAttribDivisorANGLE")(index, divisor);
+            GetDelegate<InvokeUUV>("glVertexAttribDivisorANGLE")(index, divisor);
 
         #endregion // GL_ANGLE_instanced_arrays
         #region GL_ANGLE_timer_query
 
-        private delegate void beginQueryANGLE(uint target, uint id);
-        private delegate void deleteQueriesANGLE(int n, uint[] ids);
-        private delegate void endQueryANGLE(uint target);
-        private delegate void genQueriesANGLE(int n, uint[] ids);
-        private delegate void getQueryObjecti64vANGLE(uint id, uint pname, long[] @params);
-        private delegate void getQueryObjectivANGLE(uint id, uint pname, int[] @params);
-        private delegate void getQueryObjectui64vANGLE(uint id, uint pname, ulong[] @params);
-        private delegate void getQueryObjectuivANGLE(uint id, uint pname, uint[] @params);
-        private delegate void getQueryivANGLE(uint target, uint pname, int[] @params);
-        private delegate bool isQueryANGLE(uint id);
-        private delegate void queryCounterANGLE(uint id, uint target);
-        public static void BeginQueryANGLE(uint target, uint id) =>
-            GetDelegate<beginQueryANGLE>("glBeginQueryANGLE")(target, id);
-        public static void DeleteQueriesANGLE(int n, uint[] ids) =>
-            GetDelegate<deleteQueriesANGLE>("glDeleteQueriesANGLE")(n, ids);
-        public static void EndQueryANGLE(uint target) =>
-            GetDelegate<endQueryANGLE>("glEndQueryANGLE")(target);
-        public static void GenQueriesANGLE(int n, uint[] ids) =>
-            GetDelegate<genQueriesANGLE>("glGenQueriesANGLE")(n, ids);
         public static void GetQueryObjecti64vANGLE(uint id, uint pname, long[] @params) =>
-            GetDelegate<getQueryObjecti64vANGLE>("glGetQueryObjecti64vANGLE")(id, pname, @params);
-        public static void GetQueryObjectivANGLE(uint id, uint pname, int[] @params) =>
-            GetDelegate<getQueryObjectivANGLE>("glGetQueryObjectivANGLE")(id, pname, @params);
+            GetDelegate<InvokeUUOjV>("glGetQueryObjecti64vANGLE")(id, pname, @params);
         public static void GetQueryObjectui64vANGLE(uint id, uint pname, ulong[] @params) =>
-            GetDelegate<getQueryObjectui64vANGLE>("glGetQueryObjectui64vANGLE")(id, pname, @params);
-        public static void GetQueryObjectuivANGLE(uint id, uint pname, uint[] @params) =>
-            GetDelegate<getQueryObjectuivANGLE>("glGetQueryObjectuivANGLE")(id, pname, @params);
-        public static void GetQueryivANGLE(uint target, uint pname, int[] @params) =>
-            GetDelegate<getQueryivANGLE>("glGetQueryivANGLE")(target, pname, @params);
-        public static bool IsQueryANGLE(uint id) =>
-            GetDelegate<isQueryANGLE>("glIsQueryANGLE")(id);
+            GetDelegate<InvokeUUOlV>("glGetQueryObjectui64vANGLE")(id, pname, @params);
         public static void QueryCounterANGLE(uint id, uint target) =>
-            GetDelegate<queryCounterANGLE>("glQueryCounterANGLE")(id, target);
+            GetDelegate<InvokeUUV>("glQueryCounterANGLE")(id, target);
 
         #endregion // GL_ANGLE_timer_query
         #region GL_ANGLE_translated_shader_source
 
-        private delegate void getTranslatedShaderSourceANGLE(uint shader, int bufsize, ref int length, ref string source);
-        public static void GetTranslatedShaderSourceANGLE(uint shader, int bufsize, ref int length, ref string source) =>
-            GetDelegate<getTranslatedShaderSourceANGLE>("glGetTranslatedShaderSourceANGLE")(shader, bufsize, ref length, ref source);
+        public static void GetTranslatedShaderSourceANGLE(uint shader, int bufsize, ref int length, StringBuilder source) =>
+            GetDelegate<InvokeUIRiYV>("glGetTranslatedShaderSourceANGLE")(shader, bufsize, ref length, source);
 
         #endregion // GL_ANGLE_translated_shader_source
         #region GL_APPLE_copy_texture_levels
 
-        private delegate void copyTextureLevelsAPPLE(uint destinationTexture, uint sourceTexture, int sourceBaseLevel, int sourceLevelCount);
         public static void CopyTextureLevelsAPPLE(uint destinationTexture, uint sourceTexture, int sourceBaseLevel, int sourceLevelCount) =>
-            GetDelegate<copyTextureLevelsAPPLE>("glCopyTextureLevelsAPPLE")(destinationTexture, sourceTexture, sourceBaseLevel, sourceLevelCount);
+            GetDelegate<InvokeUUIIV>("glCopyTextureLevelsAPPLE")(destinationTexture, sourceTexture, sourceBaseLevel, sourceLevelCount);
 
         #endregion // GL_APPLE_copy_texture_levels
         #region GL_APPLE_element_array
 
-        private delegate void drawElementArrayAPPLE(uint mode, int first, int count);
-        private delegate void drawRangeElementArrayAPPLE(uint mode, uint start, uint end, int first, int count);
-        private delegate void elementPointerAPPLE(uint type, IntPtr pointer);
-        private delegate void multiDrawElementArrayAPPLE(uint mode, int[] first, int[] count, int primCount);
-        private delegate void multiDrawRangeElementArrayAPPLE(uint mode, uint start, uint end, int[] first, int[] count, int primCount);
         public static void DrawElementArrayAPPLE(uint mode, int first, int count) =>
-            GetDelegate<drawElementArrayAPPLE>("glDrawElementArrayAPPLE")(mode, first, count);
+            GetDelegate<InvokeUIIV>("glDrawElementArrayAPPLE")(mode, first, count);
         public static void DrawRangeElementArrayAPPLE(uint mode, uint start, uint end, int first, int count) =>
-            GetDelegate<drawRangeElementArrayAPPLE>("glDrawRangeElementArrayAPPLE")(mode, start, end, first, count);
+            GetDelegate<InvokeUUUIIV>("glDrawRangeElementArrayAPPLE")(mode, start, end, first, count);
         public static void ElementPointerAPPLE(uint type, IntPtr pointer) =>
-            GetDelegate<elementPointerAPPLE>("glElementPointerAPPLE")(type, pointer);
+            GetDelegate<InvokeUPV>("glElementPointerAPPLE")(type, pointer);
         public static void MultiDrawElementArrayAPPLE(uint mode, int[] first, int[] count, int primCount) =>
-            GetDelegate<multiDrawElementArrayAPPLE>("glMultiDrawElementArrayAPPLE")(mode, first, count, primCount);
+            GetDelegate<InvokeUOiOiIV>("glMultiDrawElementArrayAPPLE")(mode, first, count, primCount);
         public static void MultiDrawRangeElementArrayAPPLE(uint mode, uint start, uint end, int[] first, int[] count, int primCount) =>
-            GetDelegate<multiDrawRangeElementArrayAPPLE>("glMultiDrawRangeElementArrayAPPLE")(mode, start, end, first, count, primCount);
+            GetDelegate<InvokeUUUOiOiIV>("glMultiDrawRangeElementArrayAPPLE")(mode, start, end, first, count, primCount);
 
         #endregion // GL_APPLE_element_array
         #region GL_APPLE_fence
 
-        private delegate void deleteFencesAPPLE(int n, uint[] fences);
-        private delegate void finishFenceAPPLE(uint fence);
-        private delegate void finishObjectAPPLE(uint @object, int name);
-        private delegate void genFencesAPPLE(int n, uint[] fences);
-        private delegate bool isFenceAPPLE(uint fence);
-        private delegate void setFenceAPPLE(uint fence);
-        private delegate bool testFenceAPPLE(uint fence);
-        private delegate bool testObjectAPPLE(uint @object, uint name);
         public static void DeleteFencesAPPLE(int n, uint[] fences) =>
-            GetDelegate<deleteFencesAPPLE>("glDeleteFencesAPPLE")(n, fences);
+            GetDelegate<InvokeIOuV>("glDeleteFencesAPPLE")(n, fences);
         public static void FinishFenceAPPLE(uint fence) =>
-            GetDelegate<finishFenceAPPLE>("glFinishFenceAPPLE")(fence);
+            GetDelegate<InvokeUV>("glFinishFenceAPPLE")(fence);
         public static void FinishObjectAPPLE(uint @object, int name) =>
-            GetDelegate<finishObjectAPPLE>("glFinishObjectAPPLE")(@object, name);
+            GetDelegate<InvokeUIV>("glFinishObjectAPPLE")(@object, name);
         public static void GenFencesAPPLE(int n, uint[] fences) =>
-            GetDelegate<genFencesAPPLE>("glGenFencesAPPLE")(n, fences);
+            GetDelegate<InvokeIOuV>("glGenFencesAPPLE")(n, fences);
         public static bool IsFenceAPPLE(uint fence) =>
-            GetDelegate<isFenceAPPLE>("glIsFenceAPPLE")(fence);
+            GetDelegate<InvokeUZ>("glIsFenceAPPLE")(fence);
         public static void SetFenceAPPLE(uint fence) =>
-            GetDelegate<setFenceAPPLE>("glSetFenceAPPLE")(fence);
+            GetDelegate<InvokeUV>("glSetFenceAPPLE")(fence);
         public static bool TestFenceAPPLE(uint fence) =>
-            GetDelegate<testFenceAPPLE>("glTestFenceAPPLE")(fence);
+            GetDelegate<InvokeUZ>("glTestFenceAPPLE")(fence);
         public static bool TestObjectAPPLE(uint @object, uint name) =>
-            GetDelegate<testObjectAPPLE>("glTestObjectAPPLE")(@object, name);
+            GetDelegate<InvokeUUZ>("glTestObjectAPPLE")(@object, name);
 
         #endregion // GL_APPLE_fence
         #region GL_APPLE_flush_buffer_range
 
-        private delegate void bufferParameteriAPPLE(uint target, uint pname, int param);
-        private delegate void flushMappedBufferRangeAPPLE(uint target, int[] offset, int[] size);
         public static void BufferParameteriAPPLE(uint target, uint pname, int param) =>
-            GetDelegate<bufferParameteriAPPLE>("glBufferParameteriAPPLE")(target, pname, param);
+            GetDelegate<InvokeUUIV>("glBufferParameteriAPPLE")(target, pname, param);
         public static void FlushMappedBufferRangeAPPLE(uint target, int[] offset, int[] size) =>
-            GetDelegate<flushMappedBufferRangeAPPLE>("glFlushMappedBufferRangeAPPLE")(target, offset, size);
+            GetDelegate<InvokeUOiOiV>("glFlushMappedBufferRangeAPPLE")(target, offset, size);
 
         #endregion // GL_APPLE_flush_buffer_range
         #region GL_APPLE_framebuffer_multisample
 
-        private delegate void renderbufferStorageMultisampleAPPLE(uint target, int samples, uint internalformat, int width, int height);
-        private delegate void resolveMultisampleFramebufferAPPLE();
         public static void RenderbufferStorageMultisampleAPPLE(uint target, int samples, uint internalformat, int width, int height) =>
-            GetDelegate<renderbufferStorageMultisampleAPPLE>("glRenderbufferStorageMultisampleAPPLE")(target, samples, internalformat, width, height);
+            GetDelegate<InvokeUIUIIV>("glRenderbufferStorageMultisampleAPPLE")(target, samples, internalformat, width, height);
         public static void ResolveMultisampleFramebufferAPPLE() =>
-            GetDelegate<resolveMultisampleFramebufferAPPLE>("glResolveMultisampleFramebufferAPPLE")();
+            GetDelegate<InvokeV>("glResolveMultisampleFramebufferAPPLE")();
 
         #endregion // GL_APPLE_framebuffer_multisample
         #region GL_APPLE_object_purgeable
 
-        private delegate void getObjectParameterivAPPLE(uint objectType, uint name, uint pname, ref int[] @params);
-        private delegate void objectPurgeableAPPLE(uint objectType, uint name, uint option);
-        private delegate void objectUnpurgeableAPPLE(uint objectType, uint name, uint option);
-        public static void GetObjectParameterivAPPLE(uint objectType, uint name, uint pname, ref int[] @params) =>
-            GetDelegate<getObjectParameterivAPPLE>("glGetObjectParameterivAPPLE")(objectType, name, pname, ref @params);
+        public static void GetObjectParameterivAPPLE(uint objectType, uint name, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUUOiV>("glGetObjectParameterivAPPLE")(objectType, name, pname, @params);
         public static void ObjectPurgeableAPPLE(uint objectType, uint name, uint option) =>
-            GetDelegate<objectPurgeableAPPLE>("glObjectPurgeableAPPLE")(objectType, name, option);
+            GetDelegate<InvokeUUUV>("glObjectPurgeableAPPLE")(objectType, name, option);
         public static void ObjectUnpurgeableAPPLE(uint objectType, uint name, uint option) =>
-            GetDelegate<objectUnpurgeableAPPLE>("glObjectUnpurgeableAPPLE")(objectType, name, option);
+            GetDelegate<InvokeUUUV>("glObjectUnpurgeableAPPLE")(objectType, name, option);
 
         #endregion // GL_APPLE_object_purgeable
         #region GL_APPLE_sync
 
-        private delegate uint clientWaitSyncAPPLE(IntPtr GLsync, uint flags, ulong timeout);
-        private delegate void deleteSyncAPPLE(IntPtr GLsync);
-        private delegate IntPtr fenceSyncAPPLE(uint condition, uint flags);
-        private delegate void getInteger64vAPPLE(uint pname, ref int[] @params);
-        private delegate void getSyncivAPPLE(IntPtr GLsync, uint pname, int bufSize, ref int[] length, ref int[] values);
-        private delegate bool isSyncAPPLE(IntPtr GLsync);
-        private delegate void waitSyncAPPLE(IntPtr GLsync, uint flags, ulong timeout);
         public static uint ClientWaitSyncAPPLE(IntPtr GLsync, uint flags, ulong timeout) =>
-            GetDelegate<clientWaitSyncAPPLE>("glClientWaitSyncAPPLE")(GLsync, flags, timeout);
+            GetDelegate<InvokePULU>("glClientWaitSyncAPPLE")(GLsync, flags, timeout);
         public static void DeleteSyncAPPLE(IntPtr GLsync) =>
-            GetDelegate<deleteSyncAPPLE>("glDeleteSyncAPPLE")(GLsync);
+            GetDelegate<InvokePV>("glDeleteSyncAPPLE")(GLsync);
         public static IntPtr FenceSyncAPPLE(uint condition, uint flags) =>
-            GetDelegate<fenceSyncAPPLE>("glFenceSyncAPPLE")(condition, flags);
-        public static void GetInteger64vAPPLE(uint pname, ref int[] @params) =>
-            GetDelegate<getInteger64vAPPLE>("glGetInteger64vAPPLE")(pname, ref @params);
-        public static void GetSyncivAPPLE(IntPtr GLsync, uint pname, int bufSize, ref int[] length, ref int[] values) =>
-            GetDelegate<getSyncivAPPLE>("glGetSyncivAPPLE")(GLsync, pname, bufSize, ref length, ref values);
+            GetDelegate<InvokeUUP>("glFenceSyncAPPLE")(condition, flags);
+        public static void GetInteger64vAPPLE(uint pname, long[] @params) =>
+            GetDelegate<InvokeUOjV>("glGetInteger64vAPPLE")(pname, @params);
+        public static void GetSyncivAPPLE(IntPtr GLsync, uint pname, int bufSize, int[] length, int[] values) =>
+            GetDelegate<InvokePUIOiOiV>("glGetSyncivAPPLE")(GLsync, pname, bufSize, length, values);
         public static bool IsSyncAPPLE(IntPtr GLsync) =>
-            GetDelegate<isSyncAPPLE>("glIsSyncAPPLE")(GLsync);
+            GetDelegate<InvokePZ>("glIsSyncAPPLE")(GLsync);
         public static void WaitSyncAPPLE(IntPtr GLsync, uint flags, ulong timeout) =>
-            GetDelegate<waitSyncAPPLE>("glWaitSyncAPPLE")(GLsync, flags, timeout);
+            GetDelegate<InvokePULV>("glWaitSyncAPPLE")(GLsync, flags, timeout);
 
         #endregion // GL_APPLE_sync
         #region GL_APPLE_texture_range
 
-        private delegate void getTexParameterPointervAPPLE(uint target, uint pname, IntPtr[] @params);
-        private delegate void textureRangeAPPLE(uint target, int length, IntPtr pointer);
         public static void GetTexParameterPointervAPPLE(uint target, uint pname, IntPtr[] @params) =>
-            GetDelegate<getTexParameterPointervAPPLE>("glGetTexParameterPointervAPPLE")(target, pname, @params);
+            GetDelegate<InvokeUUOpV>("glGetTexParameterPointervAPPLE")(target, pname, @params);
         public static void TextureRangeAPPLE(uint target, int length, IntPtr pointer) =>
-            GetDelegate<textureRangeAPPLE>("glTextureRangeAPPLE")(target, length, pointer);
+            GetDelegate<InvokeUIPV>("glTextureRangeAPPLE")(target, length, pointer);
 
         #endregion // GL_APPLE_texture_range
-        #region GL_APPLE_vertex_array_object
-
-        private delegate void bindVertexArrayAPPLE(uint array);
-        private delegate void deleteVertexArraysAPPLE(int n, uint[] arrays);
-        private delegate void genVertexArraysAPPLE(int n, uint[] arrays);
-        private delegate void isVertexArrayAPPLE(uint array);
-        public static void BindVertexArrayAPPLE(uint array) =>
-            GetDelegate<bindVertexArrayAPPLE>("glBindVertexArrayAPPLE")(array);
-        public static void DeleteVertexArraysAPPLE(int n, uint[] arrays) =>
-            GetDelegate<deleteVertexArraysAPPLE>("glDeleteVertexArraysAPPLE")(n, arrays);
-        public static void GenVertexArraysAPPLE(int n, uint[] arrays) =>
-            GetDelegate<genVertexArraysAPPLE>("glGenVertexArraysAPPLE")(n, arrays);
-        public static void IsVertexArrayAPPLE(uint array) =>
-            GetDelegate<isVertexArrayAPPLE>("glIsVertexArrayAPPLE")(array);
-
-        #endregion // GL_APPLE_vertex_array_object
         #region GL_APPLE_vertex_array_range
 
         private delegate void flushVertexArrayRangeAPPLE(int length, IntPtr pointer);
@@ -8370,42 +8021,24 @@ namespace GLCs
             GetDelegate<clearTexSubImage>("glClearTexSubImage")(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, data);
 
         #endregion // GL_ARB_clear_texture
-        #region GL_ARB_clip_control
-
-        private delegate void clipControl(uint origin, uint depth);
-        public static void ClipControl(uint origin, uint depth) =>
-            GetDelegate<clipControl>("glClipControl")(origin, depth);
-
-        #endregion // GL_ARB_clip_control
-        #region GL_ARB_color_buffer_float
-
-        private delegate void clampColorARB(uint target, uint clamp);
-        public static void ClampColorARB(uint target, uint clamp) =>
-            GetDelegate<clampColorARB>("glClampColorARB")(target, clamp);
-
-        #endregion // GL_ARB_color_buffer_float
         #region GL_ARB_compute_shader
 
-        private delegate void dispatchCompute(uint num_groups_x, uint num_groups_y, uint num_groups_z);
-        private delegate void dispatchComputeIndirect(int[] indirect);
         public static void DispatchCompute(uint num_groups_x, uint num_groups_y, uint num_groups_z) =>
-            GetDelegate<dispatchCompute>("glDispatchCompute")(num_groups_x, num_groups_y, num_groups_z);
+            GetDelegate<InvokeUUUV>("glDispatchCompute")(num_groups_x, num_groups_y, num_groups_z);
         public static void DispatchComputeIndirect(int[] indirect) =>
-            GetDelegate<dispatchComputeIndirect>("glDispatchComputeIndirect")(indirect);
+            GetDelegate<InvokeOiV>("glDispatchComputeIndirect")(indirect);
 
         #endregion // GL_ARB_compute_shader
         #region GL_ARB_compute_variable_group_size
 
-        private delegate void dispatchComputeGroupSizeARB(uint num_groups_x, uint num_groups_y, uint num_groups_z, uint group_size_x, uint group_size_y, uint group_size_z);
         public static void DispatchComputeGroupSizeARB(uint num_groups_x, uint num_groups_y, uint num_groups_z, uint group_size_x, uint group_size_y, uint group_size_z) =>
-            GetDelegate<dispatchComputeGroupSizeARB>("glDispatchComputeGroupSizeARB")(num_groups_x, num_groups_y, num_groups_z, group_size_x, group_size_y, group_size_z);
+            GetDelegate<InvokeUUUUUUV>("glDispatchComputeGroupSizeARB")(num_groups_x, num_groups_y, num_groups_z, group_size_x, group_size_y, group_size_z);
 
         #endregion // GL_ARB_compute_variable_group_size
         #region GL_ARB_copy_buffer
 
-        private delegate void copyBufferSubData(uint readTarget, uint writeTarget, int[] readOffset, int[] writeOffset, int[] size);
         public static void CopyBufferSubData(uint readTarget, uint writeTarget, int[] readOffset, int[] writeOffset, int[] size) =>
-            GetDelegate<copyBufferSubData>("glCopyBufferSubData")(readTarget, writeTarget, readOffset, writeOffset, size);
+            GetDelegate<InvokeUUOiOiOiV>("glCopyBufferSubData")(readTarget, writeTarget, readOffset, writeOffset, size);
 
         #endregion // GL_ARB_copy_buffer
         #region GL_ARB_copy_image
@@ -8434,137 +8067,40 @@ namespace GLCs
         #endregion // GL_ARB_debug_output
         #region GL_ARB_direct_state_access
 
-        private delegate void bindTextureUnit(uint unit, uint texture);
-        private delegate void blitNamedFramebuffer(uint readFramebuffer, uint drawFramebuffer, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter);
-        private delegate uint checkNamedFramebufferStatus(uint framebuffer, uint target);
-        private delegate void clearNamedBufferData(uint buffer, uint internalformat, uint format, uint type, IntPtr data);
-        private delegate void clearNamedBufferSubData(uint buffer, uint internalformat, int[] offset, int[] size, uint format, uint type, IntPtr data);
-        private delegate void clearNamedFramebufferfi(uint framebuffer, uint buffer, int drawbuffer, float depth, int stencil);
-        private delegate void clearNamedFramebufferfv(uint framebuffer, uint buffer, int drawbuffer, float[] value);
-        private delegate void clearNamedFramebufferiv(uint framebuffer, uint buffer, int drawbuffer, int[] value);
-        private delegate void clearNamedFramebufferuiv(uint framebuffer, uint buffer, int drawbuffer, uint[] value);
-        private delegate void compressedTextureSubImage1D(uint texture, int level, int xoffset, int width, uint format, int imageSize, IntPtr data);
-        private delegate void compressedTextureSubImage2D(uint texture, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data);
-        private delegate void compressedTextureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data);
-        private delegate void copyNamedBufferSubData(uint readBuffer, uint writeBuffer, int[] readOffset, int[] writeOffset, int[] size);
-        private delegate void copyTextureSubImage1D(uint texture, int level, int xoffset, int x, int y, int width);
-        private delegate void copyTextureSubImage2D(uint texture, int level, int xoffset, int yoffset, int x, int y, int width, int height);
-        private delegate void copyTextureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
-        private delegate void createBuffers(int n, uint[] buffers);
-        private delegate void createFramebuffers(int n, uint[] framebuffers);
-        private delegate void createProgramPipelines(int n, uint[] pipelines);
-        private delegate void createQueries(uint target, int n, uint[] ids);
-        private delegate void createRenderbuffers(int n, uint[] renderbuffers);
-        private delegate void createSamplers(int n, uint[] samplers);
-        private delegate void createTextures(uint target, int n, uint[] textures);
-        private delegate void createTransformFeedbacks(int n, uint[] ids);
-        private delegate void createVertexArrays(int n, uint[] arrays);
-        private delegate void disableVertexArrayAttrib(uint vaobj, uint index);
-        private delegate void enableVertexArrayAttrib(uint vaobj, uint index);
-        private delegate void flushMappedNamedBufferRange(uint buffer, int[] offset, int[] length);
-        private delegate void generateTextureMipmap(uint texture);
-        private delegate void getCompressedTextureImage(uint texture, int level, int bufSize, IntPtr pixels);
-        private delegate void getNamedBufferParameteri64v(uint buffer, uint pname, ref long[] @params);
-        private delegate void getNamedBufferParameteriv(uint buffer, uint pname, ref int[] @params);
-        private delegate void getNamedBufferPointerv(uint buffer, uint pname, IntPtr[] @params);
-        private delegate void getNamedBufferSubData(uint buffer, int[] offset, int[] size, IntPtr data);
-        private delegate void getNamedFramebufferAttachmentParameteriv(uint framebuffer, uint attachment, uint pname, ref int[] @params);
-        private delegate void getNamedFramebufferParameteriv(uint framebuffer, uint pname, ref int[] param);
-        private delegate void getNamedRenderbufferParameteriv(uint renderbuffer, uint pname, ref int[] @params);
-        private delegate void getQueryBufferObjecti64v(uint id, uint buffer, uint pname, int[] offset);
-        private delegate void getQueryBufferObjectiv(uint id, uint buffer, uint pname, int[] offset);
-        private delegate void getQueryBufferObjectui64v(uint id, uint buffer, uint pname, int[] offset);
-        private delegate void getQueryBufferObjectuiv(uint id, uint buffer, uint pname, int[] offset);
-        private delegate void getTextureImage(uint texture, int level, uint format, uint type, int bufSize, IntPtr pixels);
-        private delegate void getTextureLevelParameterfv(uint texture, int level, uint pname, ref float[] @params);
-        private delegate void getTextureLevelParameteriv(uint texture, int level, uint pname, ref int[] @params);
-        private delegate void getTextureParameterIiv(uint texture, uint pname, int[] @params);
-        private delegate void getTextureParameterIuiv(uint texture, uint pname, uint[] @params);
-        private delegate void getTextureParameterfv(uint texture, uint pname, float[] @params);
-        private delegate void getTextureParameteriv(uint texture, uint pname, int[] @params);
-        private delegate void getTransformFeedbacki64_v(uint xfb, uint pname, uint index, long[] param);
-        private delegate void getTransformFeedbacki_v(uint xfb, uint pname, uint index, int[] param);
-        private delegate void getTransformFeedbackiv(uint xfb, uint pname, int[] param);
-        private delegate void getVertexArrayIndexed64iv(uint vaobj, uint index, uint pname, long[] param);
-        private delegate void getVertexArrayIndexediv(uint vaobj, uint index, uint pname, int[] param);
-        private delegate void getVertexArrayiv(uint vaobj, uint pname, int[] param);
-        private delegate void invalidateNamedFramebufferData(uint framebuffer, int numAttachments, uint[] attachments);
-        private delegate void invalidateNamedFramebufferSubData(uint framebuffer, int numAttachments, uint[] attachments, int x, int y, int width, int height);
-        private delegate IntPtr mapNamedBuffer(uint buffer, uint access);
-        private delegate IntPtr mapNamedBufferRange(uint buffer, int[] offset, int[] length, uint access);
-        private delegate void namedBufferData(uint buffer, int[] size, IntPtr data, uint usage);
-        private delegate void namedBufferStorage(uint buffer, int[] size, IntPtr data, uint flags);
-        private delegate void namedBufferSubData(uint buffer, int[] offset, int[] size, IntPtr data);
-        private delegate void namedFramebufferDrawBuffer(uint framebuffer, uint mode);
-        private delegate void namedFramebufferDrawBuffers(uint framebuffer, int n, uint[] bufs);
-        private delegate void namedFramebufferParameteri(uint framebuffer, uint pname, int param);
-        private delegate void namedFramebufferReadBuffer(uint framebuffer, uint mode);
-        private delegate void namedFramebufferRenderbuffer(uint framebuffer, uint attachment, uint renderbuffertarget, uint renderbuffer);
-        private delegate void namedFramebufferTexture(uint framebuffer, uint attachment, uint texture, int level);
-        private delegate void namedFramebufferTextureLayer(uint framebuffer, uint attachment, uint texture, int level, int layer);
-        private delegate void namedRenderbufferStorage(uint renderbuffer, uint internalformat, int width, int height);
-        private delegate void namedRenderbufferStorageMultisample(uint renderbuffer, int samples, uint internalformat, int width, int height);
-        private delegate void textureBuffer(uint texture, uint internalformat, uint buffer);
-        private delegate void textureBufferRange(uint texture, uint internalformat, uint buffer, int[] offset, int[] size);
-        private delegate void textureParameterIiv(uint texture, uint pname, int[] @params);
-        private delegate void textureParameterIuiv(uint texture, uint pname, uint[] @params);
-        private delegate void textureParameterf(uint texture, uint pname, float param);
-        private delegate void textureParameterfv(uint texture, uint pname, float[] param);
-        private delegate void textureParameteri(uint texture, uint pname, int param);
-        private delegate void textureParameteriv(uint texture, uint pname, int[] param);
-        private delegate void textureStorage1D(uint texture, int levels, uint internalformat, int width);
-        private delegate void textureStorage2D(uint texture, int levels, uint internalformat, int width, int height);
-        private delegate void textureStorage2DMultisample(uint texture, int samples, uint internalformat, int width, int height, bool fixedsamplelocations);
-        private delegate void textureStorage3D(uint texture, int levels, uint internalformat, int width, int height, int depth);
-        private delegate void textureStorage3DMultisample(uint texture, int samples, uint internalformat, int width, int height, int depth, bool fixedsamplelocations);
-        private delegate void textureSubImage1D(uint texture, int level, int xoffset, int width, uint format, uint type, IntPtr pixels);
-        private delegate void textureSubImage2D(uint texture, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels);
-        private delegate void textureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels);
-        private delegate void transformFeedbackBufferBase(uint xfb, uint index, uint buffer);
-        private delegate void transformFeedbackBufferRange(uint xfb, uint index, uint buffer, int[] offset, int[] size);
-        private delegate bool unmapNamedBuffer(uint buffer);
-        private delegate void vertexArrayAttribBinding(uint vaobj, uint attribindex, uint bindingindex);
-        private delegate void vertexArrayAttribFormat(uint vaobj, uint attribindex, int size, uint type, bool normalized, uint relativeoffset);
-        private delegate void vertexArrayAttribIFormat(uint vaobj, uint attribindex, int size, uint type, uint relativeoffset);
-        private delegate void vertexArrayAttribLFormat(uint vaobj, uint attribindex, int size, uint type, uint relativeoffset);
-        private delegate void vertexArrayBindingDivisor(uint vaobj, uint bindingindex, uint divisor);
-        private delegate void vertexArrayElementBuffer(uint vaobj, uint buffer);
-        private delegate void vertexArrayVertexBuffer(uint vaobj, uint bindingindex, uint buffer, int[] offset, int stride);
-        private delegate void vertexArrayVertexBuffers(uint vaobj, uint first, int count, uint[] buffers, IntPtr[] offsets, int[] strides);
         public static void BindTextureUnit(uint unit, uint texture) =>
-            GetDelegate<bindTextureUnit>("glBindTextureUnit")(unit, texture);
+            GetDelegate<InvokeUUV>("glBindTextureUnit")(unit, texture);
         public static void BlitNamedFramebuffer(uint readFramebuffer, uint drawFramebuffer, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter) =>
-            GetDelegate<blitNamedFramebuffer>("glBlitNamedFramebuffer")(readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+            GetDelegate<InvokeUUIIIIIIIIUUV>("glBlitNamedFramebuffer")(readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
         public static uint CheckNamedFramebufferStatus(uint framebuffer, uint target) =>
-            GetDelegate<checkNamedFramebufferStatus>("glCheckNamedFramebufferStatus")(framebuffer, target);
+            GetDelegate<InvokeUUU>("glCheckNamedFramebufferStatus")(framebuffer, target);
         public static void ClearNamedBufferData(uint buffer, uint internalformat, uint format, uint type, IntPtr data) =>
-            GetDelegate<clearNamedBufferData>("glClearNamedBufferData")(buffer, internalformat, format, type, data);
+            GetDelegate<InvokeUUUUPV>("glClearNamedBufferData")(buffer, internalformat, format, type, data);
         public static void ClearNamedBufferSubData(uint buffer, uint internalformat, int[] offset, int[] size, uint format, uint type, IntPtr data) =>
-            GetDelegate<clearNamedBufferSubData>("glClearNamedBufferSubData")(buffer, internalformat, offset, size, format, type, data);
+            GetDelegate<InvokeUUOiOiUUPV>("glClearNamedBufferSubData")(buffer, internalformat, offset, size, format, type, data);
         public static void ClearNamedFramebufferfi(uint framebuffer, uint buffer, int drawbuffer, float depth, int stencil) =>
-            GetDelegate<clearNamedFramebufferfi>("glClearNamedFramebufferfi")(framebuffer, buffer, drawbuffer, depth, stencil);
+            GetDelegate<InvokeUUIFIV>("glClearNamedFramebufferfi")(framebuffer, buffer, drawbuffer, depth, stencil);
         public static void ClearNamedFramebufferfv(uint framebuffer, uint buffer, int drawbuffer, float[] value) =>
-            GetDelegate<clearNamedFramebufferfv>("glClearNamedFramebufferfv")(framebuffer, buffer, drawbuffer, value);
+            GetDelegate<InvokeUUIOfV>("glClearNamedFramebufferfv")(framebuffer, buffer, drawbuffer, value);
         public static void ClearNamedFramebufferiv(uint framebuffer, uint buffer, int drawbuffer, int[] value) =>
-            GetDelegate<clearNamedFramebufferiv>("glClearNamedFramebufferiv")(framebuffer, buffer, drawbuffer, value);
+            GetDelegate<InvokeUUIOiV>("glClearNamedFramebufferiv")(framebuffer, buffer, drawbuffer, value);
         public static void ClearNamedFramebufferuiv(uint framebuffer, uint buffer, int drawbuffer, uint[] value) =>
-            GetDelegate<clearNamedFramebufferuiv>("glClearNamedFramebufferuiv")(framebuffer, buffer, drawbuffer, value);
+            GetDelegate<InvokeUUIOuV>("glClearNamedFramebufferuiv")(framebuffer, buffer, drawbuffer, value);
         public static void CompressedTextureSubImage1D(uint texture, int level, int xoffset, int width, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTextureSubImage1D>("glCompressedTextureSubImage1D")(texture, level, xoffset, width, format, imageSize, data);
+            GetDelegate<InvokeUIIIUIPV>("glCompressedTextureSubImage1D")(texture, level, xoffset, width, format, imageSize, data);
         public static void CompressedTextureSubImage2D(uint texture, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTextureSubImage2D>("glCompressedTextureSubImage2D")(texture, level, xoffset, yoffset, width, height, format, imageSize, data);
+            GetDelegate<InvokeUIIIIIUIPV>("glCompressedTextureSubImage2D")(texture, level, xoffset, yoffset, width, height, format, imageSize, data);
         public static void CompressedTextureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, IntPtr data) =>
-            GetDelegate<compressedTextureSubImage3D>("glCompressedTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+            GetDelegate<InvokeUIIIIIIIUIPV>("glCompressedTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
         public static void CopyNamedBufferSubData(uint readBuffer, uint writeBuffer, int[] readOffset, int[] writeOffset, int[] size) =>
-            GetDelegate<copyNamedBufferSubData>("glCopyNamedBufferSubData")(readBuffer, writeBuffer, readOffset, writeOffset, size);
+            GetDelegate<InvokeUUOiOiOiV>("glCopyNamedBufferSubData")(readBuffer, writeBuffer, readOffset, writeOffset, size);
         public static void CopyTextureSubImage1D(uint texture, int level, int xoffset, int x, int y, int width) =>
-            GetDelegate<copyTextureSubImage1D>("glCopyTextureSubImage1D")(texture, level, xoffset, x, y, width);
+            GetDelegate<InvokeUIIIIIV>("glCopyTextureSubImage1D")(texture, level, xoffset, x, y, width);
         public static void CopyTextureSubImage2D(uint texture, int level, int xoffset, int yoffset, int x, int y, int width, int height) =>
-            GetDelegate<copyTextureSubImage2D>("glCopyTextureSubImage2D")(texture, level, xoffset, yoffset, x, y, width, height);
+            GetDelegate<InvokeUIIIIIIIV>("glCopyTextureSubImage2D")(texture, level, xoffset, yoffset, x, y, width, height);
         public static void CopyTextureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) =>
-            GetDelegate<copyTextureSubImage3D>("glCopyTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, x, y, width, height);
+            GetDelegate<InvokeUIIIIIIIIV>("glCopyTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, x, y, width, height);
         public static void CreateBuffers(int n, uint[] buffers) =>
-            GetDelegate<createBuffers>("glCreateBuffers")(n, buffers);
+            GetDelegate<InvokeIOuV>("glCreateBuffers")(n, buffers);
         public static uint CreateBuffers()
         {
             uint[] p = { 0 };
@@ -8572,17 +8108,17 @@ namespace GLCs
             return p[0];
         }
         public static void CreateFramebuffers(int n, uint[] framebuffers) =>
-            GetDelegate<createFramebuffers>("glCreateFramebuffers")(n, framebuffers);
+            GetDelegate<InvokeIOuV>("glCreateFramebuffers")(n, framebuffers);
         public static void CreateProgramPipelines(int n, uint[] pipelines) =>
-            GetDelegate<createProgramPipelines>("glCreateProgramPipelines")(n, pipelines);
+            GetDelegate<InvokeIOuV>("glCreateProgramPipelines")(n, pipelines);
         public static void CreateQueries(uint target, int n, uint[] ids) =>
-            GetDelegate<createQueries>("glCreateQueries")(target, n, ids);
+            GetDelegate<InvokeUIOuV>("glCreateQueries")(target, n, ids);
         public static void CreateRenderbuffers(int n, uint[] renderbuffers) =>
-            GetDelegate<createRenderbuffers>("glCreateRenderbuffers")(n, renderbuffers);
+            GetDelegate<InvokeIOuV>("glCreateRenderbuffers")(n, renderbuffers);
         public static void CreateSamplers(int n, uint[] samplers) =>
-            GetDelegate<createSamplers>("glCreateSamplers")(n, samplers);
+            GetDelegate<InvokeIOuV>("glCreateSamplers")(n, samplers);
         public static void CreateTextures(uint target, int n, uint[] textures) =>
-            GetDelegate<createTextures>("glCreateTextures")(target, n, textures);
+            GetDelegate<InvokeUIOuV>("glCreateTextures")(target, n, textures);
         public static uint CreateTextures(uint target)
         {
             uint[] p = { 0 };
@@ -8590,246 +8126,204 @@ namespace GLCs
             return p[0];
         }
         public static void CreateTransformFeedbacks(int n, uint[] ids) =>
-            GetDelegate<createTransformFeedbacks>("glCreateTransformFeedbacks")(n, ids);
+            GetDelegate<InvokeIOuV>("glCreateTransformFeedbacks")(n, ids);
         public static void CreateVertexArrays(int n, uint[] arrays) =>
-            GetDelegate<createVertexArrays>("glCreateVertexArrays")(n, arrays);
+            GetDelegate<InvokeIOuV>("glCreateVertexArrays")(n, arrays);
         public static void DisableVertexArrayAttrib(uint vaobj, uint index) =>
-            GetDelegate<disableVertexArrayAttrib>("glDisableVertexArrayAttrib")(vaobj, index);
+            GetDelegate<InvokeUUV>("glDisableVertexArrayAttrib")(vaobj, index);
         public static void EnableVertexArrayAttrib(uint vaobj, uint index) =>
-            GetDelegate<enableVertexArrayAttrib>("glEnableVertexArrayAttrib")(vaobj, index);
+            GetDelegate<InvokeUUV>("glEnableVertexArrayAttrib")(vaobj, index);
         public static void FlushMappedNamedBufferRange(uint buffer, int[] offset, int[] length) =>
-            GetDelegate<flushMappedNamedBufferRange>("glFlushMappedNamedBufferRange")(buffer, offset, length);
+            GetDelegate<InvokeUOiOiV>("glFlushMappedNamedBufferRange")(buffer, offset, length);
         public static void GenerateTextureMipmap(uint texture) =>
-            GetDelegate<generateTextureMipmap>("glGenerateTextureMipmap")(texture);
+            GetDelegate<InvokeUV>("glGenerateTextureMipmap")(texture);
         public static void GetCompressedTextureImage(uint texture, int level, int bufSize, IntPtr pixels) =>
-            GetDelegate<getCompressedTextureImage>("glGetCompressedTextureImage")(texture, level, bufSize, pixels);
-        public static void GetNamedBufferParameteri64v(uint buffer, uint pname, ref long[] @params) =>
-            GetDelegate<getNamedBufferParameteri64v>("glGetNamedBufferParameteri64v")(buffer, pname, ref @params);
-        public static void GetNamedBufferParameteriv(uint buffer, uint pname, ref int[] @params) =>
-            GetDelegate<getNamedBufferParameteriv>("glGetNamedBufferParameteriv")(buffer, pname, ref @params);
+            GetDelegate<InvokeUIIPV>("glGetCompressedTextureImage")(texture, level, bufSize, pixels);
+        public static void GetNamedBufferParameteri64v(uint buffer, uint pname, long[] @params) =>
+            GetDelegate<InvokeUUOjV>("glGetNamedBufferParameteri64v")(buffer, pname, @params);
+        public static void GetNamedBufferParameteriv(uint buffer, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUOiV>("glGetNamedBufferParameteriv")(buffer, pname, @params);
         public static void GetNamedBufferPointerv(uint buffer, uint pname, IntPtr[] @params) =>
-            GetDelegate<getNamedBufferPointerv>("glGetNamedBufferPointerv")(buffer, pname, @params);
+            GetDelegate<InvokeUUOpV>("glGetNamedBufferPointerv")(buffer, pname, @params);
         public static void GetNamedBufferSubData(uint buffer, int[] offset, int[] size, IntPtr data) =>
-            GetDelegate<getNamedBufferSubData>("glGetNamedBufferSubData")(buffer, offset, size, data);
-        public static void GetNamedFramebufferAttachmentParameteriv(uint framebuffer, uint attachment, uint pname, ref int[] @params) =>
-            GetDelegate<getNamedFramebufferAttachmentParameteriv>("glGetNamedFramebufferAttachmentParameteriv")(framebuffer, attachment, pname, ref @params);
-        public static void GetNamedFramebufferParameteriv(uint framebuffer, uint pname, ref int[] param) =>
-            GetDelegate<getNamedFramebufferParameteriv>("glGetNamedFramebufferParameteriv")(framebuffer, pname, ref param);
-        public static void GetNamedRenderbufferParameteriv(uint renderbuffer, uint pname, ref int[] @params) =>
-            GetDelegate<getNamedRenderbufferParameteriv>("glGetNamedRenderbufferParameteriv")(renderbuffer, pname, ref @params);
+            GetDelegate<InvokeUOiOiPV>("glGetNamedBufferSubData")(buffer, offset, size, data);
+        public static void GetNamedFramebufferAttachmentParameteriv(uint framebuffer, uint attachment, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUUOiV>("glGetNamedFramebufferAttachmentParameteriv")(framebuffer, attachment, pname, @params);
+        public static void GetNamedFramebufferParameteriv(uint framebuffer, uint pname, int[] param) =>
+            GetDelegate<InvokeUUOiV>("glGetNamedFramebufferParameteriv")(framebuffer, pname, param);
+        public static void GetNamedRenderbufferParameteriv(uint renderbuffer, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUOiV>("glGetNamedRenderbufferParameteriv")(renderbuffer, pname, @params);
         public static void GetQueryBufferObjecti64v(uint id, uint buffer, uint pname, int[] offset) =>
-            GetDelegate<getQueryBufferObjecti64v>("glGetQueryBufferObjecti64v")(id, buffer, pname, offset);
+            GetDelegate<InvokeUUUOiV>("glGetQueryBufferObjecti64v")(id, buffer, pname, offset);
         public static void GetQueryBufferObjectiv(uint id, uint buffer, uint pname, int[] offset) =>
-            GetDelegate<getQueryBufferObjectiv>("glGetQueryBufferObjectiv")(id, buffer, pname, offset);
+            GetDelegate<InvokeUUUOiV>("glGetQueryBufferObjectiv")(id, buffer, pname, offset);
         public static void GetQueryBufferObjectui64v(uint id, uint buffer, uint pname, int[] offset) =>
-            GetDelegate<getQueryBufferObjectui64v>("glGetQueryBufferObjectui64v")(id, buffer, pname, offset);
+            GetDelegate<InvokeUUUOiV>("glGetQueryBufferObjectui64v")(id, buffer, pname, offset);
         public static void GetQueryBufferObjectuiv(uint id, uint buffer, uint pname, int[] offset) =>
-            GetDelegate<getQueryBufferObjectuiv>("glGetQueryBufferObjectuiv")(id, buffer, pname, offset);
+            GetDelegate<InvokeUUUOiV>("glGetQueryBufferObjectuiv")(id, buffer, pname, offset);
         public static void GetTextureImage(uint texture, int level, uint format, uint type, int bufSize, IntPtr pixels) =>
-            GetDelegate<getTextureImage>("glGetTextureImage")(texture, level, format, type, bufSize, pixels);
-        public static void GetTextureLevelParameterfv(uint texture, int level, uint pname, ref float[] @params) =>
-            GetDelegate<getTextureLevelParameterfv>("glGetTextureLevelParameterfv")(texture, level, pname, ref @params);
-        public static void GetTextureLevelParameteriv(uint texture, int level, uint pname, ref int[] @params) =>
-            GetDelegate<getTextureLevelParameteriv>("glGetTextureLevelParameteriv")(texture, level, pname, ref @params);
+            GetDelegate<InvokeUIUUIPV>("glGetTextureImage")(texture, level, format, type, bufSize, pixels);
+        public static void GetTextureLevelParameterfv(uint texture, int level, uint pname, float[] @params) =>
+            GetDelegate<InvokeUIUOfV>("glGetTextureLevelParameterfv")(texture, level, pname, @params);
+        public static void GetTextureLevelParameteriv(uint texture, int level, uint pname, int[] @params) =>
+            GetDelegate<InvokeUIUOiV>("glGetTextureLevelParameteriv")(texture, level, pname, @params);
         public static void GetTextureParameterIiv(uint texture, uint pname, int[] @params) =>
-            GetDelegate<getTextureParameterIiv>("glGetTextureParameterIiv")(texture, pname, @params);
+            GetDelegate<InvokeUUOiV>("glGetTextureParameterIiv")(texture, pname, @params);
         public static void GetTextureParameterIuiv(uint texture, uint pname, uint[] @params) =>
-            GetDelegate<getTextureParameterIuiv>("glGetTextureParameterIuiv")(texture, pname, @params);
+            GetDelegate<InvokeUUOuV>("glGetTextureParameterIuiv")(texture, pname, @params);
         public static void GetTextureParameterfv(uint texture, uint pname, float[] @params) =>
-            GetDelegate<getTextureParameterfv>("glGetTextureParameterfv")(texture, pname, @params);
+            GetDelegate<InvokeUUOfV>("glGetTextureParameterfv")(texture, pname, @params);
         public static void GetTextureParameteriv(uint texture, uint pname, int[] @params) =>
-            GetDelegate<getTextureParameteriv>("glGetTextureParameteriv")(texture, pname, @params);
+            GetDelegate<InvokeUUOiV>("glGetTextureParameteriv")(texture, pname, @params);
         public static void GetTransformFeedbacki64_v(uint xfb, uint pname, uint index, long[] param) =>
-            GetDelegate<getTransformFeedbacki64_v>("glGetTransformFeedbacki64_v")(xfb, pname, index, param);
+            GetDelegate<InvokeUUUOjV>("glGetTransformFeedbacki64_v")(xfb, pname, index, param);
         public static void GetTransformFeedbacki_v(uint xfb, uint pname, uint index, int[] param) =>
-            GetDelegate<getTransformFeedbacki_v>("glGetTransformFeedbacki_v")(xfb, pname, index, param);
+            GetDelegate<InvokeUUUOiV>("glGetTransformFeedbacki_v")(xfb, pname, index, param);
         public static void GetTransformFeedbackiv(uint xfb, uint pname, int[] param) =>
-            GetDelegate<getTransformFeedbackiv>("glGetTransformFeedbackiv")(xfb, pname, param);
+            GetDelegate<InvokeUUOiV>("glGetTransformFeedbackiv")(xfb, pname, param);
         public static void GetVertexArrayIndexed64iv(uint vaobj, uint index, uint pname, long[] param) =>
-            GetDelegate<getVertexArrayIndexed64iv>("glGetVertexArrayIndexed64iv")(vaobj, index, pname, param);
+            GetDelegate<InvokeUUUOjV>("glGetVertexArrayIndexed64iv")(vaobj, index, pname, param);
         public static void GetVertexArrayIndexediv(uint vaobj, uint index, uint pname, int[] param) =>
-            GetDelegate<getVertexArrayIndexediv>("glGetVertexArrayIndexediv")(vaobj, index, pname, param);
+            GetDelegate<InvokeUUUOiV>("glGetVertexArrayIndexediv")(vaobj, index, pname, param);
         public static void GetVertexArrayiv(uint vaobj, uint pname, int[] param) =>
-            GetDelegate<getVertexArrayiv>("glGetVertexArrayiv")(vaobj, pname, param);
+            GetDelegate<InvokeUUOiV>("glGetVertexArrayiv")(vaobj, pname, param);
         public static void InvalidateNamedFramebufferData(uint framebuffer, int numAttachments, uint[] attachments) =>
-            GetDelegate<invalidateNamedFramebufferData>("glInvalidateNamedFramebufferData")(framebuffer, numAttachments, attachments);
+            GetDelegate<InvokeUIOuV>("glInvalidateNamedFramebufferData")(framebuffer, numAttachments, attachments);
         public static void InvalidateNamedFramebufferSubData(uint framebuffer, int numAttachments, uint[] attachments, int x, int y, int width, int height) =>
-            GetDelegate<invalidateNamedFramebufferSubData>("glInvalidateNamedFramebufferSubData")(framebuffer, numAttachments, attachments, x, y, width, height);
+            GetDelegate<InvokeUIOuIIIIV>("glInvalidateNamedFramebufferSubData")(framebuffer, numAttachments, attachments, x, y, width, height);
         public static IntPtr MapNamedBuffer(uint buffer, uint access) =>
-            GetDelegate<mapNamedBuffer>("glMapNamedBuffer")(buffer, access);
+            GetDelegate<InvokeUUP>("glMapNamedBuffer")(buffer, access);
         public static IntPtr MapNamedBufferRange(uint buffer, int[] offset, int[] length, uint access) =>
-            GetDelegate<mapNamedBufferRange>("glMapNamedBufferRange")(buffer, offset, length, access);
+            GetDelegate<InvokeUOiOiUP>("glMapNamedBufferRange")(buffer, offset, length, access);
         public static void NamedBufferData(uint buffer, int[] size, IntPtr data, uint usage) =>
-            GetDelegate<namedBufferData>("glNamedBufferData")(buffer, size, data, usage);
+            GetDelegate<InvokeUOiPUV>("glNamedBufferData")(buffer, size, data, usage);
         public static void NamedBufferStorage(uint buffer, int[] size, IntPtr data, uint flags) =>
-            GetDelegate<namedBufferStorage>("glNamedBufferStorage")(buffer, size, data, flags);
+            GetDelegate<InvokeUOiPUV>("glNamedBufferStorage")(buffer, size, data, flags);
         public static void NamedBufferSubData(uint buffer, int[] offset, int[] size, IntPtr data) =>
-            GetDelegate<namedBufferSubData>("glNamedBufferSubData")(buffer, offset, size, data);
+            GetDelegate<InvokeUOiOiPV>("glNamedBufferSubData")(buffer, offset, size, data);
         public static void NamedFramebufferDrawBuffer(uint framebuffer, uint mode) =>
-            GetDelegate<namedFramebufferDrawBuffer>("glNamedFramebufferDrawBuffer")(framebuffer, mode);
+            GetDelegate<InvokeUUV>("glNamedFramebufferDrawBuffer")(framebuffer, mode);
         public static void NamedFramebufferDrawBuffers(uint framebuffer, int n, uint[] bufs) =>
-            GetDelegate<namedFramebufferDrawBuffers>("glNamedFramebufferDrawBuffers")(framebuffer, n, bufs);
+            GetDelegate<InvokeUIOuV>("glNamedFramebufferDrawBuffers")(framebuffer, n, bufs);
         public static void NamedFramebufferParameteri(uint framebuffer, uint pname, int param) =>
-            GetDelegate<namedFramebufferParameteri>("glNamedFramebufferParameteri")(framebuffer, pname, param);
+            GetDelegate<InvokeUUIV>("glNamedFramebufferParameteri")(framebuffer, pname, param);
         public static void NamedFramebufferReadBuffer(uint framebuffer, uint mode) =>
-            GetDelegate<namedFramebufferReadBuffer>("glNamedFramebufferReadBuffer")(framebuffer, mode);
+            GetDelegate<InvokeUUV>("glNamedFramebufferReadBuffer")(framebuffer, mode);
         public static void NamedFramebufferRenderbuffer(uint framebuffer, uint attachment, uint renderbuffertarget, uint renderbuffer) =>
-            GetDelegate<namedFramebufferRenderbuffer>("glNamedFramebufferRenderbuffer")(framebuffer, attachment, renderbuffertarget, renderbuffer);
+            GetDelegate<InvokeUUUUV>("glNamedFramebufferRenderbuffer")(framebuffer, attachment, renderbuffertarget, renderbuffer);
         public static void NamedFramebufferTexture(uint framebuffer, uint attachment, uint texture, int level) =>
-            GetDelegate<namedFramebufferTexture>("glNamedFramebufferTexture")(framebuffer, attachment, texture, level);
+            GetDelegate<InvokeUUUIV>("glNamedFramebufferTexture")(framebuffer, attachment, texture, level);
         public static void NamedFramebufferTextureLayer(uint framebuffer, uint attachment, uint texture, int level, int layer) =>
-            GetDelegate<namedFramebufferTextureLayer>("glNamedFramebufferTextureLayer")(framebuffer, attachment, texture, level, layer);
+            GetDelegate<InvokeUUUIIV>("glNamedFramebufferTextureLayer")(framebuffer, attachment, texture, level, layer);
         public static void NamedRenderbufferStorage(uint renderbuffer, uint internalformat, int width, int height) =>
-            GetDelegate<namedRenderbufferStorage>("glNamedRenderbufferStorage")(renderbuffer, internalformat, width, height);
+            GetDelegate<InvokeUUIIV>("glNamedRenderbufferStorage")(renderbuffer, internalformat, width, height);
         public static void NamedRenderbufferStorageMultisample(uint renderbuffer, int samples, uint internalformat, int width, int height) =>
-            GetDelegate<namedRenderbufferStorageMultisample>("glNamedRenderbufferStorageMultisample")(renderbuffer, samples, internalformat, width, height);
+            GetDelegate<InvokeUIUIIV>("glNamedRenderbufferStorageMultisample")(renderbuffer, samples, internalformat, width, height);
         public static void TextureBuffer(uint texture, uint internalformat, uint buffer) =>
-            GetDelegate<textureBuffer>("glTextureBuffer")(texture, internalformat, buffer);
+            GetDelegate<InvokeUUUV>("glTextureBuffer")(texture, internalformat, buffer);
         public static void TextureBufferRange(uint texture, uint internalformat, uint buffer, int[] offset, int[] size) =>
-            GetDelegate<textureBufferRange>("glTextureBufferRange")(texture, internalformat, buffer, offset, size);
+            GetDelegate<InvokeUUUOiOiV>("glTextureBufferRange")(texture, internalformat, buffer, offset, size);
         public static void TextureParameterIiv(uint texture, uint pname, int[] @params) =>
-            GetDelegate<textureParameterIiv>("glTextureParameterIiv")(texture, pname, @params);
+            GetDelegate<InvokeUUOiV>("glTextureParameterIiv")(texture, pname, @params);
         public static void TextureParameterIuiv(uint texture, uint pname, uint[] @params) =>
-            GetDelegate<textureParameterIuiv>("glTextureParameterIuiv")(texture, pname, @params);
+            GetDelegate<InvokeUUOuV>("glTextureParameterIuiv")(texture, pname, @params);
         public static void TextureParameterf(uint texture, uint pname, float param) =>
-            GetDelegate<textureParameterf>("glTextureParameterf")(texture, pname, param);
+            GetDelegate<InvokeUUFV>("glTextureParameterf")(texture, pname, param);
         public static void TextureParameterfv(uint texture, uint pname, float[] param) =>
-            GetDelegate<textureParameterfv>("glTextureParameterfv")(texture, pname, param);
+            GetDelegate<InvokeUUOfV>("glTextureParameterfv")(texture, pname, param);
         public static void TextureParameteri(uint texture, uint pname, int param) =>
-            GetDelegate<textureParameteri>("glTextureParameteri")(texture, pname, param);
+            GetDelegate<InvokeUUIV>("glTextureParameteri")(texture, pname, param);
         public static void TextureParameteriv(uint texture, uint pname, int[] param) =>
-            GetDelegate<textureParameteriv>("glTextureParameteriv")(texture, pname, param);
+            GetDelegate<InvokeUUOiV>("glTextureParameteriv")(texture, pname, param);
         public static void TextureStorage1D(uint texture, int levels, uint internalformat, int width) =>
-            GetDelegate<textureStorage1D>("glTextureStorage1D")(texture, levels, internalformat, width);
+            GetDelegate<InvokeUIUIV>("glTextureStorage1D")(texture, levels, internalformat, width);
         public static void TextureStorage2D(uint texture, int levels, uint internalformat, int width, int height) =>
-            GetDelegate<textureStorage2D>("glTextureStorage2D")(texture, levels, internalformat, width, height);
+            GetDelegate<InvokeUIUIIV>("glTextureStorage2D")(texture, levels, internalformat, width, height);
         public static void TextureStorage2DMultisample(uint texture, int samples, uint internalformat, int width, int height, bool fixedsamplelocations) =>
-            GetDelegate<textureStorage2DMultisample>("glTextureStorage2DMultisample")(texture, samples, internalformat, width, height, fixedsamplelocations);
+            GetDelegate<InvokeUIUIIZV>("glTextureStorage2DMultisample")(texture, samples, internalformat, width, height, fixedsamplelocations);
         public static void TextureStorage3D(uint texture, int levels, uint internalformat, int width, int height, int depth) =>
-            GetDelegate<textureStorage3D>("glTextureStorage3D")(texture, levels, internalformat, width, height, depth);
+            GetDelegate<InvokeUIUIIIV>("glTextureStorage3D")(texture, levels, internalformat, width, height, depth);
         public static void TextureStorage3DMultisample(uint texture, int samples, uint internalformat, int width, int height, int depth, bool fixedsamplelocations) =>
-            GetDelegate<textureStorage3DMultisample>("glTextureStorage3DMultisample")(texture, samples, internalformat, width, height, depth, fixedsamplelocations);
+            GetDelegate<InvokeUIUIIIZV>("glTextureStorage3DMultisample")(texture, samples, internalformat, width, height, depth, fixedsamplelocations);
         public static void TextureSubImage1D(uint texture, int level, int xoffset, int width, uint format, uint type, IntPtr pixels) =>
-            GetDelegate<textureSubImage1D>("glTextureSubImage1D")(texture, level, xoffset, width, format, type, pixels);
+            GetDelegate<InvokeUIIIUUPV>("glTextureSubImage1D")(texture, level, xoffset, width, format, type, pixels);
         public static void TextureSubImage2D(uint texture, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels) =>
-            GetDelegate<textureSubImage2D>("glTextureSubImage2D")(texture, level, xoffset, yoffset, width, height, format, type, pixels);
+            GetDelegate<InvokeUIIIIIUUPV>("glTextureSubImage2D")(texture, level, xoffset, yoffset, width, height, format, type, pixels);
         public static void TextureSubImage3D(uint texture, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, IntPtr pixels) =>
-            GetDelegate<textureSubImage3D>("glTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+            GetDelegate<InvokeUIIIIIIIUUPV>("glTextureSubImage3D")(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
         public static void TransformFeedbackBufferBase(uint xfb, uint index, uint buffer) =>
-            GetDelegate<transformFeedbackBufferBase>("glTransformFeedbackBufferBase")(xfb, index, buffer);
+            GetDelegate<InvokeUUUV>("glTransformFeedbackBufferBase")(xfb, index, buffer);
         public static void TransformFeedbackBufferRange(uint xfb, uint index, uint buffer, int[] offset, int[] size) =>
-            GetDelegate<transformFeedbackBufferRange>("glTransformFeedbackBufferRange")(xfb, index, buffer, offset, size);
+            GetDelegate<InvokeUUUOiOiV>("glTransformFeedbackBufferRange")(xfb, index, buffer, offset, size);
         public static bool UnmapNamedBuffer(uint buffer) =>
-            GetDelegate<unmapNamedBuffer>("glUnmapNamedBuffer")(buffer);
+            GetDelegate<InvokeUZ>("glUnmapNamedBuffer")(buffer);
         public static void VertexArrayAttribBinding(uint vaobj, uint attribindex, uint bindingindex) =>
-            GetDelegate<vertexArrayAttribBinding>("glVertexArrayAttribBinding")(vaobj, attribindex, bindingindex);
+            GetDelegate<InvokeUUUV>("glVertexArrayAttribBinding")(vaobj, attribindex, bindingindex);
         public static void VertexArrayAttribFormat(uint vaobj, uint attribindex, int size, uint type, bool normalized, uint relativeoffset) =>
-            GetDelegate<vertexArrayAttribFormat>("glVertexArrayAttribFormat")(vaobj, attribindex, size, type, normalized, relativeoffset);
+            GetDelegate<InvokeUUIUZUV>("glVertexArrayAttribFormat")(vaobj, attribindex, size, type, normalized, relativeoffset);
         public static void VertexArrayAttribIFormat(uint vaobj, uint attribindex, int size, uint type, uint relativeoffset) =>
-            GetDelegate<vertexArrayAttribIFormat>("glVertexArrayAttribLIormat")(vaobj, attribindex, size, type, relativeoffset);
+            GetDelegate<InvokeUUIUUV>("glVertexArrayAttribLIormat")(vaobj, attribindex, size, type, relativeoffset);
         public static void VertexArrayAttribLFormat(uint vaobj, uint attribindex, int size, uint type, uint relativeoffset) =>
-            GetDelegate<vertexArrayAttribLFormat>("glVertexArrayAttribLFormat")(vaobj, attribindex, size, type, relativeoffset);
+            GetDelegate<InvokeUUIUUV>("glVertexArrayAttribLFormat")(vaobj, attribindex, size, type, relativeoffset);
         public static void VertexArrayBindingDivisor(uint vaobj, uint bindingindex, uint divisor) =>
-            GetDelegate<vertexArrayBindingDivisor>("glVertexArrayBindingDivisor")(vaobj, bindingindex, divisor);
+            GetDelegate<InvokeUUUV>("glVertexArrayBindingDivisor")(vaobj, bindingindex, divisor);
         public static void VertexArrayElementBuffer(uint vaobj, uint buffer) =>
-            GetDelegate<vertexArrayElementBuffer>("glVertexArrayElementBuffer")(vaobj, buffer);
+            GetDelegate<InvokeUUV>("glVertexArrayElementBuffer")(vaobj, buffer);
         public static void VertexArrayVertexBuffer(uint vaobj, uint bindingindex, uint buffer, int[] offset, int stride) =>
-            GetDelegate<vertexArrayVertexBuffer>("glVertexArrayVertexBuffer")(vaobj, bindingindex, buffer, offset, stride);
+            GetDelegate<InvokeUUUOiIV>("glVertexArrayVertexBuffer")(vaobj, bindingindex, buffer, offset, stride);
         public static void VertexArrayVertexBuffers(uint vaobj, uint first, int count, uint[] buffers, IntPtr[] offsets, int[] strides) =>
-            GetDelegate<vertexArrayVertexBuffers>("glVertexArrayVertexBuffers")(vaobj, first, count, buffers, offsets, strides);
+            GetDelegate<InvokeUUIOuOpOiV>("glVertexArrayVertexBuffers")(vaobj, first, count, buffers, offsets, strides);
 
         #endregion // GL_ARB_direct_state_access
         #region GL_ARB_draw_buffers
 
-        private delegate void drawBuffersARB(int n, uint[] bufs);
         public static void DrawBuffersARB(int n, uint[] bufs) =>
-            GetDelegate<drawBuffersARB>("glDrawBuffersARB")(n, bufs);
+            GetDelegate<InvokeIOuV>("glDrawBuffersARB")(n, bufs);
 
         #endregion // GL_ARB_draw_buffers
         #region GL_ARB_draw_buffers_blend
 
-        private delegate void blendEquationSeparateiARB(uint buf, uint modeRGB, uint modeAlpha);
-        private delegate void blendEquationiARB(uint buf, uint mode);
-        private delegate void blendFuncSeparateiARB(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha);
-        private delegate void blendFunciARB(uint buf, uint src, uint dst);
         public static void BlendEquationSeparateiARB(uint buf, uint modeRGB, uint modeAlpha) =>
-            GetDelegate<blendEquationSeparateiARB>("glBlendEquationSeparateiARB")(buf, modeRGB, modeAlpha);
+            GetDelegate<InvokeUUUV>("glBlendEquationSeparateiARB")(buf, modeRGB, modeAlpha);
         public static void BlendEquationiARB(uint buf, uint mode) =>
-            GetDelegate<blendEquationiARB>("glBlendEquationiARB")(buf, mode);
+            GetDelegate<InvokeUUV>("glBlendEquationiARB")(buf, mode);
         public static void BlendFuncSeparateiARB(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha) =>
-            GetDelegate<blendFuncSeparateiARB>("glBlendFuncSeparateiARB")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            GetDelegate<InvokeUUUUUV>("glBlendFuncSeparateiARB")(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
         public static void BlendFunciARB(uint buf, uint src, uint dst) =>
-            GetDelegate<blendFunciARB>("glBlendFunciARB")(buf, src, dst);
+            GetDelegate<InvokeUUUV>("glBlendFunciARB")(buf, src, dst);
 
         #endregion // GL_ARB_draw_buffers_blend
         #region GL_ARB_draw_elements_base_vertex
 
-        private delegate void drawElementsBaseVertex(uint mode, int count, uint type, IntPtr indices, int baseVertex);
-        private delegate void drawElementsInstancedBaseVertex(uint mode, int count, uint type, IntPtr indices, int instanceCount, int baseVertex);
-        private delegate void drawRangeElementsBaseVertex(uint mode, uint start, uint end, int count, uint type, IntPtr indices, int baseVertex);
-        private delegate void multiDrawElementsBaseVertex(uint mode, int[] count, uint type, IntPtr[] indices, int drawCount, int[] baseVertex);
         public static void DrawElementsBaseVertex(uint mode, int count, uint type, IntPtr indices, int baseVertex) =>
-            GetDelegate<drawElementsBaseVertex>("glDrawElementsBaseVertex")(mode, count, type, indices, baseVertex);
+            GetDelegate<InvokeUIUPIV>("glDrawElementsBaseVertex")(mode, count, type, indices, baseVertex);
         public static void DrawElementsInstancedBaseVertex(uint mode, int count, uint type, IntPtr indices, int instanceCount, int baseVertex) =>
-            GetDelegate<drawElementsInstancedBaseVertex>("glDrawElementsInstancedBaseVertex")(mode, count, type, indices, instanceCount, baseVertex);
+            GetDelegate<InvokeUIUPIIV>("glDrawElementsInstancedBaseVertex")(mode, count, type, indices, instanceCount, baseVertex);
         public static void DrawRangeElementsBaseVertex(uint mode, uint start, uint end, int count, uint type, IntPtr indices, int baseVertex) =>
-            GetDelegate<drawRangeElementsBaseVertex>("glDrawRangeElementsBaseVertex")(mode, start, end, count, type, indices, baseVertex);
+            GetDelegate<InvokeUUUIUPIV>("glDrawRangeElementsBaseVertex")(mode, start, end, count, type, indices, baseVertex);
         public static void MultiDrawElementsBaseVertex(uint mode, int[] count, uint type, IntPtr[] indices, int drawCount, int[] baseVertex) =>
-            GetDelegate<multiDrawElementsBaseVertex>("glMultiDrawElementsBaseVertex")(mode, count, type, indices, drawCount, baseVertex);
+            GetDelegate<InvokeUOiUOpIOiV>("glMultiDrawElementsBaseVertex")(mode, count, type, indices, drawCount, baseVertex);
 
         #endregion // GL_ARB_draw_elements_base_vertex
         #region GL_ARB_draw_indirect
 
-        private delegate void drawArraysIndirect(uint mode, IntPtr indirect);
-        private delegate void drawElementsIndirect(uint mode, uint type, IntPtr indirect);
         public static void DrawArraysIndirect(uint mode, IntPtr indirect) =>
-            GetDelegate<drawArraysIndirect>("glDrawArraysIndirect")(mode, indirect);
+            GetDelegate<InvokeUPV>("glDrawArraysIndirect")(mode, indirect);
         public static void DrawElementsIndirect(uint mode, uint type, IntPtr indirect) =>
-            GetDelegate<drawElementsIndirect>("glDrawElementsIndirect")(mode, type, indirect);
+            GetDelegate<InvokeUUPV>("glDrawElementsIndirect")(mode, type, indirect);
 
         #endregion // GL_ARB_draw_indirect
         #region GL_ARB_framebuffer_no_attachments
 
-        private delegate void framebufferParameteri(uint target, uint pname, int param);
-        private delegate void getFramebufferParameteriv(uint target, uint pname, ref int[] @params);
-        private delegate void getNamedFramebufferParameterivEXT(uint framebuffer, uint pname, ref int[] @params);
-        private delegate void namedFramebufferParameteriEXT(uint framebuffer, uint pname, int param);
         public static void FramebufferParameteri(uint target, uint pname, int param) =>
-            GetDelegate<framebufferParameteri>("glFramebufferParameteri")(target, pname, param);
-        public static void GetFramebufferParameteriv(uint target, uint pname, ref int[] @params) =>
-            GetDelegate<getFramebufferParameteriv>("glGetFramebufferParameteriv")(target, pname, ref @params);
-        public static void GetNamedFramebufferParameterivEXT(uint framebuffer, uint pname, ref int[] @params) =>
-            GetDelegate<getNamedFramebufferParameterivEXT>("glGetNamedFramebufferParameterivEXT")(framebuffer, pname, ref @params);
+            GetDelegate<InvokeUUIV>("glFramebufferParameteri")(target, pname, param);
+        public static void GetFramebufferParameteriv(uint target, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUOiV>("glGetFramebufferParameteriv")(target, pname, @params);
+        public static void GetNamedFramebufferParameterivEXT(uint framebuffer, uint pname, int[] @params) =>
+            GetDelegate<InvokeUUOiV>("glGetNamedFramebufferParameterivEXT")(framebuffer, pname, @params);
         public static void NamedFramebufferParameteriEXT(uint framebuffer, uint pname, int param) =>
-            GetDelegate<namedFramebufferParameteriEXT>("glNamedFramebufferParameteriEXT")(framebuffer, pname, param);
+            GetDelegate<InvokeUUIV>("glNamedFramebufferParameteriEXT")(framebuffer, pname, param);
 
         #endregion GL_ARB_framebuffer_no_attachments
-        #region GL_ARB_vertex_array_object
-
-        private delegate void bindVertexArray(uint array);
-        private delegate void deleteVertexArrays(int n, uint[] arrays);
-        private delegate void genVertexArrays(int n, uint[] arrays);
-        private delegate bool isVertexArray(uint array);
-        public static void BindVertexArray(uint array) =>
-            GetDelegate<bindVertexArray>("glBindVertexArray")(array);
-        public static void DeleteVertexArrays(int n, uint[] arrays) =>
-            GetDelegate<deleteVertexArrays>("glDeleteVertexArrays")(n, arrays);
-        public static void DeleteVertexArrays(uint array)
-        {
-            uint[] p = { array };
-            DeleteVertexArrays(1, p);
-        }
-        public static void GenVertexArrays(int n, uint[] arrays) =>
-            GetDelegate<genVertexArrays>("glGenVertexArrays")(n, arrays);
-        public static uint GenVertexArrays()
-        {
-            uint[] p = { 0 };
-            GenVertexArrays(1, p);
-            return p[0];
-        }
-        public static bool IsVertexArray(uint array) =>
-            GetDelegate<isVertexArray>("glIsVertexArray")(array);
-
-        #endregion // GL_ARB_vertex_array_object
     }
 }

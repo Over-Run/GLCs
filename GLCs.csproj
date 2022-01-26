@@ -6,6 +6,7 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <!-- NuGet -->
     <PackageId>GLCs</PackageId>
     <Authors>squid233</Authors>
@@ -14,22 +15,34 @@
     <Version>0.4.0</Version>
     <Description>OpenGL bindings for C#.</Description>
     <PackageTags>opengl,glfw,glfw3,glfw-opengl-library,glfw-library</PackageTags>
-    <Nullable>enable</Nullable>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Over-Run/GLCs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Over-Run/GLCs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>Add extensions and STBImage</PackageReleaseNotes>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="GLCs_test\**" />
+    <EmbeddedResource Remove="GLCs_test\**" />
+    <None Remove="GLCs_test\**" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="glfw3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="stb.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
